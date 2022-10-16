@@ -7,14 +7,14 @@ namespace BinningSkill
     internal class KeyedProfession : SpaceCore.Skills.Skill.Profession
     {
         readonly object Tokens;
-        public KeyedProfession(Skills.Skill skill, string id) : base(skill, id)
+        public KeyedProfession(Skills.Skill skill, string id, Texture2D icon) : base(skill, id)
         {
-            this.Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"Mods/drbirbdev.BinningSkill/{id}");
+            this.Icon = icon;
         }
 
-        public KeyedProfession(SpaceCore.Skills.Skill skill, string id, object tokens) : base(skill, id)
+        public KeyedProfession(SpaceCore.Skills.Skill skill, string id, Texture2D icon, object tokens) : base(skill, id)
         {
-            this.Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"Mods/drbirbdev.BinningSkill/{id}");
+            this.Icon = icon;
             this.Tokens = tokens;
         }
 

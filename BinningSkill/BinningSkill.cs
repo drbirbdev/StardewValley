@@ -27,12 +27,12 @@ namespace BinningSkill
             this.ExperienceBarColor = new Microsoft.Xna.Framework.Color(99, 107, 107);
 
             this.AddProfessions(
-                    Recycler = new KeyedProfession(this, "Recycler"),
-                    Sneak = new KeyedProfession(this, "Sneak"),
-                    Environmentalist = new KeyedProfession(this, "Environmentalist"),
-                    Salvager = new KeyedProfession(this, "Salvager"),
-                    Upseller = new KeyedProfession(this, "Upseller"),
-                    Reclaimer = new KeyedProfession(this, "Reclaimer", ModEntry.Config)
+                    Recycler = new KeyedProfession(this, "Recycler", ModEntry.Assets.Recycler),
+                    Sneak = new KeyedProfession(this, "Sneak", ModEntry.Assets.Sneak),
+                    Environmentalist = new KeyedProfession(this, "Environmentalist", ModEntry.Assets.Environmentalist),
+                    Salvager = new KeyedProfession(this, "Salvager", ModEntry.Assets.Salvager),
+                    Upseller = new KeyedProfession(this, "Upseller", ModEntry.Assets.Upseller),
+                    Reclaimer = new KeyedProfession(this, "Reclaimer", ModEntry.Assets.Reclaimer, ModEntry.Config)
                 );
         }
 

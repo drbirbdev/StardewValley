@@ -1,7 +1,6 @@
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using StardewValley;
 using StardewValley.Locations;
 using Netcode;
@@ -10,6 +9,7 @@ using Microsoft.Xna.Framework;
 using StardewValley.Tools;
 using BirbShared;
 using BinningSkill.Core;
+using StardewValley.Objects;
 
 namespace BinningSkill
 {
@@ -20,7 +20,6 @@ namespace BinningSkill
             Harmony harmony = new(id);
             try
             {
-
                 // Binning Skill
                 //  - give binning exp
                 //  - give binning skill bonus drops
@@ -31,11 +30,19 @@ namespace BinningSkill
                     prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(Town_CheckAction_Prefix)),
                     postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(Town_CheckAction_Postfix)));
 
+                if (ModEntry.RSVLoaded)
+                {
+                    harmony.Patch(
+                        original: AccessTools.Method(AccessTools.TypeByName("RidgesideVillage.TrashCans"), "Trigger"),
+                        prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(RidgesideVillage_TrashCans_Trigger_Prefix)),
+                        postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(RidgesideVillage_TrashCans_Trigger_Postfix)));
+                }
+
                 // Reclaimer Profession
                 //  - give more profit from reclaiming
                 harmony.Patch(
                     original: AccessTools.Method(typeof(Utility), nameof(Utility.getTrashReclamationPrice)),
-                    postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(Utility_GetTrashReclamationPrice_Postfix)));
+                    postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(Utility_GetTrashReclamationPrice_Postfix)) { after = new string[] {"shivaGuy.BetterTrashCan"} });
 
                 // Upseller Profession
                 //  - increase acceptance of hated and disliked gifts by one notch
@@ -57,9 +64,9 @@ namespace BinningSkill
                 // Recycler Profession
                 //  - make recycing machines cheaper to craft
                 harmony.Patch(
-                    original: AccessTools.Constructor(typeof(StardewValley.CraftingRecipe), new Type[] {typeof(string), typeof(bool)}),
+                    original: AccessTools.Constructor(typeof(StardewValley.CraftingRecipe), new Type[] { typeof(string), typeof(bool) }),
                     postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(CraftingRecipe_Constructor_Postfix)));
-                    
+
 
             }
             catch (Exception ex)
@@ -119,6 +126,7 @@ namespace BinningSkill
                 {
                     if (who.HasCustomProfession(BinningSkill.Sneak))
                     {
+                        // TODO: skip this stuff by transpiling.  Will fix global chat message being displayed with sneak profession
                         Character c = Utility.isThereAFarmerOrCharacterWithinDistance(new Vector2(tileLocation.X, tileLocation.Y), 7, __instance);
                         if (c != null && c is NPC && c is not StardewValley.Characters.Horse)
                         {
@@ -134,337 +142,264 @@ namespace BinningSkill
                             }
                         }
                     }
-                    if (__instance.debris is null && __instance.debris.Count > __state[1])
-                    {
-                        // something was already gotten from the trash, give standard binning experience and return
-                        SpaceCore.Skills.AddExperience(who, "drbirbdev.Binning", ModEntry.Config.ExperienceFromTrashSuccess);
-                        return;
-                      
-                    }
 
-                    int whichCan = __state[0];
-                    int binningLevel = SpaceCore.Skills.GetSkillLevel(who, "drbirbdev.Binning");
-                    int rarity = -1;
-                    // Determine the rarity level of the drop.
-                    Random random = new();
-                    if (random.Next(100) < ModEntry.Config.PerLevelBonusDropChance * binningLevel)
-                    {
-                        rarity = 0;
-                        if (binningLevel >= 3 && random.Next(100) < ModEntry.Config.RareDropChance)
-                        {
-                            rarity = 1;
-                            if (binningLevel >= 6 && random.Next(100) < ModEntry.Config.SuperRareDropChance)
-                            {
-                                rarity = 2;
-                                if (binningLevel >= 9 && random.Next(100) < ModEntry.Config.UltraRareDropChance)
-                                {
-                                    rarity = 3;
-                                }
-                            }
-                        }
-                    }
-                    if (rarity == -1)
-                    {
-                        // Give binning experience for not getting anything
-                        SpaceCore.Skills.AddExperience(who, "drbirbdev.Binning", ModEntry.Config.ExperienceFromTrashFail);
-                        return;
-                    }
-                    Item drop = new StardewValley.Object(168, 1);
-                    if (rarity == 0)
-                    {
-                        drop = new StardewValley.Object(Utility.getRandomItemFromSeason(Game1.currentSeason, tileLocation.X * tileLocation.Y, false), 1);
-                    }
-                    else if (rarity == 1)
-                    {
-                        List<int> possibleItemIds = new();
-                        switch (whichCan)
-                        {
-                            case 0:
-                                // Jodi/Kent/Sam/Vincent
-                                // Out-of-season crop (*)
-                                if (!Game1.currentSeason.Equals("spring"))
-                                {
-                                    possibleItemIds.AddRange(new int[] { 597, 190, 433, 248, 188, 250, 24, 192, 252, 400, 591 });
-                                }
-                                if (!Game1.currentSeason.Equals("summer"))
-                                {
-                                    possibleItemIds.AddRange(new int[] { 258, 270, 304, 260, 254, 376, 264, 266, 268, 593, 421, 256 });
-                                }
-                                if (!Game1.currentSeason.Equals("fall"))
-                                {
-                                    possibleItemIds.AddRange(new int[] { 300, 274, 284, 278, 282, 272, 595, 398, 276, 280 });
-                                }
-                                break;
-                            case 1:
-                                // Haley/Emily
-                                // Any gemstone
-                                possibleItemIds.AddRange(new int[] { 60, 62, 64, 66, 68, 70, 72, 80, 82});
-                                break;
-                            case 2:
-                                // Lewis
-                                // Out-of-season forage
-                                if (!Game1.currentSeason.Equals("spring"))
-                                {
-                                    possibleItemIds.AddRange(new int[] { 16, 18, 20, 22, 399, 296 });
-                                }
-                                if (!Game1.currentSeason.Equals("summer"))
-                                {
-                                    possibleItemIds.AddRange(new int[] { 398, 396, 402, 259 });
-                                }
-                                if (!Game1.currentSeason.Equals("fall"))
-                                {
-                                    possibleItemIds.AddRange(new int[] { 406, 408, 410, 281 });
-                                }
-                                if (!Game1.currentSeason.Equals("winter"))
-                                {
-                                    possibleItemIds.AddRange(new int[] { 412, 414, 416, 418, 283 });
-                                }
-                                break;
-                            case 3:
-                                // Museum (Gunther)
-                                // Rare Geodes
-                                possibleItemIds.AddRange(new int[] { 749, 275 });
-                                break;
-                            case 4:
-                                // Blacksmith (Clint)
-                                // Bars
-                                possibleItemIds.AddRange(new int[] { 334, 335, 336, 337 });
-                                break;
-                            case 5:
-                                // Saloon (Gus)
-                                // Dish of the day
-                                possibleItemIds.Add((Game1.dishOfTheDay.ParentSheetIndex != 217) ? (Game1.dishOfTheDay.ParentSheetIndex) : 216);
-                                break;
-                            case 6:
-                                // George/Evelyn/Alex
-                                // Fish
-                                possibleItemIds.AddRange(new int[] { 128, 129, 130, 131, 132, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 154, 155 });
-                                break;
-                            case 7:
-                                // Jojamart/Movie Theater
-                                // Ticket or poster
-                                if (Utility.doesMasterPlayerHaveMailReceivedButNotMailForTomorrow("ccMovieTheater"))
-                                {
-                                    possibleItemIds.AddRange(new int[] { 809, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959 });
-                                } else
-                                {
-                                    possibleItemIds.Add(167);
-                                }
-                                break;
-                        }
-                        int dropId = possibleItemIds.ElementAt(random.Next(possibleItemIds.Count));
-                        if (dropId < 1000)
-                        {
-                            drop = new StardewValley.Object(dropId, 1);
-                        }
-                        else
-                        {
-                            drop = new StardewValley.Objects.Furniture(dropId, Vector2.Zero);
-                        }
-                    } 
-                    else if (rarity == 2)
-                    {
-                        __instance.playSound("yoba");
-                        List<int> possibleItemIds = new();
-                        switch (whichCan)
-                        {
-                            case 0:
-                                // Jodi/Kent/Sam/Vincent
-                                // Enricher
-                                // Pressure Nozzle
-                                possibleItemIds.AddRange(new int[] { 913, 915 });
-                                break;
-                            case 1:
-                                // Haley/Emily
-                                // Prismatic Shard
-                                possibleItemIds.Add(74);
-                                break;
-                            case 2:
-                                // Lewis
-                                // Mermaid Pendant
-                                // Wilted Bouquet
-                                possibleItemIds.AddRange(new int[] { 460, 277 });
-                                break;
-                            case 3:
-                                // Museum (Gunther)
-                                // Deconstructor
-                                // Hopper
-                                possibleItemIds.AddRange(new int[] { 265, 275 });
-                                break;
-                            case 4:
-                                // Blacksmith (Clint)
-                                // Radioactive Bar
-                                possibleItemIds.Add(910);
-                                break;
-                            case 5:
-                                // Saloon (Gus)
-                                // Qi Seasoning
-                                // Mushroom Tree Seed
-                                possibleItemIds.AddRange(new int[] { 917, 891 });
-                                break;
-                            case 6:
-                                // George/Evelyn/Alex
-                                // Magic Bait
-                                // Fairy Dust
-                                possibleItemIds.AddRange(new int[] { 908, 872 });
-                                break;
-                            case 7:
-                                // Jojamart/Movie Theater
-                                // Golden Pumpkin
-                                // Pearl
-                                // Treasure Chest
-                                possibleItemIds.AddRange(new int[] { 373, 797, 166 });
-                                break;
-                        }
-                        int dropId = possibleItemIds.ElementAt(random.Next(possibleItemIds.Count));
-                        if (whichCan == 3)
-                        {
-                            drop = new StardewValley.Object(Vector2.Zero, dropId);
-                        }
-                        else
-                        {
-                            drop = new StardewValley.Object(dropId, 1);
-                        }
-                    }
-                    else if (rarity == 3)
-                    {
-                        __instance.playSound("reward");
-                        List<Item> possibleDrops = new();
-                        switch (whichCan)
-                        {
-                            case 0:
-                                // Jodi/Kent/Sam/Vincent
-                                // Sam's Old Guitar
-                                // Seb's Lost Mace
-                                // Abby's Planchette
-                                // Sam's Boombox
-                                possibleDrops.AddRange(new Item[]
-                                {
-                                    new MeleeWeapon(30),
-                                    new MeleeWeapon(41),
-                                    new MeleeWeapon(40),
-                                    new StardewValley.Objects.Furniture(1309, Vector2.Zero),
-                                });
-                                break;
-                            case 1:
-                                // Haley/Emily
-                                // Haley's Iron
-                                // Sewing Machine
-                                // Night Sky Decal #1
-                                // Night Sky Decal #2
-                                // Night Sky Decal #3
-                                possibleDrops.AddRange(new Item[]
-                                {
-                                    new MeleeWeapon(42),
-                                    new StardewValley.Object(Vector2.Zero, 247),
-                                    new StardewValley.Objects.Furniture(1914, Vector2.Zero),
-                                    new StardewValley.Objects.Furniture(1915, Vector2.Zero),
-                                    new StardewValley.Objects.Furniture(1916, Vector2.Zero),
-                                });
-                                break;
-                            case 2:
-                                // Lewis
-                                // Mini-Shipping Bin
-                                // Solid Gold Lewis
-                                // Stardew Hero Trophy
-                                // Statue of Perfection
-                                // Statue of True Perfection
-                                possibleDrops.AddRange(new Item[]
-                                {
-                                    new StardewValley.Object(Vector2.Zero, 248),
-                                    new StardewValley.Object(Vector2.Zero, 164),
-                                    new StardewValley.Object(Vector2.Zero, 116),
-                                    new StardewValley.Object(Vector2.Zero, 160),
-                                    new StardewValley.Object(Vector2.Zero, 280),
-                                });
-                                break;
-                            case 3:
-                                // Museum (Gunther)
-                                // Elliott's Pencil
-                                // Penny's Fryer
-                                // Pirate Flag
-                                // Pirate Rug
-                                possibleDrops.AddRange(new Item[]
-                                {
-                                    new MeleeWeapon(35),
-                                    new MeleeWeapon(38),
-                                    new StardewValley.Objects.Furniture(1900, Vector2.Zero),
-                                    new StardewValley.Objects.Furniture(1902, Vector2.Zero),
-                                });
-                                break;
-                            case 4:
-                                // Blacksmith (Clint)
-                                // Harvey's Mallet
-                                // Maru's Wrench
-                                // ??HMTGF??
-                                // ??Foroguemon??
-                                // ??Pinky Lemon??
-                                possibleDrops.AddRange(new Item[]
-                                {
-                                    new MeleeWeapon(37),
-                                    new MeleeWeapon(36),
-                                    new StardewValley.Object(Vector2.Zero, 155),
-                                    new StardewValley.Object(Vector2.Zero, 161),
-                                    new StardewValley.Object(Vector2.Zero, 162),
-                                });
-                                break;
-                            case 5:
-                                // Saloon (Gus)
-                                // Leah's Whittler
-                                // Leah's Sculpture
-                                // My First Painting
-                                // Prairie King Arcade System
-                                // Junimo Kart Arcade System
-                                possibleDrops.AddRange(new Item[]
-                                {
-                                    new MeleeWeapon(39),
-                                    new StardewValley.Objects.Furniture(1306, Vector2.Zero),
-                                    new StardewValley.Objects.Furniture(1802, Vector2.Zero),
-                                    new StardewValley.Object(Vector2.Zero, 141),
-                                    new StardewValley.Object(Vector2.Zero, 159),
-                                });
-                                break;
-                            case 6:
-                                // George/Evelyn/Alex
-                                // Alex's Bat
-                                // Coffee Maker
-                                // Strawberry Decal
-                                // Fruit Salad Rug
-                                possibleDrops.AddRange(new Item[]
-                                {
-                                    new MeleeWeapon(25),
-                                    new StardewValley.Object(Vector2.Zero, 246),
-                                    new StardewValley.Objects.Furniture(1907, Vector2.Zero),
-                                    new StardewValley.Objects.Furniture(1909, Vector2.Zero),
-                                });
-                                break;
-                            case 7:
-                                // Jojamart/Movie Theater
-                                // Auto-Petter
-                                // Soda Machine
-                                // Junimo Plush
-                                // Stone Junimo
-                                possibleDrops.AddRange(new Item[]
-                                {
-                                    new StardewValley.Object(Vector2.Zero, 272),
-                                    new StardewValley.Object(Vector2.Zero, 117),
-                                    new StardewValley.Objects.Furniture(1733, Vector2.Zero),
-                                    new StardewValley.Object(Vector2.Zero, 55),
-                                });
-                                break;
-                        }
-                        drop = possibleDrops.ElementAt(random.Next(possibleDrops.Count));
-                    }
-
-                    SpaceCore.Skills.AddExperience(who, "drbirbdev.Binning", ModEntry.Config.ExperienceFromTrashBonus * (int)(Math.Pow(2, rarity)));
-
-                    Vector2 origin = new Vector2((float)tileLocation.X + 0.5f, tileLocation.Y - 1) * 64f;
-                    Game1.createItemDebris(drop, origin, 2, __instance, (int)origin.Y + 64);
+                    DoTrashCanCheck("Town", __state[0].ToString(), __state[1], GetItemPosition(new Vector2(tileLocation.X, tileLocation.Y)));
                 }
             }
             catch (Exception ex)
             {
                 Log.Error($"Failed in {nameof(Town_CheckAction_Postfix)}\n{ex}");
+            }
+        }
+
+        public static void RidgesideVillage_TrashCans_Trigger_Prefix(
+            ref object[] __state,
+            string tileAction,
+            Vector2 position,
+            HashSet<Vector2> ___TrashCansTriggeredToday)
+        {
+            try
+            {
+                if (___TrashCansTriggeredToday.Contains(position))
+                {
+                    return;
+                }
+
+                __state = new object[]
+                {
+                    tileAction.Split(' ')[1],
+                    Game1.currentLocation.debris.Count,
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed in {nameof(RidgesideVillage_TrashCans_Trigger_Prefix)}\n{ex}");
+            }
+        }
+
+        public static void RidgesideVillage_TrashCans_Trigger_Postfix(
+            object[] __state,
+            string tileAction,
+            Vector2 position)
+        {
+            try
+            {
+                if (__state != null && __state.Length > 0)
+                {
+                    if (!Game1.player.HasCustomProfession(BinningSkill.Sneak))
+                    {
+                        Character c = Utility.isThereAFarmerOrCharacterWithinDistance(position, 7, Game1.currentLocation);
+                        if (c != null && c is NPC && c is not StardewValley.Characters.Horse)
+                        {
+                            // Sneak Profession
+                            // RSV doesn't have people catch you in trashcans, so just do some vanilla behaviour to add that.
+
+                            // TODO: broadcast chat messages
+                            // Game1.multiplayer.globalChatInfoMessage("TrashCan", Game1.player.Name, c.name);
+                            int friendshipLoss = -ModEntry.Config.FriendshipRecovery;
+                            if (c.Name.Equals("Linus"))
+                            {
+                                c.doEmote(32);
+                                (c as NPC).setNewDialogue(Game1.content.LoadString("Data\\ExtraDialogue:Town_DumpsterDiveComment_Linus"), add: true, clearOnMovement: true);
+                                Game1.player.changeFriendship(5, c as NPC);
+                                // Game1.multiplayer.globalChatInfoMessage("LinusTrashCan");
+                            }
+                            else if ((c as NPC).Age == 2)
+                            {
+                                c.doEmote(28);
+                                (c as NPC).setNewDialogue(Game1.content.LoadString("Data\\ExtraDialogue:Town_DumpsterDiveComment_Child"), add: true, clearOnMovement: true);
+                                Game1.player.changeFriendship(friendshipLoss, c as NPC);
+                            }
+                            else if ((c as NPC).Age == 1)
+                            {
+                                c.doEmote(8);
+                                (c as NPC).setNewDialogue(Game1.content.LoadString("Data\\ExtraDialogue:Town_DumpsterDiveComment_Teen"), add: true, clearOnMovement: true);
+                                Game1.player.changeFriendship(friendshipLoss, c as NPC);
+                            }
+                            else
+                            {
+                                c.doEmote(12);
+                                (c as NPC).setNewDialogue(Game1.content.LoadString("Data\\ExtraDialogue:Town_DumpsterDiveComment_Adult"), add: true, clearOnMovement: true);
+                                Game1.player.changeFriendship(friendshipLoss, c as NPC);
+                            }
+                            Game1.drawDialogue(c as NPC);
+                        }
+                    }
+
+                    DoTrashCanCheck("RSV", (string)__state[0], (int)__state[1], GetItemPosition(position));
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed in {nameof(RidgesideVillage_TrashCans_Trigger_Postfix)}\n{ex}");
+            }
+        }
+
+        private static void DoTrashCanCheck(string location, string whichCan, int debrisCount, Vector2 position)
+        {
+            if (Game1.currentLocation.debris is not null && Game1.currentLocation.debris.Count > debrisCount)
+            {
+                // something was already gotten from the trash, give standard binning experience and return
+                Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromTrashSuccess);
+                return;
+
+            }
+
+            int rarity = GetRarity(GetRarityLevels());
+
+            if (rarity < 0)
+            {
+                // Give binning experience for not getting anything
+                Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromTrashFail);
+                return;
+            }
+
+            Item drop = GetRandomDropFromLootTable(location, whichCan, rarity);
+
+            if (rarity == 2)
+            {
+                Game1.currentLocation.playSound("yoba");
+            }
+            else if (rarity == 3)
+            {
+                Game1.currentLocation.playSound("reward");
+            }
+
+            Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromTrashBonus * (int)(Math.Pow(2, rarity)));
+
+            Game1.createItemDebris(drop, position, 2, Game1.currentLocation, (int)position.Y + 64);
+        }
+
+        private static Vector2 GetItemPosition(Vector2 tilePosition)
+        {
+            return new Vector2(tilePosition.X + 0.5f, tilePosition.Y - 1) * 64f;
+        }
+
+        public static int[] GetRarityLevels()
+        {
+            int binningLevel = Skills.GetSkillLevel(Game1.player, "drbirbdev.Binning");
+            return new int[]
+            {
+                        binningLevel * ModEntry.Config.PerLevelBonusDropChance,
+                        binningLevel >= 3 ? ModEntry.Config.RareDropChance : 0,
+                        binningLevel >= 6 ? ModEntry.Config.SuperRareDropChance : 0,
+                        binningLevel >= 9 ? ModEntry.Config.UltraRareDropChance : 0,
+            };
+        }
+
+        /// <summary>
+        /// Determine the rarity level of a drop.
+        /// </summary>
+        /// <param name="chances"></param>
+        /// <returns></returns>
+        public static int GetRarity(int[] chances)
+        {
+            Random random = new();
+            int rarity = -1;
+            for (int i = 0; i < chances.Length; i++)
+            {
+                if (random.Next(100) < chances[i])
+                {
+                    rarity++;
+                }
+                else
+                {
+                    return rarity;
+                }
+            }
+            Log.Debug($"Using rarity {rarity}");
+            return rarity;
+        }
+
+        public static Item GetRandomDropFromLootTable(string location, string whichCan, int rarity)
+        {
+            Random random = new();
+            if (rarity < 0 || rarity > 3)
+            {
+                Log.Error($"Invalid rarity level {rarity}");
+            }
+            string key = $"{location}.{whichCan}.{rarity}";
+            string defaultKey = $"{location}.*.{rarity}";
+            List<string> possibleIds;
+            if (ModEntry.Assets.TrashDrops.ContainsKey(key))
+            {
+                possibleIds = ModEntry.Assets.TrashDrops[key];
+            }
+            else if (ModEntry.Assets.TrashDrops.ContainsKey(defaultKey))
+            {
+                possibleIds = ModEntry.Assets.TrashDrops[defaultKey];
+            }
+            else
+            {
+                Log.Error($"Found no specific or default drops for key {key}");
+                possibleIds = new List<string>() { "item.168" };
+            }
+            Log.Info($"Used key {key} to find loot {string.Join(',', possibleIds)}");
+            return ParseTrashDropId(possibleIds[random.Next(possibleIds.Count)]);
+        }
+
+        public static Item ParseTrashDropId(string id)
+        {
+            try
+            {
+                string[] parts = id.Split('.');
+                string itemType = parts[0];
+                string itemId = parts[1];
+
+                if (!ModEntry.JALoaded && parts[0].StartsWith("ja_"))
+                {
+                    Log.Error($"Tried to parse JsonAssets trash drop but mod isn't loaded {id}");
+                    return new StardewValley.Object(168, 1);
+                }
+                if (!ModEntry.DGALoaded && parts[0].StartsWith("dga_"))
+                {
+                    Log.Error($"Tried to parse DynamicGameAssets trash drop but mod isn't loaded {id}");
+                    return new StardewValley.Object(168, 1);
+                }
+
+                switch (itemType)
+                {
+                    case "item":
+                        return new StardewValley.Object(int.Parse(itemId), 1);
+                    case "bigcraftable":
+                        return new StardewValley.Object(Vector2.Zero, int.Parse(itemId));
+                    case "bedfurniture":
+                        return new BedFurniture(int.Parse(itemId), Vector2.Zero);
+                    case "boots":
+                        return new Boots(int.Parse(itemId));
+                    case "clothing":
+                        return new Clothing(int.Parse(itemId));
+                    case "furniture":
+                        return new Furniture(int.Parse(itemId), Vector2.Zero);
+                    case "hat":
+                        return new Hat(int.Parse(itemId));                        
+                    case "ring":
+                        return new Ring(int.Parse(itemId));
+                    case "storagefurniture":
+                        return new StorageFurniture(int.Parse(itemId), Vector2.Zero);
+                    case "weapon":
+                        return new MeleeWeapon(int.Parse(itemId));
+                    case "ja_item":
+                        return new StardewValley.Object(ModEntry.JsonAssets.GetObjectId(itemId), 1);
+                    case "ja_bigcraftable":
+                        return new StardewValley.Object(Vector2.Zero, ModEntry.JsonAssets.GetBigCraftableId(itemId));
+                    case "ja_hat":
+                        return new Hat(ModEntry.JsonAssets.GetHatId(itemId));
+                    case "ja_weapon":
+                        return new MeleeWeapon(ModEntry.JsonAssets.GetWeaponId(itemId));
+                    case "ja_clothing":
+                        return new Clothing(ModEntry.JsonAssets.GetClothingId(itemId));
+                    case "dga_item":
+                        return (Item)ModEntry.DynamicGameAssets.SpawnDGAItem(itemId);
+                    default:
+                        Log.Error($"Failed to parse drop type {id}");
+                        return new StardewValley.Object(168, 1);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed to parse drop id {id}\n{ex}");
+                return new StardewValley.Object(168, 1);
             }
         }
 
@@ -477,18 +412,24 @@ namespace BinningSkill
             {
                 if (f.HasCustomProfession(BinningSkill.Reclaimer))
                 {
-                    float sellPercentage = 0.15f * f.trashCanLevel + (ModEntry.Config.ReclaimerExtraValuePercent / 100.0f);
+                    if (__result < 0)
+                    {
+                        return;
+                    }
+                    float extraPercentage = (ModEntry.Config.ReclaimerExtraValuePercent / 100.0f);
+                    int extraAmount = 0;
                     if (i.canBeTrashed())
                     {
                         if (i is StardewValley.Object && !(i as StardewValley.Object).bigCraftable)
                         {
-                            __result = (int)((float)i.Stack * ((float)(i as StardewValley.Object).sellToStorePrice(-1L) * sellPercentage));
+                            extraAmount = (int)((float)i.Stack * ((float)(i as StardewValley.Object).sellToStorePrice(-1L) * extraPercentage));
                         }
-                        if (i is MeleeWeapon || i is StardewValley.Objects.Ring || i is StardewValley.Objects.Boots)
+                        if (i is MeleeWeapon || i is Ring || i is Boots)
                         {
-                            __result = (int)((float)i.Stack * ((float)(i.salePrice() / 2) * sellPercentage));
+                            extraAmount = (int)((float)i.Stack * ((float)(i.salePrice() / 2) * extraPercentage));
                         }
                     }
+                    __result += extraAmount;
                 }
             }
             catch (Exception ex)

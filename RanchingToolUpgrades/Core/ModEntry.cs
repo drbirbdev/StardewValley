@@ -4,6 +4,7 @@ using BirbShared.Command;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using BirbShared.Asset;
+using BirbShared.APIs;
 
 namespace RanchingToolUpgrades
 {
@@ -12,6 +13,8 @@ namespace RanchingToolUpgrades
         public static ModEntry Instance;
         public static Config Config;
         public static Assets Assets;
+
+        public static ISpaceCore SpaceCore;
 
         public override void Entry(IModHelper helper)
         {
@@ -31,6 +34,17 @@ namespace RanchingToolUpgrades
             new ConfigClassParser(this, Config).ParseConfigs();
             HarmonyPatches.Patch(this.ModManifest.UniqueID);
             new CommandClassParser(this.Helper.ConsoleCommands, new Command()).ParseCommands();
+
+            SpaceCore = this.Helper.ModRegistry
+                .GetApi<ISpaceCore>
+                ("spacechase0.SpaceCore");
+            if (SpaceCore is null)
+            {
+                Log.Error("Can't access the SpaceCore API. Is the mod installed correctly?");
+            }
+
+            SpaceCore.RegisterSerializerType(typeof(UpgradeablePail));
+            SpaceCore.RegisterSerializerType(typeof(UpgradeableShears));
         }
     }
 }

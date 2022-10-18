@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Netcode;
 using BirbShared;
+using StardewValley.Objects;
 
 namespace PanningUpgrades
 {
@@ -15,15 +16,18 @@ namespace PanningUpgrades
     {
 
         public const int MaxUpgradeLevel = 4;
+        private TemporaryAnimatedSprite tempSprite;
 
         public UpgradeablePan() : base()
         {
             base.UpgradeLevel = 0;
+            base.InstantUse = false;
         }
 
         public UpgradeablePan(int upgradeLevel) : base()
         {
             base.UpgradeLevel = upgradeLevel;
+            base.InstantUse = false;
             base.InitialParentTileIndex = -1;
             base.IndexOfMenuItemView = -1;
         }
@@ -64,6 +68,44 @@ namespace PanningUpgrades
                 layerDepth: layerDepth);
         }
 
+        public override bool beginUsing(GameLocation location, int x, int y, Farmer who)
+        {
+            this.lastUser = who;
+            who.jitterStrength = 0.25f;
+            who.FarmerSprite.setCurrentFrame(123);
+            // who.faceDirection(2);
+
+            int genderOffset = who.IsMale ? -1 : 0;
+            this.tempSprite = new TemporaryAnimatedSprite(
+                textureName: ModEntry.Assets.SpritesPath,
+                sourceRect: AnimationSourceRectangle(this.UpgradeLevel),
+                animationInterval: 1000,
+                animationLength: 1,
+                numberOfLoops: 1000,
+                position: Game1.player.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                flicker: false,
+                flipped: false,
+                layerDepth: 1f,
+                alphaFade: 0f,
+                color: Color.White,
+                scale: 4f,
+                scaleChange: 0f,
+                rotation: 0f,
+                rotationChange: 0f);
+
+            who.currentLocation.temporarySprites.Add(this.tempSprite);
+
+            return false;
+        }
+
+        public override void endUsing(GameLocation location, Farmer who)
+        {
+            who.stopJittering();
+            who.canReleaseTool = false;
+            who.currentLocation.removeTemporarySpritesWithID(this.tempSprite.id);
+            ((FarmerSprite)who.Sprite).animateOnce(303, 50f, 4);
+        }
+
         public static Rectangle IconSourceRectangle(int upgradeLevel)
         {
             Rectangle source = new(0, 0, 16, 16);
@@ -84,17 +126,25 @@ namespace PanningUpgrades
         {
             // Copied from Tool.cs, replicate logic instead of calling base.DoFunction()
             this.lastUser = who;
+            power = who.toolPower;
+            who.stopJittering();
             Game1.recentMultiplayerRandom = new Random((short)Game1.random.Next(-32768, 32768));
-            ToolFactory.getIndexFromTool(this); x = (int)who.GetToolLocation().X;
 
-            // Copied from Pan.cs, replicate logic instead of calling base.DoFunction()
-            y = (int)who.GetToolLocation().Y;
-            base.CurrentParentTileIndex = 12;
-            base.IndexOfMenuItemView = 12;
-            location.localSound("coin");
-            who.addItemsByMenuIfNecessary(this.GetPanItemsUpgradeable(location, who));
-            location.orePanPoint.Value = Point.Zero;
+            List<Vector2> tileLocations = base.tilesAffected(new Vector2(x / 64, y / 64), power, who);
 
+            foreach (Vector2 tileLocation in tileLocations)
+            {
+                if (who.currentLocation.orePanPoint.X == tileLocation.X && who.currentLocation.orePanPoint.Y == tileLocation.Y)
+                {
+                    // Copied from Pan.cs, replicate logic instead of calling base.DoFunction()
+                    location.localSound("coin");
+                    who.addItemsByMenuIfNecessary(this.GetPanItemsUpgradeable(location, who));
+                    location.orePanPoint.Value = Point.Zero;
+
+                    ModEntry.Instance.Helper.Reflection.GetMethod((Pan)this, "finish").Invoke();
+                    break;
+                }
+            }
             ModEntry.Instance.Helper.Reflection.GetMethod((Pan)this, "finish").Invoke();
         }
 
@@ -183,6 +233,19 @@ namespace PanningUpgrades
                     new UpgradeablePan(upgradeLevel: upgradeLevel),
                     new int[] { upgradePrice, quantity, extraMaterialIndex, upgradeCostBars});
             }
+        }
+
+        public static Hat PanToHat(UpgradeablePan pan)
+        {
+            return pan.UpgradeLevel switch
+            {
+                0 => new Hat(ModEntry.JsonAssets.GetHatId("Pan")),
+                1 => new Hat(71),
+                2 => new Hat(ModEntry.JsonAssets.GetHatId("Steel Pan")),
+                3 => new Hat(ModEntry.JsonAssets.GetHatId("Gold Pan")),
+                4 => new Hat(ModEntry.JsonAssets.GetHatId("Iridium Pan")),
+                _ => new Hat(ModEntry.JsonAssets.GetHatId("Pan")),
+            };
         }
     }
 }

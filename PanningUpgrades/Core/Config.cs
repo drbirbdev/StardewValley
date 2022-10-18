@@ -38,7 +38,7 @@ namespace PanningUpgrades
         public int AnimationFrameDuration { get; set; } = 140;
 
         [ConfigOption]
-        public int AnimationYOffset { get; set; } = -9;
+        public int AnimationYOffset { get; set; } = -8;
 
     }
 }

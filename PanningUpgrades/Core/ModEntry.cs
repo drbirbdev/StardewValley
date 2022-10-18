@@ -6,6 +6,7 @@ using BirbShared;
 using BirbShared.Config;
 using BirbShared.Command;
 using BirbShared.Asset;
+using HarmonyLib;
 
 namespace PanningUpgrades
 {
@@ -16,6 +17,7 @@ namespace PanningUpgrades
         public static Assets Assets;
 
         public static IJsonAssetsApi JsonAssets;
+        public static ISpaceCore SpaceCore;
 
         internal ITranslationHelper I18n => this.Helper.Translation;
 
@@ -36,7 +38,7 @@ namespace PanningUpgrades
         private void GameLoop_GameLaunched(object sender, GameLaunchedEventArgs e)
         {
             new ConfigClassParser(this, Config).ParseConfigs();
-            HarmonyPatches.Patch(this.ModManifest.UniqueID);
+            new Harmony(this.ModManifest.UniqueID).PatchAll();
             new CommandClassParser(this.Helper.ConsoleCommands, new Command()).ParseCommands();
 
             JsonAssets = this.Helper.ModRegistry
@@ -46,6 +48,16 @@ namespace PanningUpgrades
             {
                 Log.Error("Can't access the Json Assets API. Is the mod installed correctly?");
             }
+
+            SpaceCore = this.Helper.ModRegistry
+                .GetApi<ISpaceCore>
+                ("spacechase0.SpaceCore");
+            if (SpaceCore is null)
+            {
+                Log.Error("Can't access the SpaceCore API. Is the mod installed correctly?");
+            }
+
+            SpaceCore.RegisterSerializerType(typeof(UpgradeablePan));
         }
 
     }

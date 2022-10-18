@@ -114,7 +114,7 @@ namespace RanchingToolUpgrades
                 // do extra friendship effect
                 int extraFriendship = ModEntry.Config.ExtraFriendshipBase * this.UpgradeLevel;
                 animal.friendshipTowardFarmer.Value = Math.Min(1000, animal.friendshipTowardFarmer + extraFriendship);
-                Log.Info($"Applied extra friendship {extraFriendship}.  Total friendship: {animal.friendshipTowardFarmer.Value}");
+                Log.Trace($"Applied extra friendship {extraFriendship}.  Total friendship: {animal.friendshipTowardFarmer.Value}");
 
                 // do quality bump effect
                 float higherQualityChance = ModEntry.Config.QualityBumpChanceBase * this.UpgradeLevel;

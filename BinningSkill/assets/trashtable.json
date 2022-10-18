@@ -1,6 +1,6 @@
 ﻿{
     // Format
-    // "Location.WhichCan.Rarity": [ "Type.Id,Type.Id,..." ]
+    // "Location.WhichCan.Rarity": [ "Type.Id", "Type.Id", ... ]
 
     // Town Default
     // Ore, Geode, Common Fish or Crop
@@ -122,10 +122,11 @@
         "item.418",
         "item.283"
     ],
-    // Mermaid Pendant, Wilted Bouquet
+    // Mermaid Pendant, Wilted Bouquet, Lucky Purple Shorts
     "Town.2.2": [
         "item.460",
-        "item.277"
+        "item.277",
+        "item.789"
     ],
     // Mini-Shipping Bin, Sold Gold Lewis, Stardew Hero Trophy, Statue of Perfection, Statue of True Perfection
     "Town.2.3": [

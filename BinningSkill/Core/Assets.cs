@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BirbShared.Asset;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -30,7 +26,10 @@ namespace BinningSkill
         [AssetProperty("assets/upseller.png")]
         public Texture2D Upseller { get; set; }
 
-        [AssetProperty("assets/trashdrops.json")]
-        public Dictionary<string, List<string>> TrashDrops { get; set; }
+        [AssetProperty("assets/trashtable.json")]
+        public Dictionary<string, List<string>> TrashTable { get; set; }
+
+        [AssetProperty("assets/salvagertable.json")]
+        public Dictionary<string, List<string>> SalvagerTable { get; set; }
     }
 }

@@ -3,23 +3,25 @@ using BirbShared.APIs;
 using BirbShared.Asset;
 using BirbShared.Command;
 using BirbShared.Config;
+using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
-namespace BinningSkill.Core
+namespace BinningSkill
 {
     public class ModEntry : Mod
     {
-        public static ModEntry Instance;
-        public static Config Config;
-        public static Assets Assets;
+        internal static ModEntry Instance;
+        internal static Config Config;
+        internal static Assets Assets;
 
-        public static bool RSVLoaded;
-        public static bool JALoaded;
-        public static bool DGALoaded;
+        internal static bool RSVLoaded;
+        internal static bool AutomateLoaded;
+        internal static bool JALoaded;
+        internal static bool DGALoaded;
 
-        public static IJsonAssetsApi JsonAssets;
-        public static IDynamicGameAssetsApi DynamicGameAssets;
+        internal static IJsonAssetsApi JsonAssets;
+        internal static IDynamicGameAssetsApi DynamicGameAssets;
 
         internal ITranslationHelper I18n => this.Helper.Translation;
 
@@ -39,6 +41,7 @@ namespace BinningSkill.Core
         private void Event_GameLaunched(object sender, GameLaunchedEventArgs e)
         {
             RSVLoaded = this.Helper.ModRegistry.IsLoaded("Rafseazz.RidgesideVillage");
+            AutomateLoaded = this.Helper.ModRegistry.IsLoaded("Pathoschild.Automate");
             JALoaded = this.Helper.ModRegistry.IsLoaded("spacechase0.JsonAssets");
             DGALoaded = this.Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets");
 
@@ -64,12 +67,10 @@ namespace BinningSkill.Core
                 }
             }
 
-
             new ConfigClassParser(this, Config).ParseConfigs();
-            HarmonyPatches.Patch(this.ModManifest.UniqueID);
+            new Harmony(this.ModManifest.UniqueID).PatchAll();
             new CommandClassParser(this.Helper.ConsoleCommands, new Command()).ParseCommands();
             SpaceCore.Skills.RegisterSkill(new BinningSkill());
-
         }
     }
 }

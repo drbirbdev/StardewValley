@@ -52,7 +52,7 @@ namespace BinningSkill
         [ConfigSectionTitle("Environmentalist Profession Modifiers")]
         // Gain friendship for every N recyclables
         [ConfigOption(Min = 10, Max = 1000, Interval = 10)]
-        public int RecyclingCountToGainFriendship { get; set; } = 10;
+        public int RecyclingCountToGainFriendship { get; set; } = 100;
         // Amount of friendship to gain each time
         [ConfigOption(Min = 0, Max = 10, Interval = 1)]
         public int RecyclingFriendshipGain { get; set; } = 1;
@@ -61,10 +61,10 @@ namespace BinningSkill
         [ConfigSectionTitle("Salvager Profession Modifiers")]
         // Chance of rare recyleable output when salvaging
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int SalvagerRareDropChance { get; set; } = 30;
+        public int SalvagerRareDropChance { get; set; } = 20;
         // If getting a rare salvage, what is the chance it is super rare?
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int SalvagerSuperRareDropChance { get; set; } = 30;
+        public int SalvagerSuperRareDropChance { get; set; } = 20;
 
 
         // Sneak

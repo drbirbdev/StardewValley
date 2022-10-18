@@ -1,10 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BinningSkill.Core;
-using Microsoft.Xna.Framework.Graphics;
+using BirbShared;
 
 namespace BinningSkill
 {
@@ -19,20 +14,19 @@ namespace BinningSkill
 
         public BinningSkill() : base("drbirbdev.Binning")
         {
-            this.Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/iconA.png");
-            this.SkillsPageIcon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/iconB.png");
-
+            this.Icon = ModEntry.Assets.IconA;
+            this.SkillsPageIcon = ModEntry.Assets.IconB;
 
             this.ExperienceCurve = new[] { 100, 300, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000 };
             this.ExperienceBarColor = new Microsoft.Xna.Framework.Color(99, 107, 107);
 
             this.AddProfessions(
-                    Recycler = new KeyedProfession(this, "Recycler", ModEntry.Assets.Recycler),
-                    Sneak = new KeyedProfession(this, "Sneak", ModEntry.Assets.Sneak),
-                    Environmentalist = new KeyedProfession(this, "Environmentalist", ModEntry.Assets.Environmentalist),
-                    Salvager = new KeyedProfession(this, "Salvager", ModEntry.Assets.Salvager),
-                    Upseller = new KeyedProfession(this, "Upseller", ModEntry.Assets.Upseller),
-                    Reclaimer = new KeyedProfession(this, "Reclaimer", ModEntry.Assets.Reclaimer, ModEntry.Config)
+                    Recycler = new KeyedProfession(this, "Recycler", ModEntry.Assets.Recycler, ModEntry.Instance.I18n),
+                    Sneak = new KeyedProfession(this, "Sneak", ModEntry.Assets.Sneak, ModEntry.Instance.I18n),
+                    Environmentalist = new KeyedProfession(this, "Environmentalist", ModEntry.Assets.Environmentalist, ModEntry.Instance.I18n),
+                    Salvager = new KeyedProfession(this, "Salvager", ModEntry.Assets.Salvager, ModEntry.Instance.I18n),
+                    Upseller = new KeyedProfession(this, "Upseller", ModEntry.Assets.Upseller, ModEntry.Instance.I18n),
+                    Reclaimer = new KeyedProfession(this, "Reclaimer", ModEntry.Assets.Reclaimer, ModEntry.Instance.I18n, ModEntry.Config)
                 );
         }
 
@@ -60,7 +54,7 @@ namespace BinningSkill
         {
             List<string> result = new()
             {
-                ModEntry.Instance.I18n.Get("skill.perk", new { bonus = 1 })
+                ModEntry.Instance.I18n.Get("skill.perk", new { bonus = ModEntry.Config.PerLevelBonusDropChance })
             };
             if (level == 3 || level == 6 || level == 9)
             {
@@ -73,7 +67,7 @@ namespace BinningSkill
 
         public override string GetSkillPageHoverText(int level)
         {
-            return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level });
+            return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level * ModEntry.Config.PerLevelBonusDropChance });
         }
     }
 }

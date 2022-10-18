@@ -1,0 +1,30 @@
+﻿{
+    "skill.name": "Socializing",
+    "skill.perk": "-{{bonus}} daily friendship decay",
+
+    "friendly.name": "Friendly",
+    "friendly.desc": "Gain additional friendship from talking to villagers",
+    "smoothtalker.name": "Smooth Talker",
+    "smoothtalker.desc": "Gain more friendship (and lose less) during heart events",
+    "gifter.name": "Gifter",
+    "gifter.desc": "Gain additional friendship from giving gifts",
+    "helpful.name": "Helpful",
+    "helpful.desc": "Gain additional quest rewards",
+    "haggler.name": "Haggler",
+    "haggler.desc": "Get a discount at shops when you are friends with the owner",
+    "beloved.name": "Beloved",
+    "beloved.desc": "Sometimes get gifts from your friends",
+
+    "dialogue.beloved": "Take this.  I found it lying around the house.",
+    "dialogue.beloved.rare": "Hey {{name}}, I think you might like this.",
+    "dialogue.beloved.superrare": "I saw this, and I knew you'd love it.",
+
+    "config.ExperienceFromTalking": "Exp From Talking",
+    "config.ExperienceFromTalking.tooltip": "Experience gained from talking to villagers",
+    "config.ExperienceFromGifts": "Exp From Gifts",
+    "config.ExperienceFromGifts.tooltip": "Experience gained from giving gifts to villagers",
+    "config.ExperienceFromEvents": "Exp From Events",
+    "config.ExperienceFromEvents.tooltip": "Experience gained from heart events",
+    "config.ExperienceFromQuests":  "Exp From Quests",
+    "config.ExperienceFromQuests.tooltip":  "Experience gained from completeing bulletin board requests"
+}

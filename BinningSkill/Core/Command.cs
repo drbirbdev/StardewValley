@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BirbShared.Command;
 using StardewValley;
 
-namespace BinningSkill.Core
+namespace BinningSkill
 {
     [CommandClass]
     public class Command
@@ -17,16 +12,17 @@ namespace BinningSkill.Core
         {
             if (rarity == -1)
             {
-                rarity = HarmonyPatches.GetRarity(HarmonyPatches.GetRarityLevels());
+                rarity = BirbShared.Utilities.GetRarity(Utilities.GetBinningRarityLevels());
             }
+            string dropString = BirbShared.Utilities.GetRandomDropStringFromLootTable(ModEntry.Assets.TrashTable, location, whichCan, rarity.ToString());
 
-            Game1.player.addItemByMenuIfNecessary(HarmonyPatches.GetRandomDropFromLootTable(location, whichCan, rarity));
+            Game1.player.addItemByMenuIfNecessary(BirbShared.Utilities.ParseDropString(dropString, ModEntry.JsonAssets, ModEntry.DynamicGameAssets));
         }
 
         [CommandMethod("Get a particular drop for a given item id in the trashdrops json format")]
         public static void GetTrashDrop(string id)
         {
-            Game1.player.addItemByMenuIfNecessary(HarmonyPatches.ParseTrashDropId(id));
+            Game1.player.addItemByMenuIfNecessary(BirbShared.Utilities.ParseDropString(id, ModEntry.JsonAssets, ModEntry.DynamicGameAssets));
         }
     }
 }

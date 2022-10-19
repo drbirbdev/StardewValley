@@ -41,7 +41,7 @@ namespace BirbShared.APIs
         /// </summary>
         /// <param name="packname">The name of the pack.</param>
         /// <returns>Namespaced item names.</returns>
-        string[]? GetItemsByPack(string packname);
+        string[] GetItemsByPack(string packname);
 
         /// <summary>
         /// Gets all the items (namespaced names)

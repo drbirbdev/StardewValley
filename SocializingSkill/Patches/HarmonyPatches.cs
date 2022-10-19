@@ -17,7 +17,7 @@ namespace SocializingSkill
     class NPCDialogueResponse_Constructor
     {
 
-        static void Postfix(
+        internal static void Postfix(
             int friendshipChange,
             NPCDialogueResponse __instance)
         {
@@ -34,7 +34,7 @@ namespace SocializingSkill
             }
         }
 
-        static void Finalizer(Exception __exception)
+        internal static void Finalizer(Exception __exception)
         {
             if (__exception != null)
             {
@@ -155,10 +155,7 @@ namespace SocializingSkill
     [HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] {typeof(Dictionary<ISalable, int[]>), typeof(int), typeof(string), typeof(Func<ISalable, Farmer, int, bool>), typeof(Func<ISalable, bool>), typeof(string)})]
     class ShopMenu_Constructor1
     {
-        static void Postfix(
-            int currency,
-            ShopMenu __instance
-            )
+        internal static void Postfix(int currency, ShopMenu __instance)
         {
             if (!Game1.player.HasCustomProfession(SocializingSkill.Haggler))
             {
@@ -204,7 +201,7 @@ namespace SocializingSkill
             }
         }
 
-        static void Finalizer(Exception __exception)
+        internal static void Finalizer(Exception __exception)
         {
             if (__exception != null)
             {
@@ -219,7 +216,7 @@ namespace SocializingSkill
     class ShopMenu_Constructor2
     {
 
-        static void Postfix(ShopMenu __instance, int currency)
+        internal static void Postfix(ShopMenu __instance, int currency)
         {
             // TODO: Refactor into common location
             if (!Game1.player.HasCustomProfession(SocializingSkill.Haggler))
@@ -267,7 +264,7 @@ namespace SocializingSkill
             }
         }
 
-        static void Finalizer(Exception __exception)
+        internal static void Finalizer(Exception __exception)
         {
             if (__exception != null)
             {
@@ -412,20 +409,12 @@ namespace SocializingSkill
 
             string dropString = Utilities.GetRandomDropStringFromLootTable(ModEntry.Assets.BelovedTable, __instance.Name, heartLevel, rarity.ToString());
             Item gift = Utilities.ParseDropString(dropString);
-
-            string dialogue;
-            switch (rarity)
+            string dialogue = rarity switch
             {
-                case 0:
-                    dialogue = ModEntry.Instance.I18n.Get("dialogue.beloved");
-                    break;
-                case 1:
-                    dialogue = ModEntry.Instance.I18n.Get("dialogue.beloved.rare", new { name = Game1.player.displayName });
-                    break;
-                default:
-                    dialogue = ModEntry.Instance.I18n.Get("dialogue.beloved.superrare");
-                    break;
-            }
+                0 => (string)ModEntry.Instance.I18n.Get("dialogue.beloved"),
+                1 => (string)ModEntry.Instance.I18n.Get("dialogue.beloved.rare", new { name = Game1.player.displayName }),
+                _ => (string)ModEntry.Instance.I18n.Get("dialogue.beloved.superrare"),
+            };
             __instance.CurrentDialogue.Push(new Dialogue(dialogue, __instance));
             Game1.drawDialogue(__instance);
             Game1.player.addItemByMenuIfNecessary(gift);

@@ -84,9 +84,7 @@ namespace PanningUpgrades
         /// <summary>
         /// Removes the old Copper Pan tool from the fishing shop.
         /// </summary>
-        public static void Postfix(
-            Dictionary<ISalable, int[]> __result,
-            Farmer who)
+        public static void Postfix(Dictionary<ISalable, int[]> __result)
         {
             // Keying off of `new Pan()` doesn't work.
             // Iterate over items for sale, and remove any by the name "Copper Pan".
@@ -199,11 +197,7 @@ namespace PanningUpgrades
         /// Handles pan to hat conversion in Inventory page.  Since there's no good entry point for patching,
         /// detects changes to player.hat.Value and player.CursorSlotItem using __state.
         /// </summary>
-        public static void Prefix(
-            ref Item[] __state,
-            int x,
-            int y,
-            bool playSound)
+        public static void Prefix(ref Item[] __state)
         {
             if (Game1.player.CursorSlotItem is UpgradeablePan)
             {
@@ -218,11 +212,7 @@ namespace PanningUpgrades
         /// Handles pan to hat conversion in Inventory page.  Since there's no good entry point for patching,
         /// detects changes to player.hat.Value and player.CursorSlotItem using __state.
         /// </summary>
-        public static void Postfix(
-            Item[] __state,
-            int x,
-            int y,
-            bool playSound)
+        public static void Postfix(Item[] __state)
         {
             if (__state is not null && __state[0] is UpgradeablePan upgradeablePan && __state[1] != Game1.player.hat.Value)
             {
@@ -257,13 +247,7 @@ namespace PanningUpgrades
         /// <summary>
         /// Use a TemporaryAnimatedSprite to make the panning animation reflect upgrade level.
         /// </summary>
-        public static void Postfix(
-            int index,
-            FarmerSprite requester,
-            int interval,
-            int numberOfFrames,
-            bool flip,
-            bool secondaryArm)
+        public static void Postfix(int index)
         {
             if (index == 303)
             {
@@ -346,11 +330,7 @@ namespace PanningUpgrades
         /// <summary>
         /// Changes which pan tool is rewarded during events.
         /// </summary>
-        public static bool Prefix(
-            Event __instance,
-            GameLocation location,
-            GameTime time,
-            string[] split)
+        public static bool Prefix(Event __instance, string[] split)
         {
             if (split.Length > 1 && split[1].ToLower() == "pan")
             {
@@ -380,11 +360,7 @@ namespace PanningUpgrades
         /// <summary>
         /// Changes which pan tool is shown being held during events.
         /// </summary>
-        public static bool Prefix(
-            Event __instance,
-            GameLocation location,
-            GameTime time,
-            string[] split)
+        public static bool Prefix(Event __instance, string[] split)
         {
             if (split.Length > 1 && split[1].Equals("pan"))
             {

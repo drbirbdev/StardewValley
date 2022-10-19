@@ -19,7 +19,7 @@ namespace SocializingSkill
 
         internal ITranslationHelper I18n => this.Helper.Translation;
 
-        internal static readonly PerScreen<List<string>> BelovedCheckedToday = new PerScreen<List<string>>();
+        internal static readonly PerScreen<List<string>> BelovedCheckedToday = new();
 
         public override void Entry(IModHelper helper)
         {

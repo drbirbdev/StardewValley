@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_root", "_root", "{7BB5EFE4
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		common-nospace.targets = common-nospace.targets
 		common-unreleased.targets = common-unreleased.targets
 		common.targets = common.targets
 		LICENSE.txt = LICENSE.txt
@@ -23,7 +24,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_root", "_root", "{7BB5EFE4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocializingSkill", "SocializingSkill\SocializingSkill.csproj", "{20FAF7EA-1817-4A07-84B1-7AA7CF08536A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinterStarSpouse", "WinterStarSpouse\WinterStarSpouse.csproj", "{797A1209-B2E4-4BC9-8503-354F32B3ABF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinterStarSpouse", "WinterStarSpouse\WinterStarSpouse.csproj", "{797A1209-B2E4-4BC9-8503-354F32B3ABF9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterFestivalNotifications", "BetterFestivalNotifications\BetterFestivalNotifications.csproj", "{BCFF64B5-9EA5-4CCD-972D-108A97F389E4}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "BirbSharedSpaceCore", "BirbSharedSpaceCore\BirbSharedSpaceCore.shproj", "{19CEDB88-A912-48DA-B35D-FCE2509E70E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +56,10 @@ Global
 		{797A1209-B2E4-4BC9-8503-354F32B3ABF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{797A1209-B2E4-4BC9-8503-354F32B3ABF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{797A1209-B2E4-4BC9-8503-354F32B3ABF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCFF64B5-9EA5-4CCD-972D-108A97F389E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCFF64B5-9EA5-4CCD-972D-108A97F389E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCFF64B5-9EA5-4CCD-972D-108A97F389E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCFF64B5-9EA5-4CCD-972D-108A97F389E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +68,7 @@ Global
 		SolutionGuid = {2CC4FC86-39C6-4152-8058-FE3B146896A6}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		BirbSharedSpaceCore\BirbSharedSpaceCore.projitems*{19cedb88-a912-48da-b35d-fce2509e70e6}*SharedItemsImports = 13
 		BirbShared\BirbShared.projitems*{8f13906d-7e88-45b4-abbc-617437970163}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

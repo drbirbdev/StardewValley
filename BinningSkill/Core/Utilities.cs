@@ -20,7 +20,10 @@ namespace BinningSkill
 
             Item drop = GetBonusItem(location, whichCan, Game1.player, true);
 
-            Game1.createItemDebris(drop, position, 2, Game1.currentLocation, (int)position.Y + 64);
+            if (drop != null)
+            {
+                Game1.createItemDebris(drop, position, 2, Game1.currentLocation, (int)position.Y + 64);
+            }
         }
 
         internal static Item GetBonusItem(string location, string whichCan, Farmer player, bool doSound)

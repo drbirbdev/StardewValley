@@ -365,7 +365,8 @@ namespace SocializingSkill
         }
     }
 
-    // 
+    // Beloved Profession
+    //  - Sometimes get random gifts
     [HarmonyPatch(typeof(NPC), nameof(NPC.checkAction))]
     class NPC_CheckAction
     {
@@ -419,7 +420,7 @@ namespace SocializingSkill
                     dialogue = ModEntry.Instance.I18n.Get("dialogue.beloved");
                     break;
                 case 1:
-                    dialogue = ModEntry.Instance.I18n.Get("dialogue.beloved.rare");
+                    dialogue = ModEntry.Instance.I18n.Get("dialogue.beloved.rare", new { name = Game1.player.displayName });
                     break;
                 default:
                     dialogue = ModEntry.Instance.I18n.Get("dialogue.beloved.superrare");

@@ -21,7 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_root", "_root", "{7BB5EFE4
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocializingSkill", "SocializingSkill\SocializingSkill.csproj", "{20FAF7EA-1817-4A07-84B1-7AA7CF08536A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocializingSkill", "SocializingSkill\SocializingSkill.csproj", "{20FAF7EA-1817-4A07-84B1-7AA7CF08536A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinterStarSpouse", "WinterStarSpouse\WinterStarSpouse.csproj", "{797A1209-B2E4-4BC9-8503-354F32B3ABF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{20FAF7EA-1817-4A07-84B1-7AA7CF08536A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20FAF7EA-1817-4A07-84B1-7AA7CF08536A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20FAF7EA-1817-4A07-84B1-7AA7CF08536A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{797A1209-B2E4-4BC9-8503-354F32B3ABF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{797A1209-B2E4-4BC9-8503-354F32B3ABF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{797A1209-B2E4-4BC9-8503-354F32B3ABF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{797A1209-B2E4-4BC9-8503-354F32B3ABF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

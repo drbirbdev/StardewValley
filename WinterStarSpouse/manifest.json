@@ -1,12 +1,12 @@
 ﻿{
     "Name": "WinterStarSpouse",
     "Author": "drbirbdev",
-    "Version": "1.0.0",
+    "Version": "1.0.1",
     "Description": "Customize how often you spouse is your winter star secret santa.",
     "UniqueID": "drbirbdev.WinterStarSpouse",
     "EntryDll": "WinterStarSpouse.dll",
     "MinimumApiVersion": "3.0.0",
-    "UpdateKeys": [ "Nexus:" ],
+    "UpdateKeys": [ "Nexus:14164" ],
     "Dependencies": [
         {
             "UniqueID": "spacechase0.GenericModConfigMenu",

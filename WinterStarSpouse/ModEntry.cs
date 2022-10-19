@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using BirbShared;
 using BirbShared.Config;
 using HarmonyLib;
@@ -68,7 +69,7 @@ namespace WinterStarSpouse
                 return;
             }
 
-            Random random = new Random((int)(Game1.uniqueIDForThisGame / 2uL) ^ Game1.year ^ (int)Game1.player.UniqueMultiplayerID);
+            Random random = new((int)(Game1.uniqueIDForThisGame / 2uL) ^ Game1.year ^ (int)Game1.player.UniqueMultiplayerID);
             if (Utilities.SpouseAsRecipient())
             {
                 __instance.secretSantaRecipient = other;
@@ -82,13 +83,21 @@ namespace WinterStarSpouse
             }
 
         }
+
+        static void Finalizer(Exception __exception)
+        {
+            if (__exception != null)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
+            }
+        }
     }
 
 
     [HarmonyPatch(typeof(LetterViewerMenu), MethodType.Constructor, new Type[] {typeof(string), typeof(string), typeof(bool)})]
     class LetterViewerMenu_Constructor
     {
-        static void Postfix(string mail, string mailTitle, bool fromCollection, LetterViewerMenu __instance)
+        internal static void Postfix(string mailTitle, bool fromCollection, LetterViewerMenu __instance)
         {
             if (mailTitle != "winter_24" && mailTitle != "winter_18")
             {
@@ -100,7 +109,7 @@ namespace WinterStarSpouse
             }
             // Reload the mail text, because the parameter has already been changed in-place with the wrong gift recipient.
             Dictionary<string, string> mailDict = Game1.content.Load<Dictionary<string, string>>("Data\\mail");
-            mail = mailDict[mailTitle];
+            string mail = mailDict[mailTitle];
 
             mail = mail.Split(new string[1] { "[#]" }, StringSplitOptions.None)[0];
             mail = mail.Replace("@", Game1.player.Name);
@@ -123,6 +132,14 @@ namespace WinterStarSpouse
                 page_height = __instance.height - 128 - 32;
             }
             __instance.mailMessage = SpriteText.getStringBrokenIntoSectionsOfHeight(mail, __instance.width - 64, page_height);
+        }
+
+        internal static void Finalizer(Exception __exception)
+        {
+            if (__exception != null)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
+            }
         }
     }
 
@@ -156,7 +173,7 @@ namespace WinterStarSpouse
 
         internal static bool SpouseAsRecipient()
         {
-            Random random = new Random((int)(Game1.uniqueIDForThisGame / 2uL) ^ Game1.year ^ (int)Game1.player.UniqueMultiplayerID * 123);
+            Random random = new((int)(Game1.uniqueIDForThisGame / 2uL) ^ Game1.year ^ (int)Game1.player.UniqueMultiplayerID * 123);
 
             return random.Next(100) < ModEntry.Config.SpouseIsRecipientChance;
         }

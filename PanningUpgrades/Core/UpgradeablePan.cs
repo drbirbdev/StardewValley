@@ -5,7 +5,6 @@ using StardewValley.Tools;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using Netcode;
 using BirbShared;
 using StardewValley.Objects;
 
@@ -17,6 +16,7 @@ namespace PanningUpgrades
 
         public const int MaxUpgradeLevel = 4;
         private TemporaryAnimatedSprite tempSprite;
+        private int ToolUseDirection = 0;
 
         public UpgradeablePan() : base()
         {
@@ -73,7 +73,8 @@ namespace PanningUpgrades
             this.lastUser = who;
             who.jitterStrength = 0.25f;
             who.FarmerSprite.setCurrentFrame(123);
-            // who.faceDirection(2);
+            this.ToolUseDirection = who.FacingDirection;
+            who.faceDirection(2);
 
             int genderOffset = who.IsMale ? -1 : 0;
             this.tempSprite = new TemporaryAnimatedSprite(
@@ -96,6 +97,25 @@ namespace PanningUpgrades
             who.currentLocation.temporarySprites.Add(this.tempSprite);
 
             return false;
+        }
+
+        protected new List<Vector2> tilesAffected(Vector2 tileLocation, int power)
+        {
+            Farmer fake = new() { FacingDirection = this.ToolUseDirection };
+            return base.tilesAffected(tileLocation, power, fake);
+        }
+
+        // Copied from Tool.cs, uses new tilesAffected method (since I can't override tilesAffected, I need to override draw)
+        public override void draw(SpriteBatch b)
+        {
+            if (this.lastUser == null || this.lastUser.toolPower <= 0 || !this.lastUser.canReleaseTool)
+            {
+                return;
+            }
+            foreach (Vector2 v in this.tilesAffected(this.lastUser.GetToolLocation() / 64f, this.lastUser.toolPower))
+            {
+                b.Draw(Game1.mouseCursors, Game1.GlobalToLocal(new Vector2((int)v.X * 64, (int)v.Y * 64)), new Rectangle(194, 388, 16, 16), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0.01f);
+            }
         }
 
         public override void endUsing(GameLocation location, Farmer who)
@@ -130,7 +150,7 @@ namespace PanningUpgrades
             who.stopJittering();
             Game1.recentMultiplayerRandom = new Random((short)Game1.random.Next(-32768, 32768));
 
-            List<Vector2> tileLocations = base.tilesAffected(new Vector2(x / 64, y / 64), power, who);
+            List<Vector2> tileLocations = this.tilesAffected(new Vector2(x / 64, y / 64), power);
 
             foreach (Vector2 tileLocation in tileLocations)
             {
@@ -140,11 +160,10 @@ namespace PanningUpgrades
                     location.localSound("coin");
                     who.addItemsByMenuIfNecessary(this.GetPanItemsUpgradeable(location, who));
                     location.orePanPoint.Value = Point.Zero;
-
-                    ModEntry.Instance.Helper.Reflection.GetMethod((Pan)this, "finish").Invoke();
                     break;
                 }
             }
+            this.ToolUseDirection = 0;
             ModEntry.Instance.Helper.Reflection.GetMethod((Pan)this, "finish").Invoke();
         }
 

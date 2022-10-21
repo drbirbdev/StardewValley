@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using BirbShared.APIs;
 using Microsoft.Xna.Framework;
 using StardewValley;
@@ -90,6 +89,7 @@ namespace BirbShared
                     return new StardewValley.Object(168, 1);
                 }
 
+                int externalId = -1;
                 switch (itemType)
                 {
                     case "item":
@@ -113,19 +113,55 @@ namespace BirbShared
                     case "weapon":
                         return new MeleeWeapon(int.Parse(itemId));
                     case "ja_item":
-                        return new StardewValley.Object(jsonAssets.GetObjectId(itemId), itemCount);
+                        externalId = jsonAssets.GetObjectId(itemId);
+                        if (externalId < 0)
+                        {
+                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
+                            return new StardewValley.Object(168, 1);
+                        }
+                        return new StardewValley.Object(externalId, itemCount);
                     case "ja_bigcraftable":
-                        return new StardewValley.Object(Vector2.Zero, jsonAssets.GetBigCraftableId(itemId));
+                        externalId = jsonAssets.GetBigCraftableId(itemId);
+                        if (externalId < 0)
+                        {
+                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
+                            return new StardewValley.Object(168, 1);
+                        }
+                        return new StardewValley.Object(Vector2.Zero, externalId);
                     case "ja_hat":
-                        return new Hat(jsonAssets.GetHatId(itemId));
+                        externalId = jsonAssets.GetHatId(itemId);
+                        if (externalId < 0)
+                        {
+                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
+                            return new StardewValley.Object(168, 1);
+                        }
+                        return new Hat(externalId);
                     case "ja_weapon":
-                        return new MeleeWeapon(jsonAssets.GetWeaponId(itemId));
+                        externalId = jsonAssets.GetWeaponId(itemId);
+                        if (externalId < 0)
+                        {
+                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
+                            return new StardewValley.Object(168, 1);
+                        }
+                        return new MeleeWeapon(externalId);
                     case "ja_clothing":
-                        return new Clothing(jsonAssets.GetClothingId(itemId));
+                        externalId = jsonAssets.GetClothingId(itemId);
+                        if (externalId < 0)
+                        {
+                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
+                            return new StardewValley.Object(168, 1);
+                        }
+                        return new Clothing(externalId);
                     case "dga_item":
-                        Item item = (Item)dynamicGameAssets.SpawnDGAItem(itemId);
-                        item.Stack = itemCount;
-                        return item;
+                        object dgaItem = dynamicGameAssets.SpawnDGAItem(itemId);
+                        if (dgaItem != null && dgaItem is Item item)
+                        {
+                            item.Stack = itemCount;
+                            return item;
+                        }
+                        Log.Error($"Tried to parse DynamicGameAssets trash drop, but item was unknown {id}");
+                        return new StardewValley.Object(168, 1);
+
                     default:
                         Log.Error($"Failed to parse drop type {id}");
                         return new StardewValley.Object(168, 1);

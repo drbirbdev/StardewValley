@@ -383,8 +383,7 @@
     ],
     "RSV.3.3": [
         "ja_weapon.Father's Sorrow",
-        "ja_weapon.Icreon",
-        "ja_boots.FRA Combat Boots"
+        "ja_weapon.Icreon"
     ],
 
     // Picken's Residence (Maddie)
@@ -599,7 +598,7 @@
         "ja_item.Village Hero Sculpture"
     ],
     "RSV.16.3": [
-        "ja_weapon.The Bubble Club"
+        "ja_weapon.Bubble Club"
     ],
 
     // Electricians House (Kenneth)

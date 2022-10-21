@@ -358,7 +358,7 @@ namespace BinningSkill
             return ModEntry.AutomateLoaded;
         }
 
-        static void Postfix(
+        internal static void Postfix(
             int index,
             ref Item __result)
         {
@@ -366,13 +366,13 @@ namespace BinningSkill
             {
                 __result = Utilities.GetBonusItem("Town", index.ToString(), Game1.player, false);
             }
-            else
+            else if (ModEntry.Config.AutomateGrantsXp)
             {
                 Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromTrashSuccess);
             }
         }
 
-        static void Finalizer(Exception __exception)
+        internal static void Finalizer(Exception __exception)
         {
             if (__exception != null)
             {
@@ -397,22 +397,17 @@ namespace BinningSkill
             return true;
         }
 
-        static void Prefix(
-            object input,
-            ref bool __result,
-            object __instance)
-        {
-            // TODO: Salvager profession with automate
-        }
-
-        static void Postfix(
+        internal static void Postfix(
             object input,
             bool __result,
             object __instance)
         {
             if (__result)
             {
-                Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromRecycling);
+                if (ModEntry.Config.AutomateGrantsXp)
+                {
+                    Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromRecycling);
+                }
 
                 if (Game1.player.HasCustomProfession(BinningSkill.Environmentalist))
                 {
@@ -431,7 +426,7 @@ namespace BinningSkill
             }
         }
 
-        static void Finalizer(Exception __exception)
+        internal static void Finalizer(Exception __exception)
         {
             if (__exception != null)
             {

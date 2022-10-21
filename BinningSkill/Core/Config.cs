@@ -23,6 +23,9 @@ namespace BinningSkill
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
         public int ExperienceFromRecycling { get; set; } = 5;
 
+        [ConfigOption]
+        public bool AutomateGrantsXp { get; set; } = true;
+
         // Increase in chance of bonus drop per level.
         [ConfigPage("BonusDrops")]
         [ConfigSectionTitle("Bonus Drop Modifiers")]

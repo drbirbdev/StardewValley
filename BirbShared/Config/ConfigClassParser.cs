@@ -306,9 +306,9 @@ namespace BirbShared.Config
             string key = this.ConfigClass.I18NPrefix + TransformUtility.TransformText(possibleKey, this.ConfigClass.I18NInfixTransform) + suffix;
 
             Translation attemptedTranslation = this.I18n.Get(key);
-            if (attemptedTranslation.HasValue())
+            if (attemptedTranslation != null && attemptedTranslation.HasValue())
             {
-                return () => attemptedTranslation;
+                return () => this.I18n.Get(key);
             }
             else
             {

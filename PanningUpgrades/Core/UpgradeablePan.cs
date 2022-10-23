@@ -99,10 +99,13 @@ namespace PanningUpgrades
             return false;
         }
 
-        protected new List<Vector2> tilesAffected(Vector2 tileLocation, int power)
+        protected new List<Vector2> tilesAffected(int power)
         {
-            Farmer fake = new() { FacingDirection = this.ToolUseDirection };
-            return base.tilesAffected(tileLocation, power, fake);
+            // We want to get tilesAffected based on the farmers direction, but we want the Farmer to face down for animating
+            // so use a fake farmer for this call.
+            Farmer fake = new() { FacingDirection = this.ToolUseDirection, Position = Game1.player.Position, Sprite = Game1.player.Sprite };
+
+            return base.tilesAffected(new Vector2(fake.GetToolLocation().X / 64, fake.GetToolLocation().Y / 64), power, fake);
         }
 
         // Copied from Tool.cs, uses new tilesAffected method (since I can't override tilesAffected, I need to override draw)
@@ -112,7 +115,7 @@ namespace PanningUpgrades
             {
                 return;
             }
-            foreach (Vector2 v in this.tilesAffected(this.lastUser.GetToolLocation() / 64f, this.lastUser.toolPower))
+            foreach (Vector2 v in this.tilesAffected(this.lastUser.toolPower))
             {
                 b.Draw(Game1.mouseCursors, Game1.GlobalToLocal(new Vector2((int)v.X * 64, (int)v.Y * 64)), new Rectangle(194, 388, 16, 16), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0.01f);
             }
@@ -150,18 +153,48 @@ namespace PanningUpgrades
             who.stopJittering();
             Game1.recentMultiplayerRandom = new Random((short)Game1.random.Next(-32768, 32768));
 
-            List<Vector2> tileLocations = this.tilesAffected(new Vector2(x / 64, y / 64), power);
+            List<Vector2> tileLocations = this.tilesAffected(power);
 
+            int minX = int.MaxValue;
+            int minY = int.MaxValue;
+            int maxX = int.MinValue;
+            int maxY = int.MinValue;
             foreach (Vector2 tileLocation in tileLocations)
             {
-                if (who.currentLocation.orePanPoint.X == tileLocation.X && who.currentLocation.orePanPoint.Y == tileLocation.Y)
+                if (minX > tileLocation.X)
                 {
-                    // Copied from Pan.cs, replicate logic instead of calling base.DoFunction()
-                    location.localSound("coin");
-                    who.addItemsByMenuIfNecessary(this.GetPanItemsUpgradeable(location, who));
-                    location.orePanPoint.Value = Point.Zero;
-                    break;
+                    minX = (int)tileLocation.X;
                 }
+                if (maxX < tileLocation.X)
+                {
+                    maxX = (int)tileLocation.X;
+                }
+                if (minY > tileLocation.Y)
+                {
+                    minY = (int)tileLocation.Y;
+                }
+                if (maxY < tileLocation.Y)
+                {
+                    maxY = (int)tileLocation.Y;
+                }
+            }
+
+            // Expand the range by 1 in each direction to match vanilla behaviour
+            minX -= 1;
+            minY -= 1;
+            maxX += 1;
+            maxY += 1;
+
+            Log.Trace($"Panninng square {minX},{minY} to {maxX},{maxY}.  Does it contain {who.currentLocation.orePanPoint.X},{who.currentLocation.orePanPoint.Y}");
+
+            if (location.orePanPoint != null && !location.orePanPoint.Equals(Point.Zero)
+                && minX <= who.currentLocation.orePanPoint.X && minY <= who.currentLocation.orePanPoint.Y
+                && maxX >= who.currentLocation.orePanPoint.X && maxY >= who.currentLocation.orePanPoint.Y)
+            {
+                // Copied from Pan.cs, replicate logic instead of calling base.DoFunction()
+                location.localSound("coin");
+                who.addItemsByMenuIfNecessary(this.GetPanItemsUpgradeable(location, who));
+                location.orePanPoint.Value = Point.Zero;
             }
             this.ToolUseDirection = 0;
             ModEntry.Instance.Helper.Reflection.GetMethod((Pan)this, "finish").Invoke();

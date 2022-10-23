@@ -7,6 +7,7 @@ using BirbShared.Config;
 using BirbShared.Command;
 using BirbShared.Asset;
 using HarmonyLib;
+using System.IO;
 
 namespace PanningUpgrades
 {
@@ -47,6 +48,7 @@ namespace PanningUpgrades
             if (JsonAssets is null)
             {
                 Log.Error("Can't access the Json Assets API. Is the mod installed correctly?");
+                return;
             }
 
             SpaceCore = this.Helper.ModRegistry
@@ -55,10 +57,12 @@ namespace PanningUpgrades
             if (SpaceCore is null)
             {
                 Log.Error("Can't access the SpaceCore API. Is the mod installed correctly?");
+                return;
             }
 
             SpaceCore.RegisterSerializerType(typeof(UpgradeablePan));
-        }
 
+            JsonAssets.LoadAssets(Path.Combine(this.Helper.DirectoryPath, "assets", "PanHats"));
+        }
     }
 }

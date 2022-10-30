@@ -15,7 +15,7 @@ namespace SocializingSkill
     [HarmonyPatch(typeof(Dialogue), nameof(Dialogue.chooseResponse))]
     class Dialogue_ChooseResponse
     {
-        internal static void Postfix(
+        internal static void Prefix(
             Response response,
             Dialogue __instance,
             List<NPCDialogueResponse> ___playerResponses,
@@ -328,8 +328,8 @@ namespace SocializingSkill
         static void Postfix(Farmer __instance)
         {
             Random random = new();
-            int level = SpaceCore.Skills.GetSkillLevel(__instance, "birb.Socializing");
-            if (level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel < random.Next(100))
+            int level = SpaceCore.Skills.GetSkillLevel(__instance, "drbirbdev.Socializing");
+            if (random.Next(100) < level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel)
             {
                 // Undo vanilla friendship decay
                 // TODO: check other mods for friendship loss prevention maybe

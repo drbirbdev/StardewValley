@@ -54,7 +54,7 @@ namespace SocializingSkill
         {
             List<string> result = new()
             {
-                ModEntry.Instance.I18n.Get("skill.perk", new { bonus = 1 })
+                ModEntry.Instance.I18n.Get("skill.perk", new { bonus = ModEntry.Config.ChanceNoFriendshipDecayPerLevel })
             };
 
             return result;
@@ -62,7 +62,7 @@ namespace SocializingSkill
 
         public override string GetSkillPageHoverText(int level)
         {
-            return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level });
+            return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel });
         }
     }
 }

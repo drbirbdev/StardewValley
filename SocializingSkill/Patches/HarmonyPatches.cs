@@ -11,6 +11,51 @@ using System.Reflection;
 
 namespace SocializingSkill
 {
+    // Grant XP
+    [HarmonyPatch(typeof(Dialogue), nameof(Dialogue.chooseResponse))]
+    class Dialogue_ChooseResponse
+    {
+        internal static void Postfix(
+            Response response,
+            Dialogue __instance,
+            List<NPCDialogueResponse> ___playerResponses,
+            bool ___quickResponse)
+        {
+
+            for (int i = 0; i < ___playerResponses.Count; i++)
+            {
+                if (___playerResponses[i].responseKey == null || response.responseKey == null || !___playerResponses[i].responseKey.Equals(response.responseKey))
+                {
+                    continue;
+                }
+                if (__instance.answerQuestionBehavior != null)
+                {
+                    return;
+                }
+                if (___quickResponse)
+                {
+                    return;
+                }
+                if (Game1.isFestival())
+                {
+                    return;
+                }
+                if (___playerResponses[i].friendshipChange <= 0)
+                {
+                    return;
+                }
+                Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromEvents);
+            }
+        }
+        internal static void Finalizer(Exception __exception)
+        {
+            if (__exception != null)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
+            }
+        }
+    }
+
     // Smooth Talker Profession
     //  - adjust friendship change during dialogue
     [HarmonyPatch(typeof(NPCDialogueResponse), MethodType.Constructor, new Type[] {typeof(int), typeof(int), typeof(string), typeof(string)})]
@@ -43,6 +88,7 @@ namespace SocializingSkill
         }
     }
 
+    // Grant XP
     // Smooth Talker Profession
     //  - adjust friendship change during event
     [HarmonyPatch(typeof(Event), nameof(Event.command_friendship))]
@@ -71,6 +117,7 @@ namespace SocializingSkill
                 else
                 {
                     friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier);
+                    Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromEvents);
                 }
 
                 Game1.player.changeFriendship(friendship, character);
@@ -280,40 +327,38 @@ namespace SocializingSkill
     {
         static void Postfix(Farmer __instance)
         {
+            Random random = new();
             int level = SpaceCore.Skills.GetSkillLevel(__instance, "birb.Socializing");
-            int friendshipRecovery = level * ModEntry.Config.FriendshipRecoveryPerLevel;
-            int maxFriendshipRecovery = 10 * ModEntry.Config.FriendshipRecoveryPerLevel;
-
-            // undo original methods friendship loss, and apply custom logic
-            foreach (string name in __instance.friendshipData.Keys)
+            if (level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel < random.Next(100))
             {
-                bool single = false;
-                NPC i = Game1.getCharacterFromName(name);
-                if (i == null)
+                // Undo vanilla friendship decay
+                // TODO: check other mods for friendship loss prevention maybe
+                foreach (string name in __instance.friendshipData.Keys)
                 {
-                    i = Game1.getCharacterFromName<Child>(name, mustBeVillager: false);
-                }
-                if (i != null)
-                {
-                    if (i != null && (bool)i.datable && !__instance.friendshipData[name].IsDating() && !i.isMarried())
+                    bool single = false;
+                    NPC i = Game1.getCharacterFromName(name);
+                    if (i == null)
                     {
-                        single = true;
+                        i = Game1.getCharacterFromName<Child>(name, mustBeVillager: false);
                     }
-                    if (__instance.spouse != null && name.Equals(__instance.spouse) && !__instance.hasPlayerTalkedToNPC(name))
+                    if (i != null)
                     {
-                        __instance.changeFriendship(-maxFriendshipRecovery + friendshipRecovery + 10, i);
-                    }
-                    else if (i != null && __instance.friendshipData[name].IsDating() && !__instance.hasPlayerTalkedToNPC(name) && __instance.friendshipData[name].Points < 2500)
-                    {
-                        __instance.changeFriendship(-maxFriendshipRecovery + friendshipRecovery + 3, i);
-                    }
-                    if (__instance.hasPlayerTalkedToNPC(name))
-                    {
-                        __instance.friendshipData[name].TalkedToToday = false;
-                    }
-                    else if ((!single && __instance.friendshipData[name].Points < 2500) || (single && __instance.friendshipData[name].Points < 2000))
-                    {
-                        __instance.changeFriendship(-maxFriendshipRecovery + friendshipRecovery + 2, i);
+                        if (i != null && (bool)i.datable && !__instance.friendshipData[name].IsDating() && !i.isMarried())
+                        {
+                            single = true;
+                        }
+                        if (__instance.spouse != null && name.Equals(__instance.spouse) && !__instance.hasPlayerTalkedToNPC(name))
+                        {
+                            __instance.changeFriendship(20, i);
+                        }
+                        else if (i != null && __instance.friendshipData[name].IsDating() && !__instance.hasPlayerTalkedToNPC(name) && __instance.friendshipData[name].Points < 2500)
+                        {
+                            __instance.changeFriendship(10, i);
+                        }
+                        else if ((!single && __instance.friendshipData[name].Points < 2500) || (single && __instance.friendshipData[name].Points < 2000))
+                        {
+                            __instance.changeFriendship(2, i);
+                        }
                     }
                 }
             }

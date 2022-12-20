@@ -5,6 +5,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using BirbShared.Asset;
 using BirbShared.APIs;
+using HarmonyLib;
 
 namespace RanchingToolUpgrades
 {
@@ -32,7 +33,7 @@ namespace RanchingToolUpgrades
         private void GameLoop_GameLaunched(object sender, GameLaunchedEventArgs e)
         {
             new ConfigClassParser(this, Config).ParseConfigs();
-            HarmonyPatches.Patch(this.ModManifest.UniqueID);
+            new Harmony(this.ModManifest.UniqueID).PatchAll();
             new CommandClassParser(this.Helper.ConsoleCommands, new Command()).ParseCommands();
 
             SpaceCore = this.Helper.ModRegistry
@@ -41,6 +42,7 @@ namespace RanchingToolUpgrades
             if (SpaceCore is null)
             {
                 Log.Error("Can't access the SpaceCore API. Is the mod installed correctly?");
+                return;
             }
 
             SpaceCore.RegisterSerializerType(typeof(UpgradeablePail));

@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using BirbShared;
 using System.Reflection;
-using static StardewValley.FarmerSprite;
 using StardewValley.Tools;
+using System.Reflection.Emit;
 
 namespace PanningUpgrades
 {
@@ -424,6 +424,73 @@ namespace PanningUpgrades
                 return false;
             }
             return true;
+        }
+
+        static void Finalizer(Exception __exception)
+        {
+            if (__exception != null)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
+            }
+        }
+    }
+
+    // 3rd party
+    // Fix Wear More Rings incompatibility
+    [HarmonyPatch("StardewHack.WearMoreRings.ModEntry", "EquipmentClick")]
+    class WearMoreRings_ModEntry_EquipmentClick
+    {
+        public static bool Prepare()
+        {
+            return ModEntry.Instance.Helper.ModRegistry.IsLoaded("bcmpinc.WearMoreRings");
+        }
+
+        public static void Prefix(
+            ClickableComponent icon
+            )
+        {
+            if (icon.name == "Hat" && Game1.player.CursorSlotItem is UpgradeablePan pan)
+            {
+                Game1.player.CursorSlotItem = UpgradeablePan.PanToHat(pan);
+            }
+        }
+
+        static void Finalizer(Exception __exception)
+        {
+            if (__exception != null)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
+            }
+        }
+    }
+
+    // Allow sending pan to upgrade in the mail with Mail Services
+    [HarmonyPatch("MailServicesMod.ToolUpgradeOverrides", "mailbox")]
+    class MailServicesMod_ToolUpgradeOverrides_Mailbox
+    {
+        public static bool Prepare()
+        {
+            return ModEntry.Instance.Helper.ModRegistry.IsLoaded("Digus.MailServicesMod");
+        }
+
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var code = new List<CodeInstruction>(instructions);
+
+            for (int i = 0; i < code.Count; i++)
+            {
+                if (code[i].Is(OpCodes.Isinst, typeof(Axe)))
+                {
+                    yield return new CodeInstruction(OpCodes.Isinst, typeof(UpgradeablePan));
+                    yield return code[i + 1];
+                    yield return code[i + 2];
+                    yield return code[i + 3];
+                    yield return code[i];
+                } else
+                {
+                    yield return code[i];
+                }
+            }
         }
 
         static void Finalizer(Exception __exception)

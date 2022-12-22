@@ -17,14 +17,14 @@ namespace RanchingToolUpgrades
             Dictionary<ISalable, int[]> __result,
             Farmer who)
         {
-            UpgradeablePail.AddToShopStock(itemPriceAndStock: __result, who: who);
-            UpgradeableShears.AddToShopStock(itemPriceAndStock: __result, who: who);
-        }
-        static void Finalizer(Exception __exception)
-        {
-            if (__exception != null)
+            try
             {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
+                UpgradeablePail.AddToShopStock(itemPriceAndStock: __result, who: who);
+                UpgradeableShears.AddToShopStock(itemPriceAndStock: __result, who: who);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
             }
         }
     }
@@ -35,47 +35,47 @@ namespace RanchingToolUpgrades
         public static bool Prefix(
             Farmer who)
         {
-            Item mrg = who.mostRecentlyGrabbedItem;
-            if (mrg is UpgradeablePail || mrg is UpgradeableShears)
+            try
             {
-                Rectangle r;
-                if (mrg is UpgradeablePail)
+                Item mrg = who.mostRecentlyGrabbedItem;
+                if (mrg is UpgradeablePail || mrg is UpgradeableShears)
                 {
-                    r = UpgradeablePail.IconSourceRectangle((who.mostRecentlyGrabbedItem as Tool).UpgradeLevel);
-                } else
-                {
-                    r = UpgradeableShears.IconSourceRectangle((who.mostRecentlyGrabbedItem as Tool).UpgradeLevel);
+                    Rectangle r;
+                    if (mrg is UpgradeablePail)
+                    {
+                        r = UpgradeablePail.IconSourceRectangle((who.mostRecentlyGrabbedItem as Tool).UpgradeLevel);
+                    }
+                    else
+                    {
+                        r = UpgradeableShears.IconSourceRectangle((who.mostRecentlyGrabbedItem as Tool).UpgradeLevel);
+                    }
+                    Game1.currentLocation.temporarySprites.Add(new TemporaryAnimatedSprite(
+                        textureName: ModEntry.Assets.SpritesPath,
+                        sourceRect: r,
+                        animationInterval: 2500f,
+                        animationLength: 1,
+                        numberOfLoops: 0,
+                        position: who.Position + new Vector2(0f, -124f),
+                        flicker: false,
+                        flipped: false,
+                        layerDepth: 1f,
+                        alphaFade: 0f,
+                        color: Color.White,
+                        scale: 4f,
+                        scaleChange: 0f,
+                        rotation: 0f,
+                        rotationChange: 0f)
+                    {
+                        motion = new Vector2(0f, -0.1f)
+                    });
+                    return false;
                 }
-                Game1.currentLocation.temporarySprites.Add(new TemporaryAnimatedSprite(
-                    textureName: ModEntry.Assets.SpritesPath,
-                    sourceRect: r,
-                    animationInterval: 2500f,
-                    animationLength: 1,
-                    numberOfLoops: 0,
-                    position: who.Position + new Vector2(0f, -124f),
-                    flicker: false,
-                    flipped: false,
-                    layerDepth: 1f,
-                    alphaFade: 0f,
-                    color: Color.White,
-                    scale: 4f,
-                    scaleChange: 0f,
-                    rotation: 0f,
-                    rotationChange: 0f)
-                {
-                    motion = new Vector2(0f, -0.1f)
-                });
-                return false;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
             }
             return true;
-        }
-
-        static void Finalizer(Exception __exception)
-        {
-            if (__exception != null)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
-            }
         }
     }
 
@@ -86,29 +86,29 @@ namespace RanchingToolUpgrades
             Dictionary<ISalable, int[]> __result
             )
         {
-            // Keying off of `new MilkPail()` or `new Shears()` doesn't work.
-            // Iterate over items for sale, and remove any by the name "Milk Pail" or "Shears"
-            foreach (ISalable key in __result.Keys)
+            try
             {
-                if (key.Name.Equals("Milk Pail") || key.Name.Equals("Shears"))
+                // Keying off of `new MilkPail()` or `new Shears()` doesn't work.
+                // Iterate over items for sale, and remove any by the name "Milk Pail" or "Shears"
+                foreach (ISalable key in __result.Keys)
                 {
-                    __result.Remove(key);
+                    if (key.Name.Equals("Milk Pail") || key.Name.Equals("Shears"))
+                    {
+                        __result.Remove(key);
+                    }
+                }
+                if (Game1.player.hasItemWithNameThatContains("Pail") == null)
+                {
+                    __result.Add(new UpgradeablePail(0), new int[2] { ModEntry.Config.PailBuyCost, 1 });
+                }
+                if (Game1.player.hasItemWithNameThatContains("Shears") == null)
+                {
+                    __result.Add(new UpgradeableShears(0), new int[2] { ModEntry.Config.ShearsBuyCost, 1 });
                 }
             }
-            if (Game1.player.hasItemWithNameThatContains("Pail") == null)
+            catch (Exception e)
             {
-                __result.Add(new UpgradeablePail(0), new int[2] { ModEntry.Config.PailBuyCost, 1 });
-            }
-            if (Game1.player.hasItemWithNameThatContains("Shears") == null)
-            {
-                __result.Add(new UpgradeableShears(0), new int[2] { ModEntry.Config.ShearsBuyCost, 1 });
-            }
-        }
-        static void Finalizer(Exception __exception)
-        {
-            if (__exception != null)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
             }
         }
     }
@@ -145,14 +145,6 @@ namespace RanchingToolUpgrades
                 {
                     yield return code[i];
                 }
-            }
-        }
-
-        static void Finalizer(Exception __exception)
-        {
-            if (__exception != null)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{__exception}");
             }
         }
     }

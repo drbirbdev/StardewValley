@@ -428,16 +428,16 @@ namespace BinningSkill
 
         public static void Prefix(
             ref object[] __state,
-            GameLocation __location,
-            int __index
+            GameLocation location,
+            int index
             )
         {
             try
             {
                 __state = new object[]
                 {
-                    __index,
-                    __location.debris.Count,
+                    index,
+                    location.debris.Count,
                 };
             }
             catch (Exception e)
@@ -448,14 +448,14 @@ namespace BinningSkill
 
         public static void Postfix(
             object[] __state,
-            Location __tileLocation
+            Location tileLocation
             )
         {
             try
             {
                 if (__state != null && __state.Length > 0)
                 {
-                    Utilities.DoTrashCanCheck("Town", __state[0].ToString(), (int)__state[1], Utilities.GetItemPosition(__tileLocation));
+                    Utilities.DoTrashCanCheck("Town", __state[0].ToString(), (int)__state[1], Utilities.GetItemPosition(tileLocation));
                 }
             }
             catch (Exception e)
@@ -524,13 +524,11 @@ namespace BinningSkill
                         {
                             exp = ModEntry.Config.ExperienceFromTrashBonus * (int)(Math.Pow(2, rarity));
                         }
-
-                        int currExp = BirbShared.Utilities.GetIntData(____chest, "drbirbdev.BinningSkill/GarbageDayExp");
-                        exp += currExp;
-
-                        ____chest.modData.Add("drbirbdev.BinningSkill/GarbageDayExp", exp.ToString());
                     }
-
+                    int currExp = BirbShared.Utilities.GetIntData(____chest, "drbirbdev.BinningSkill/GarbageDayExp");
+                    ____chest.modData.Remove("drbirbdev.BinningSkill/GarbageDayExp");
+                    exp += currExp;
+                    ____chest.modData.Add("drbirbdev.BinningSkill/GarbageDayExp", exp.ToString());
                 }
             }
             catch (Exception e)
@@ -548,7 +546,7 @@ namespace BinningSkill
             return ModEntry.Instance.Helper.ModRegistry.IsLoaded("furyx639.GarbageDay");
         }
 
-        public static bool Prefix(
+        public static void Postfix(
             Chest ____chest)
         {
             try
@@ -564,7 +562,28 @@ namespace BinningSkill
             {
                 Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
             }
-            return true;
+        }
+    }
+
+    [HarmonyPatch("StardewMods.GarbageDay.GarbageCan", "EmptyTrash")]
+    class GarbageDay_GarbageCan_EmptyTrash
+    {
+        public static bool Prepare()
+        {
+            return ModEntry.Instance.Helper.ModRegistry.IsLoaded("furyx639.GarbageDay");
+        }
+
+        public static void Postfix(
+            Chest ____chest)
+        {
+            try
+            {
+                ____chest.modData.Remove("drbirbdev.BinningSkill/GarbageDayExp");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            }
         }
     }
 
@@ -618,7 +637,14 @@ namespace BinningSkill
             }
             if (ModEntry.Instance.Helper.ModRegistry.IsLoaded("furyx639.GarbageDay"))
             {
-                yield return AccessTools.Method("StardewMods.GarbageDay.ModEntry:OnButtonPress");
+                if (AccessTools.Method("StardewMods.GarbageDay.GarbageDay:OnButtonPressed") is null)
+                {
+                    yield return AccessTools.Method("StardewMods.GarbageDay.ModEntry:OnButtonPressed");
+                }
+                else
+                {
+                    yield return AccessTools.Method("StardewMods.GarbageDay.GarbageDay:OnButtonPressed");
+                }
             }
         }
 

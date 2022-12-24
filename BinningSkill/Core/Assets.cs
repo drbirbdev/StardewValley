@@ -7,9 +7,9 @@ namespace BinningSkill
     [AssetClass]
     public class Assets
     {
-        [AssetProperty("assets/iconA.png")]
+        [AssetProperty("assets/binningiconA.png")]
         public Texture2D IconA { get; set; }
-        [AssetProperty("assets/iconB.png")]
+        [AssetProperty("assets/binningiconB.png")]
         public Texture2D IconB { get; set; }
 
 

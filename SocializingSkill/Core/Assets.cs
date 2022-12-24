@@ -7,9 +7,9 @@ namespace SocializingSkill
     [AssetClass]
     internal class Assets
     {
-        [AssetProperty("assets/iconA.png")]
+        [AssetProperty("assets/socializingiconA.png")]
         public Texture2D IconA { get; set; }
-        [AssetProperty("assets/iconB.png")]
+        [AssetProperty("assets/socializingiconB.png")]
         public Texture2D IconB { get; set; }
 
 

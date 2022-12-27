@@ -63,7 +63,7 @@ jobs:
           echo "mod_id=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.UpdateKeys[] | split(\":\") | select(.[0] == \"Nexus\") | .[1]')" >> "$GITHUB_OUTPUT"
 
       - name: Upload Mod File
-        uses: Vodianoi/uploadMod@v1
+        uses: Vodianoi/uploadMod@0.9.18
         with:
           mod-id: ${{ steps.read_manifest.output.mod_id }}
           archive-file: "_releases/Release/${{ matrix.zip }}"

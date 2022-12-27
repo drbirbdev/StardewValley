@@ -16,13 +16,13 @@ jobs:
         id: get_changed
         uses: tj-actions/changed-files@v35
         with:
-          dir_names: true
+          dir_names: "true"
           dir_names_max_depth: 1
           files_ignore: |
             .github/**
             BirbShared*/**
             *.*
-          json: true
+          json: "true"
       - name: Print directories
         run: echo ${{ steps.get_changed.outputs.all_changed_and_modified_files }}
     outputs:

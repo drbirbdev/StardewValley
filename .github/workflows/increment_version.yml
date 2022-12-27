@@ -39,9 +39,10 @@ jobs:
           fail: true
 
       - name: Update Version
-        run: cd ./${{ matrix.subdir }}
-        run: jq '.Version = (.Version | split(".") | .[:-1] + [(.[2] | tonumber + 1 | tostring)] | join("."))' manifest.json > manifest.json
-        
+        run: |
+          cd ./${{ matrix.subdir }}
+          jq '.Version = (.Version | split(".") | .[:-1] + [(.[2] | tonumber + 1 | tostring)] | join("."))' manifest.json > manifest.json
+
       - name: Commit version change
         run: |
           git config user.name github-actions

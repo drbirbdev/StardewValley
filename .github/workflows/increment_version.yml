@@ -38,8 +38,7 @@ jobs:
     needs: mods_json
     if: ${{ needs.mods_json.outputs.matrix != '[]'}}
     strategy:
-      matrix:
-        subdir: ${{ fromJson(needs.mods_json.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.mods_json.outputs.matrix) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

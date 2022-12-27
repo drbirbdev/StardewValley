@@ -67,7 +67,7 @@ jobs:
         with:
           mod-id: ${{ steps.read_manifest.output.mod_id }}
           archive-file: ${{ matrix.zip }}
-          filename: ${{ steps.read_manifest.output.name }}
+          file-name: ${{ steps.read_manifest.output.name }}
           version: ${{ steps.read_manifest.output.version }}
           description: ${{ steps.read_manifest.output.description }}
           category: "Main"

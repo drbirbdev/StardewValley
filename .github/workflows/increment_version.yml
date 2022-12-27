@@ -1,0 +1,34 @@
+name: Increment manifest version on push
+
+env:
+  SUBDIR: BetterFestivalNotifications
+  
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  provide_subdirs_json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Stockopedia/action-get-changed-files@v1
+        id: get_changed
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ignore: "**/+(.github)"
+          foldersOnly: true
+          format: json
+    outputs:
+      matrix: ${{ steps.get_changed.outputs.changed }}
+          
+  increment_version:
+    runs-on: ubuntu-latest
+    needs: provide_subdirs_json
+    strategy:
+      matrix:
+        subdir: ${{ fromJson(needs.provide_subdirs_json.outputs.matrix) }}
+    steps:
+      - name: Echo changed files
+        run: echo ${{ matrix.subdir }}
+      

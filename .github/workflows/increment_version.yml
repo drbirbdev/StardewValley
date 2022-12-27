@@ -31,6 +31,7 @@ jobs:
   increment_version:
     runs-on: ubuntu-latest
     needs: provide_subdirs_json
+    if: ${{ needs.provide_subdirs_json.outputs.matrix != "[]"}}
     strategy:
       matrix:
         subdir: ${{ fromJson(needs.provide_subdirs_json.outputs.matrix) }}

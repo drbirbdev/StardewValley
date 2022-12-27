@@ -12,13 +12,16 @@ jobs:
   provide_subdirs_json:
     runs-on: ubuntu-latest
     steps:
-      - uses: Stockopedia/action-get-changed-files@v1
+      - name: Get changed subdirectories
+        uses: Stockopedia/action-get-changed-files@v1
         id: get_changed
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          ignore: "+(.github|BirbShared)*"
+          ignore: "**/+(.github|BirbShared*)/**"
           foldersOnly: true
           format: json
+      - name: Print directories
+        run: echo ${{ steps.get_changed.outputs.changed }}
     outputs:
       matrix: ${{ steps.get_changed.outputs.changed }}
           

@@ -16,7 +16,7 @@ jobs:
         id: get_changed
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          ignore: "**/+(.github)"
+          ignore: "+(.github|BirbShared)*"
           foldersOnly: true
           format: json
     outputs:

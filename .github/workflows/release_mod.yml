@@ -46,13 +46,13 @@ jobs:
       - name: Check Zip Exists
         uses: andstor/file-existence-action@v2
         with:
-          files: "_releases/Release/${{ matrix.zip }}"
+          files: ${{ matrix.zip }}
           fail: true
 
       - name: Parse Manifest File
         id: parse_manifest
         run: |
-          echo "manifest=$(echo ${{ matrix.zip }} | cut -d " " -f 1)/manifest.json" >> "$GITHUB_OUTPUT"
+          echo "manifest=$(echo ${{ matrix.zip }} | cut -d "/" -f 3 | cut -d " " -f 1)/manifest.json" >> "$GITHUB_OUTPUT"
 
       - name: Read Manifest
         id: read_manifest
@@ -66,7 +66,7 @@ jobs:
         uses: Vodianoi/uploadMod@0.9.18
         with:
           mod-id: ${{ steps.read_manifest.output.mod_id }}
-          archive-file: "_releases/Release/${{ matrix.zip }}"
+          archive-file: ${{ matrix.zip }}
           filename: ${{ steps.read_manifest.output.name }}
           version: ${{ steps.read_manifest.output.version }}
           description: ${{ steps.read_manifest.output.description }}

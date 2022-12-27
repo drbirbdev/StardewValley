@@ -27,7 +27,8 @@ jobs:
         if: ${{ steps.get_new.outputs.added_files != '[]' }}
         run: |
           echo ${{ steps.get_new.outputs.added_files }}
-          echo "matrix={\"zip\"${{ steps.get_new.outputs.added_files }}}" >> "$GITHUB_OUTPUT"
+          echo "matrix={\"zip\":${{ steps.get_new.outputs.added_files }}}" >> "$GITHUB_OUTPUT"
+
     outputs:
       matrix: ${{ steps.set_matrix.outputs.matrix}}
 

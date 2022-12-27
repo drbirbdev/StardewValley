@@ -1,0 +1,78 @@
+name: Release Mods
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '_releeases/Release/**'
+
+jobs:
+  releases_json:
+    name: Get New Releases
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get Releases Json
+        id: get_new
+        uses: tj-actions/changed-files@v35
+        with:
+          files: '_releases/Release'
+          json: "true"
+        
+      - name: Set Matrix
+        id: set_matrix
+        if: ${{ steps.get_new.outputs.added_files != '[]' }}
+        run: |
+          echo ${{ steps.get_new.outputs.added_files }}
+          echo "matrix={\"zip\"${{ steps.get_new.outputs.added_files }}}" >> "$GITHUB_OUTPUT"
+    outputs:
+      matrix: ${{ steps.set_matrix.outputs.matrix}}
+
+  upload_file:
+    name: Upload File
+    runs-on: ubuntu-latest
+    needs: releases_json
+    if: ${{ needs.releases_json.outputs.matrix != ''}}
+    strategy:
+      matrix: ${{ fromJson(needs.releases_json.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check Zip Exists
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "_releases/Release/${{ matrix.zip }}"
+          fail: true
+
+      - name: Parse Manifest File
+        id: parse_manifest
+        run: |
+          echo "manifest=$(echo ${{ matrix.zip }} | cut -d " " -f 1)/manifest.json" >> "$GITHUB_OUTPUT"
+
+      - name: Read Manifest
+        id: read_manifest
+        run: |
+          echo "name=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.Name')" >> "$GITHUB_OUTPUT"
+          echo "version=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.Version')" >> "$GITHUB_OUTPUT"
+          echo "description=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.Description')" >> "$GITHUB_OUTPUT"
+          echo "mod_id=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.UpdateKeys[] | split(\":\") | select(.[0] == \"Nexus\") | .[1]')" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Mod File
+        uses: Vodianoi/uploadMod@v1
+        with:
+          mod-id: ${{ steps.read_manifest.output.mod_id }}
+          archive-file: "_releases/Release/${{ matrix.zip }}"
+          filename: ${{ steps.read_manifest.output.name }}
+          version: ${{ steps.read_manifest.output.version }}
+          description: ${{ steps.read_manifest.output.description }}
+          category: "Main"
+          game: "stardewvalley???"
+        secrets:
+          NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
+          NEXUSMOD_COOKIE_NEXUSID: ${{ secrets.NEXUSMOD_COOKIE_NEXUSID }}
+          NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
+

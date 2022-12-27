@@ -29,6 +29,24 @@ jobs:
       matrix:
         subdir: ${{ fromJson(needs.provide_subdirs_json.outputs.matrix) }}
     steps:
-      - name: Echo changed files
-        run: echo ${{ matrix.subdir }}
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check file exists
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "${{ matrix.subdir }}/manifest.json"
+          fail: true
+
+      - name: Update Version
+        run: cd ./${{ matrix.subdir }}
+        run: jq '.Version = (.Version | split(".") | .[:-1] + [(.[2] | tonumber + 1 | tostring)] | join("."))' manifest.json > manifest.json
+        
+      - name: Commit version change
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add manifest.json
+          git commit -m "Auto-increment version number"
+          git push
       

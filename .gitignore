@@ -27,6 +27,6 @@ _ReSharper*/
 *.nuget.targets
 
 # release zips
-_releases/*
+_releases/Debug/*
 /UpgradeLog.htm
 /Backup

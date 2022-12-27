@@ -71,7 +71,6 @@ jobs:
           description: ${{ steps.read_manifest.output.description }}
           category: "Main"
           game: "stardewvalley???"
-        secrets:
           NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
           NEXUSMOD_COOKIE_NEXUSID: ${{ secrets.NEXUSMOD_COOKIE_NEXUSID }}
           NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}

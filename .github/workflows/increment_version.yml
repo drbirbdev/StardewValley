@@ -41,7 +41,8 @@ jobs:
       - name: Update Version
         run: |
           cd ./${{ matrix.subdir }}
-          jq '.Version = (.Version | split(".") | .[:-1] + [(.[2] | tonumber + 1 | tostring)] | join("."))' manifest.json > manifest.json
+          jq '.Version = (.Version | split(".") | .[:-1] + [(.[2] | tonumber + 1 | tostring)] | join("."))' manifest.json > manifest_TEMP.json 
+          mv manifest_TEMP.json manifest.json
 
       - name: Commit version change
         run: |

@@ -21,6 +21,8 @@ namespace WinterStarSpouse
             ModEntry.Instance = this;
             Log.Init(this.Monitor);
 
+            Log.Trace("test");
+
             ModEntry.Config = helper.ReadConfig<Config>();
 
             this.Helper.Events.GameLoop.GameLaunched += this.GameLoop_GameLaunched;

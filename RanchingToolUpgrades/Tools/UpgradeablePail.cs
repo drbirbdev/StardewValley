@@ -39,6 +39,7 @@ namespace RanchingToolUpgrades
 
         public static bool CanBeUpgraded()
         {
+            Log.Trace("test");
             Tool pail = Game1.player.getToolFromName("Pail");
             return pail is not null && pail.UpgradeLevel != MaxUpgradeLevel;
         }

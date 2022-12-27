@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using BirbShared;
 using BirbShared.APIs;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
@@ -17,8 +15,6 @@ namespace BirbShared.Config
         private readonly IGenericModConfigMenuApi Api;
         private readonly ITranslationHelper I18n;
         private readonly ConfigClass ConfigClass;
-
-
 
         public ConfigClassParser(IMod mod, object config)
         {

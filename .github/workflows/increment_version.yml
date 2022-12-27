@@ -22,6 +22,7 @@ jobs:
           files_ignore: |
             .github/**
             BirbShared*/**
+            _releases/**
             *.*
           json: "true"
       - name: Set Matrix

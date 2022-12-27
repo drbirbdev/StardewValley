@@ -27,6 +27,7 @@ namespace BinningSkill
 
         public override void Entry(IModHelper helper)
         {
+            Log.Trace("testing");
             Instance = this;
             Log.Init(this.Monitor);
 

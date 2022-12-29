@@ -57,19 +57,19 @@ jobs:
       - name: Read Manifest
         id: read_manifest
         run: |
-          echo "name=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.Name')" >> "$GITHUB_OUTPUT"
-          echo "version=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.Version')" >> "$GITHUB_OUTPUT"
-          echo "description=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.Description')" >> "$GITHUB_OUTPUT"
-        # echo "mod_id=$(cat ${{ steps.parse_manifest.output.manifest }} | jq -r '.UpdateKeys[] | split(\":\") | select(.[0] == \"Nexus\") | .[1]')" >> "$GITHUB_OUTPUT"
+          echo "name=$(cat ${{ steps.parse_manifest.outputs.manifest }} | jq -r '.Name')" >> "$GITHUB_OUTPUT"
+          echo "version=$(cat ${{ steps.parse_manifest.outputs.manifest }} | jq -r '.Version')" >> "$GITHUB_OUTPUT"
+          echo "description=$(cat ${{ steps.parse_manifest.outputs.manifest }} | jq -r '.Description')" >> "$GITHUB_OUTPUT"
+          echo "mod_id=$(cat ${{ steps.parse_manifest.outputs.manifest }} | jq -r '.UpdateKeys[] | split(\":\") | select(.[0] == \"Nexus\") | .[1]')" >> "$GITHUB_OUTPUT"
 
       - name: Upload Mod File
         uses: Vodianoi/uploadMod@0.9.40
         with:
-          mod-id: ${{ steps.read_manifest.output.mod_id }}
-          archive-file: ${{ matrix.zip }}
-          file-name: "${{ steps.read_manifest.output.name }}"
-          version: ${{ steps.read_manifest.output.version }}
-          description: ${{ steps.read_manifest.output.description }}
+          mod-id: ${{ steps.read_manifest.outputs.mod_id }}
+          archive-file: "${{ matrix.zip }}"
+          file-name: ${{ steps.read_manifest.outputs.name }}
+          version: ${{ steps.read_manifest.outputs.version }}
+          description: ${{ steps.read_manifest.outputs.description }}
           category: "Main"
           game: "stardewvalley"
           NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}

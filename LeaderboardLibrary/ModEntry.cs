@@ -18,7 +18,7 @@ namespace LeaderboardLibrary
 
         internal static ModEntry Instance;
         internal static AmazonDynamoDBClient DdbClient;
-        internal static PerScreen<GlobalModData> GlobalModData;
+        internal static readonly PerScreen<GlobalModData> GlobalModData = new PerScreen<GlobalModData>();
         internal static LocalModData LocalModData;
 
         public override void Entry(IModHelper helper)
@@ -56,14 +56,17 @@ namespace LeaderboardLibrary
             this.Helper.Events.Multiplayer.PeerConnected += this.Multiplayer_PeerConnected;
         }
 
-
         private void GameLoop_SaveLoaded(object sender, StardewModdingAPI.Events.SaveLoadedEventArgs e)
         {
-            // TODO: test if ShareUUID message should be sent here, or if PeerConnected works
+            if (!Context.IsMainPlayer)
+            {
+                Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { ModManifest.UniqueID });
+            }
         }
 
         private void Multiplayer_PeerConnected(object sender, StardewModdingAPI.Events.PeerConnectedEventArgs e)
         {
+            Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { ModManifest.UniqueID });
             if (e.Peer.IsSplitScreen)
             {
                 if (e.Peer.ScreenID != 0)
@@ -76,18 +79,10 @@ namespace LeaderboardLibrary
                     GlobalModData.SetValueForScreen(e.Peer.ScreenID.Value, globalData);
                 }
             }
-            else
-            {
-                Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { ModManifest.UniqueID });
-            }
         }
 
         private void Multiplayer_ModMessageReceived(object sender, StardewModdingAPI.Events.ModMessageReceivedEventArgs e)
         {
-            if (Context.ScreenId != 0)
-            {
-                return;
-            }
             if (e.FromModID == ModEntry.Instance.ModManifest.UniqueID && e.Type == "ShareUUID" && e.FromPlayerID != Game1.player.UniqueMultiplayerID)
             {
                 LocalModData.MultiplayerUUIDs.Add(e.ReadAs<string>());

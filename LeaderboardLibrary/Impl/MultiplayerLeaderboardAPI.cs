@@ -1,3 +1,4 @@
+using BirbShared;
 using StardewModdingAPI;
 using StardewValley;
 
@@ -18,11 +19,6 @@ namespace LeaderboardLibrary
 
         private void Multiplayer_ModMessageReceived(object sender, StardewModdingAPI.Events.ModMessageReceivedEventArgs e)
         {
-            // TODO: check if split-screen players send messages to the main player
-            if (Context.ScreenId != 0)
-            {
-                return;
-            }
             if (e.FromModID == ModEntry.Instance.ModManifest.UniqueID && e.Type == $"{ModId}:UploadScore" && e.FromPlayerID != Game1.player.UniqueMultiplayerID)
             {
                 string name = Game1.getFarmer(e.FromPlayerID)?.Name;
@@ -30,7 +26,6 @@ namespace LeaderboardLibrary
                 ((CachedLeaderboardAPI)Delegate).UpdateCache(message.Stat, message.Score, message.UserUUID, name);
             }
         }
-
 
         public override bool UploadScore(string stat, int score)
         {

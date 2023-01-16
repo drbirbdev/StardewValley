@@ -147,7 +147,7 @@ namespace LeaderboardLibrary
 
                 if (TopLeaderboards[stat].Count() < 10 || TopLeaderboards[stat].Last<LeaderboardStat>().Score < score)
                 {
-                    LeaderboardStat existing = TopLeaderboards[stat].Find((match) => match.UserUUID == (userUuid ?? ModEntry.GlobalModData.UserUUID));
+                    LeaderboardStat existing = TopLeaderboards[stat].Find((match) => match.UserUUID == userUuid);
                     if (existing is not null)
                     {
                         TopLeaderboards[stat].Remove(existing);

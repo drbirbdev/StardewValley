@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
-using Amazon.DynamoDBv2.Model;
 using BirbShared;
 using HarmonyLib;
 using StardewValley;
@@ -17,34 +15,10 @@ namespace JunimoKartGlobalRankings
         {
             try
             {
-                Task response = ModEntry.DdbContext.SaveAsync(new JunimoKartDDB()
+                if(!ModEntry.LeaderboardAPI.UploadScore("JunimoKartScore", ___score))
                 {
-                    User = ModEntry.Credentials.GetIdentityId(),
-                    Score = ___score,
-                    Game = "JunimoKart",
-                    Name = Game1.player.Name,
-                    Farm = Game1.player.farmName,
-                    Timestamp = DateTime.UtcNow.ToString("o")
-                });
-                response.ContinueWith((task) =>
-                {
-                    if (task.IsFaulted)
-                    {
-                        Log.Error(task.Exception.Message);
-                        return;
-                    }
-                    if (task.IsCanceled)
-                    {
-                        Log.Error("JunimoKart Save Score was canceled");
-                        return;
-                    }
-                    if (!task.IsCompleted)
-                    {
-                        Log.Error("JunimoKart Save Score failed to complete");
-                        return;
-                    }
-                    Log.Info("JunimoKart saved score to global rankings");
-                });
+                    Log.Error("Failed to upload JunimoKart high score");
+                }
             }
             catch (Exception e)
             {
@@ -54,66 +28,17 @@ namespace JunimoKartGlobalRankings
 
     }
 
-    [HarmonyPatch(typeof(NetLeaderboards), nameof(NetLeaderboards.LoadScores))]
-    class NetLeaderboards_LoadScores
+    [HarmonyPatch(typeof(NetLeaderboards), nameof(NetLeaderboards.AddScore))]
+    class NetLeaderboards_AddScore
     {
-        internal static bool Prefix(
-            List<KeyValuePair<string, int>> scores,
-            NetLeaderboards __instance)
+        internal static bool Prefix(string name, int score)
         {
             try
             {
-                __instance.entries.Clear();
-                QueryRequest queryRequest = new QueryRequest()
+                if (Game1.player.Name == name)
                 {
-                    TableName = JunimoKartDDB.TABLE_NAME,
-                    IndexName = JunimoKartDDB.HIGH_SCORE_INDEX_NAME,
-                    KeyConditionExpression = "Game = :game",
-                    ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-                    {
-                        {":game", new AttributeValue {S = "JunimoKart"}}
-                    },
-                    ScanIndexForward = false,
-                    Limit = 10,
-                };
-
-                Task<QueryResponse> response = ModEntry.DdbClient.QueryAsync(queryRequest);
-
-                response.ContinueWith((task) =>
-                {
-                    if (task.IsFaulted)
-                    {
-                        Log.Error(task.Exception.Message);
-                        return;
-                    }
-                    if (task.IsCanceled)
-                    {
-                        Log.Error("JunimoKart HighScore Query was canceled");
-                        return;
-                    }
-                    if (!task.IsCompleted)
-                    {
-                        Log.Error("JunimoKart HighScore Query failed to complete");
-                        return;
-                    }
-
-                    foreach (Dictionary<string, AttributeValue> item in task.Result.Items)
-                    {
-                        if (!item.TryGetValue("Name", out AttributeValue name) && name.S != "")
-                        {
-                            Log.Error("Invalid HighScore entry missing name: " + item);
-                            return;
-                        }
-                        if (!item.TryGetValue("Score", out AttributeValue scoreString) || !int.TryParse(scoreString.N, out int score))
-                        {
-                            Log.Error("Invalid HighScore entry missing score: " + item);
-                            return;
-                        }
-
-                        __instance.AddScore(name.S, score);
-                    }
-                    Log.Info("Loaded JunimoKart Global High Scores");
-                });
+                    ModEntry.LeaderboardAPI.UploadScore("JunimoKartScore", score);
+                }
                 return false;
             }
             catch (Exception e)
@@ -121,6 +46,61 @@ namespace JunimoKartGlobalRankings
                 Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
             }
             return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(NetLeaderboards), nameof(NetLeaderboards.GetScores))]
+    class NetLeaderboards_GetScores
+    {
+        internal static bool Prefix(ref List<KeyValuePair<string, int>> __result)
+        {
+            try
+            {
+                __result = new List<KeyValuePair<string, int>>();
+                foreach (Dictionary<string, string> record in ModEntry.LeaderboardAPI.GetTopN("JunimoKartScore", 5))
+                {
+                    int.TryParse(record["Score"], out int score);
+                    __result.Add(new KeyValuePair<string, int>(record["Name"], score));
+                }
+
+                __result.Add(new KeyValuePair<string, int>(Game1.getCharacterFromName("Lewis").displayName, 50000));
+                __result.Add(new KeyValuePair<string, int>(Game1.getCharacterFromName("Shane").displayName, 25000));
+                __result.Add(new KeyValuePair<string, int>(Game1.getCharacterFromName("Sam").displayName, 10000));
+                __result.Add(new KeyValuePair<string, int>(Game1.getCharacterFromName("Abigail").displayName, 5000));
+                __result.Add(new KeyValuePair<string, int>(Game1.getCharacterFromName("Vincent").displayName, 250));
+
+                __result.Sort(Comparer<KeyValuePair<string, int>>.Create((x, y) => y.Value - x.Value));
+                __result.RemoveRange(5, __result.Count - 5);
+                return false;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            }
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(NetLeaderboards), nameof(NetLeaderboards.LoadScores))]
+    class NetLeaderboards_LoadScores
+    {
+        internal static bool Prefix()
+        {
+            try
+            {
+                ModEntry.Instance.Helper.Events.GameLoop.SaveLoaded += GameLoop_SaveLoaded;
+                return false;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            }
+            return true;
+        }
+
+        private static void GameLoop_SaveLoaded(object sender, StardewModdingAPI.Events.SaveLoadedEventArgs e)
+        {
+            ModEntry.LeaderboardAPI.RefreshCache("JunimoKartScore");
         }
     }
 }

@@ -8,5 +8,10 @@
     "MinimumApiVersion": "3.0.0",
     "UpdateKeys": [
         "Nexus:14856"
+    ],
+    "Dependencies": [
+        {
+            "UniqueID": "drbirbdev.LeaderboardLibrary"
+        }
     ]
 }

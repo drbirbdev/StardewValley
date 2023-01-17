@@ -28,7 +28,7 @@ namespace LeaderboardLibrary
             new CommandClassParser(this.Helper.ConsoleCommands, new Command()).ParseCommands();
 
             GlobalModData.SetValueForScreen(0, this.Helper.Data.ReadGlobalData<GlobalModData>(GLOBAL_DATA_KEY));
-            if (GlobalModData is null)
+            if (GlobalModData.Value is null)
             {
                 Log.Debug("Creating new global leaderboard data...");
                 GlobalModData.SetValueForScreen(0, new GlobalModData());

@@ -70,13 +70,27 @@ namespace SocializingSkill
             {
                 if (Game1.player.HasCustomProfession(SocializingSkill.SmoothTalker))
                 {
-                    if (friendshipChange < 0)
+                    if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.SmoothTalker))
                     {
-                        __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerNegativeMultiplier);
+                        if (friendshipChange < 0)
+                        {
+                            __instance.friendshipChange = 0;
+                        }
+                        else
+                        {
+                            __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPositiveMultiplier * 1.5);
+                        }
                     }
                     else
                     {
-                        __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPositiveMultiplier);
+                        if (friendshipChange < 0)
+                        {
+                            __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerNegativeMultiplier);
+                        }
+                        else
+                        {
+                            __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPositiveMultiplier);
+                        }
                     }
                 }
             }
@@ -111,14 +125,32 @@ namespace SocializingSkill
                     // Undo original method friendship change
                     Game1.player.changeFriendship(-friendship, character);
 
-                    if (friendship < 0)
+                    if (friendship > 0)
                     {
-                        friendship = (int)(friendship * ModEntry.Config.SmoothTalkerNegativeMultiplier);
+                        Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromEvents);
+                    }
+
+                    if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.SmoothTalker))
+                    {
+                        if (friendship < 0)
+                        {
+                            friendship = 0;
+                        }
+                        else
+                        {
+                            friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier * 1.5);
+                        }
                     }
                     else
                     {
-                        friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier);
-                        Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromEvents);
+                        if (friendship < 0)
+                        {
+                            friendship = (int)(friendship * ModEntry.Config.SmoothTalkerNegativeMultiplier);
+                        }
+                        else
+                        {
+                            friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier);
+                        }
                     }
 
                     Game1.player.changeFriendship(friendship, character);
@@ -183,7 +215,14 @@ namespace SocializingSkill
             {
                 if (Game1.player.HasCustomProfession(SocializingSkill.Helpful))
                 {
-                    __result = (int)(__result * ModEntry.Config.HelpfulRewardMultiplier);
+                    if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.Helpful))
+                    {
+                        __result = (int)(__result * ModEntry.Config.HelpfulRewardMultiplier * 2);
+                    }
+                    else
+                    {
+                        __result = (int)(__result * ModEntry.Config.HelpfulRewardMultiplier);
+                    }
                 }
             }
             catch (Exception e)
@@ -235,13 +274,17 @@ namespace SocializingSkill
                 }
 
                 int discountPercent = (heartLevel - ModEntry.Config.HagglerMinHeartLevel + 1) * ModEntry.Config.HagglerDiscountPercentPerHeartLevel;
+                if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.Haggler))
+                {
+                    discountPercent += 10;
+                }
 
                 float discount = (100f - discountPercent) / 100;
                 foreach (KeyValuePair<ISalable, int[]> item in __instance.itemPriceAndStock)
                 {
                     if (item.Value != null && item.Value.Length > 0)
                     {
-                        item.Value[0] = (int)(discount * item.Value[0]);
+                        item.Value[0] = (int)Math.Max(1, discount * item.Value[0]);
                     }
                 }
             }
@@ -297,13 +340,17 @@ namespace SocializingSkill
                 }
 
                 int discountPercent = (heartLevel - ModEntry.Config.HagglerMinHeartLevel + 1) * ModEntry.Config.HagglerDiscountPercentPerHeartLevel;
+                if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.Haggler))
+                {
+                    discountPercent += 10;
+                }
 
                 float discount = (100f - discountPercent) / 100;
                 foreach (KeyValuePair<ISalable, int[]> item in __instance.itemPriceAndStock)
                 {
                     if (item.Value != null && item.Value.Length > 0)
                     {
-                        item.Value[0] = (int)(discount * item.Value[0]);
+                        item.Value[0] = (int)Math.Max(0, discount * item.Value[0]);
                     }
                 }
             }
@@ -388,7 +435,13 @@ namespace SocializingSkill
                     SpaceCore.Skills.AddExperience(who, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromTalking);
                     if (who.HasCustomProfession(SocializingSkill.Friendly))
                     {
-                        who.changeFriendship(ModEntry.Config.FriendlyExtraFriendship, __instance);
+                        if (who.HasCustomPrestigeProfession(SocializingSkill.Friendly))
+                        {
+                            who.changeFriendship((int)(ModEntry.Config.FriendlyExtraFriendship * 1.5), __instance);
+                        } else
+                        {
+                            who.changeFriendship(ModEntry.Config.FriendlyExtraFriendship, __instance);
+                        }
                     }
                 }
             }
@@ -433,8 +486,14 @@ namespace SocializingSkill
                 }
                 ModEntry.BelovedCheckedToday.Value.Add(__instance.Name);
 
+                int giftPercentChance = ModEntry.Config.BelovedGiftPercentChance;
+                if (who.HasCustomPrestigeProfession(SocializingSkill.Beloved))
+                {
+                    giftPercentChance *= 2;
+                }
+
                 int rarity = Utilities.GetRarity(new int[] {
-                    ModEntry.Config.BelovedGiftPercentChance,
+                    giftPercentChance,
                     ModEntry.Config.BelovedGiftRarePercentChance,
                     ModEntry.Config.BelovedGiftSuperRarePercentChance
             });

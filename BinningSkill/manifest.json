@@ -1,4 +1,4 @@
-{
+﻿{
   "Name": "BinningSkill",
   "Author": "drbirbdev",
   "Version": "1.1.5",
@@ -14,8 +14,13 @@
       "UniqueID": "spacechase0.SpaceCore"
     },
     {
-      "UniqueID": "spacechase0.GenericModConfigMenu",
-      "IsRequired": false
+        "UniqueID": "spacechase0.GenericModConfigMenu",
+        "IsRequired": false
+    },
+    {
+        "UniqueID": "DaLion.Overhaul",
+        "MinimumVersion": "1.1.1",
+        "IsRequired": false
     }
   ]
 }

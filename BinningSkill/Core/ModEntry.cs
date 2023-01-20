@@ -92,7 +92,7 @@ namespace BinningSkill
         {
             if (MargoAPI is not null)
             {
-                string id = SpaceCore.Skills.GetSkill("binning").Id;
+                string id = SpaceCore.Skills.GetSkill("drbirbdev.Binning").Id;
                 MargoAPI.RegisterCustomSkillForPrestige(id);
             }
         }

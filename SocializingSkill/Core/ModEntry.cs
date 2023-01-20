@@ -65,7 +65,7 @@ namespace SocializingSkill
         {
             if (MargoAPI is not null)
             {
-                string id = Skills.GetSkill("socializing").Id;
+                string id = Skills.GetSkill("drbirbdev.Socializing").Id;
                 MargoAPI.RegisterCustomSkillForPrestige(id);
             }
         }

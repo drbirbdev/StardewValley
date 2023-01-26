@@ -1,0 +1,13 @@
+{
+    "Name": "[CP] GameboyArcadeTemplate",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Add an event using a minigame.",
+    "UniqueID": "drbirbdev.GameboyArcadeTemplate.CP",
+    "ContentPackFor": {
+        "UniqueID": "Pathoschild.ContentPatcher"
+    },
+    "UpdateKeys": [
+        "Nexus:???"
+    ]
+}

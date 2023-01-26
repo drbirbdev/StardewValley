@@ -1,0 +1,15 @@
+﻿{
+    "Name": "[DGA] GameboyArcadeTemplate",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Add an arcade machine for Adjustris.",
+    "UniqueID": "drbirbdev.GameboyArcadeTemplate.DGA",
+    "ContentPackFor": {
+        "UniqueID": "spacechase0.DynamicGameAssets"
+    },
+    "UpdateKeys": [
+        "Nexus:???"
+    ],
+    "DGA.FormatVersion": 2,
+    "DGA.ConditionsFormatVersion": "1.23.0"
+}

@@ -1,0 +1,13 @@
+﻿{
+    "Name": "[GBA] 144pTestSuite",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Add well known Gameboy emulation test roms that can be run from the SMAPI console",
+    "UniqueID": "drbirbdev.144pTestSuite.GBA",
+    "ContentPackFor": {
+        "UniqueID": "drbirbdev.GameboyArcade"
+    },
+    "UpdateKeys": [
+        "Nexus:???"
+    ]
+}

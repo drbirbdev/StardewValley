@@ -1,0 +1,13 @@
+﻿{
+    "Name": "[GBA] GameboyArcadeTemplate",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Add a playable minigame from a Gameboy rom.",
+    "UniqueID": "drbirbdev.GameboyArcadeTemplate.GBA",
+    "ContentPackFor": {
+        "UniqueID": "drbirbdev.GameboyArcade"
+    },
+    "UpdateKeys": [
+        "Nexus:???"
+    ]
+}

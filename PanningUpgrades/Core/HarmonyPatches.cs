@@ -241,16 +241,24 @@ namespace PanningUpgrades
     class FarmerSprite_GetAnimationFromIndex
     {
         /// <summary>
+        /// Access the private field FarmerSprite.owner
+        /// </summary>
+        private static readonly FieldInfo Farmer_owner = typeof(FarmerSprite).GetField("owner", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        /// <summary>
         /// Use a TemporaryAnimatedSprite to make the panning animation reflect upgrade level.
         /// </summary>
-        public static void Postfix(int index)
+        public static void Postfix(int index, FarmerSprite requester)
         {
             try
             {
+                if (requester is null || Farmer_owner.GetValue(requester) is not Farmer owner)
+                    return;
+
                 if (index == 303)
                 {
-                    int upgradeLevel = Game1.player.CurrentTool.UpgradeLevel;
-                    int genderOffset = Game1.player.IsMale ? -1 : 0;
+                    int upgradeLevel = owner.CurrentTool.UpgradeLevel;
+                    int genderOffset = owner.IsMale ? -1 : 0;
 
                     Game1.currentLocation.temporarySprites.Add(new TemporaryAnimatedSprite(
                         textureName: ModEntry.Assets.SpritesPath,
@@ -258,7 +266,7 @@ namespace PanningUpgrades
                         animationInterval: ModEntry.Config.AnimationFrameDuration,
                         animationLength: 4,
                         numberOfLoops: 3,
-                        position: Game1.player.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                        position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
                         flicker: false,
                         flipped: false,
                         layerDepth: 1f,
@@ -277,7 +285,7 @@ namespace PanningUpgrades
                                 animationInterval: ModEntry.Config.AnimationFrameDuration,
                                 animationLength: 3,
                                 numberOfLoops: 0,
-                                position: Game1.player.position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                                position: owner.position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
                                 flicker: false,
                                 flipped: false,
                                 layerDepth: 1f,
@@ -296,7 +304,7 @@ namespace PanningUpgrades
                                         animationInterval: ModEntry.Config.AnimationFrameDuration * 2.5f,
                                         animationLength: 1,
                                         numberOfLoops: 0,
-                                        position: Game1.player.position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                                        position: owner.position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
                                         flicker: false,
                                         flipped: false,
                                         layerDepth: 1f,

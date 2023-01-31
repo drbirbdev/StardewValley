@@ -135,11 +135,11 @@ namespace LeaderboardLibrary
                     {
                         Stat = stat,
                         UserUUID = userUuid,
-                        Name = userName,
-                        Farm = Game1.player.farmName,
                     };
                     LocalLeaderboards[stat].Add(current);
                 }
+                current.Name = userName;
+                current.Farm = Game1.player.farmName;
                 current.Score = score;
                 current.DateTime = DateTimeOffset.Now.ToUnixTimeSeconds();
 

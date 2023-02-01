@@ -73,7 +73,7 @@ jobs:
 
       - name: Upload File
         run: |
-          echo nexusmods upload "${{ steps.read_manifest.outputs.mod_id }}" "${{ matrix.zip }}" -f "${{ steps.read_manifest.outputs.name }}" -v ${{ steps.read_manifest.outputs.version }} -g stardewvalley -t Main -d "${{ steps.read_manifest.outputs.description }}"
+          opmu nexusmods upload "${{ steps.read_manifest.outputs.mod_id }}" "${{ matrix.zip }}" -f "${{ steps.read_manifest.outputs.name }}" -v ${{ steps.read_manifest.outputs.version }} -g stardewvalley -t Main -d "${{ steps.read_manifest.outputs.description }}"
 
   increment_version:
     name: Update Version

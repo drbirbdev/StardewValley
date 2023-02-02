@@ -241,18 +241,14 @@ namespace PanningUpgrades
     class FarmerSprite_GetAnimationFromIndex
     {
         /// <summary>
-        /// Access the private field FarmerSprite.owner
-        /// </summary>
-        private static readonly FieldInfo Farmer_owner = typeof(FarmerSprite).GetField("owner", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        /// <summary>
         /// Use a TemporaryAnimatedSprite to make the panning animation reflect upgrade level.
         /// </summary>
         public static void Postfix(int index, FarmerSprite requester)
         {
             try
             {
-                if (requester is null || Farmer_owner.GetValue(requester) is not Farmer owner)
+                var owner = Traverse.Create(requester).Field("owner").GetValue<Farmer>();
+                if (owner is null)
                     return;
 
                 if (index == 303)

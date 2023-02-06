@@ -117,7 +117,7 @@ namespace LeaderboardLibrary
             LeaderboardStat current = GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUUID);
             if (current is null || current.Score < score)
             {
-                LeaderboardDAO.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name, Game1.player.farmName, ModEntry.GlobalModData.Value.Secret);
+                LeaderboardDAO.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name, Game1.player.farmName, ModEntry.GlobalModData.Value.Secret, this);
                 return UpdateCache(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name);
             }
             return true;
@@ -161,7 +161,21 @@ namespace LeaderboardLibrary
                     }
                 }
 
-                ModEntry.Instance.Helper.Data.WriteJsonFile($"data/cached_leaderboards.json", ModEntry.LocalModData);
+                try
+                {
+                    ModEntry.Instance.Helper.Data.WriteJsonFile($"data/cached_leaderboards.json", ModEntry.LocalModData);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to update the cache.  Could multiple mods be updating high scores at once?.\n" +
+                        $"Score: {score}\n" +
+                        $"Stat : {stat}\n" +
+                        $"Name : {userName}\n" +
+                        $"Farm : {Game1.player.farmName}\n" +
+                        $"UUID : {userUuid}\n");
+                    Log.Error(e.Message);
+                }
+
             }
             return true;
         }

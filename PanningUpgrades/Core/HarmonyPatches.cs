@@ -480,7 +480,11 @@ namespace PanningUpgrades
                     yield return new CodeInstruction(OpCodes.Isinst, typeof(UpgradeablePan));
                     yield return code[i + 1];
                     yield return code[i + 2];
-                    yield return code[i + 3];
+                    // ILCode of newer versions is shorter for whatever reason
+                    if (ModEntry.Instance.Helper.ModRegistry.Get("Digus.MailServicesMod").Manifest.Version.IsOlderThan("1.5"))
+                    {
+                        yield return code[1 + 3];
+                    }
                     yield return code[i];
                 } else
                 {

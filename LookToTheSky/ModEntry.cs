@@ -58,7 +58,7 @@ namespace LookToTheSky
             {
                 return;
             }
-            if (Game1.random.Next(100) <= Config.SpawnChancePerSecond)
+            if (Game1.random.Next(100) < Config.SpawnChancePerSecond)
             {
                 int rand = Game1.random.Next(100);
                 if (rand <= 10)

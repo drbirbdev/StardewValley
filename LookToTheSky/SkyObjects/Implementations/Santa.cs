@@ -33,12 +33,15 @@ namespace LookToTheSky
 
         public override void OnEnter()
         {
-            Game1.playSound("moneyDial");
-            DelayedAction.playSoundAfterDelay("moneyDial", 200);
-            DelayedAction.playSoundAfterDelay("moneyDial", 400);
-            DelayedAction.playSoundAfterDelay("moneyDial", 800);
-            DelayedAction.playSoundAfterDelay("moneyDial", 1000);
-            DelayedAction.playSoundAfterDelay("moneyDial", 1200);
+            if (ModEntry.Config.DoNotificationNoise)
+            {
+                Game1.playSound("moneyDial");
+                DelayedAction.playSoundAfterDelay("moneyDial", 200);
+                DelayedAction.playSoundAfterDelay("moneyDial", 400);
+                DelayedAction.playSoundAfterDelay("moneyDial", 800);
+                DelayedAction.playSoundAfterDelay("moneyDial", 1000);
+                DelayedAction.playSoundAfterDelay("moneyDial", 1200);
+            }
         }
     }
 }

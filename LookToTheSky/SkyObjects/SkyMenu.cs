@@ -1,9 +1,7 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Menus;
-using StardewValley.Projectiles;
 using StardewValley.Tools;
 
 namespace LookToTheSky

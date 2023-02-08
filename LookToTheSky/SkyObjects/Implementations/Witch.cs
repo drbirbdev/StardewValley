@@ -31,7 +31,10 @@ namespace LookToTheSky
 
         public override void OnEnter()
         {
-            Game1.playSound("cacklingWitch");
+            if (ModEntry.Config.DoNotificationNoise)
+            {
+                Game1.playSound("cacklingWitch");
+            }
         }
     }
 }

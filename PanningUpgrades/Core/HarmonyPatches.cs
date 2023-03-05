@@ -248,7 +248,7 @@ namespace PanningUpgrades
             try
             {
                 var owner = Traverse.Create(requester).Field("owner").GetValue<Farmer>();
-                if (owner is null)
+                if (owner is null || Game1.player != owner)
                     return;
 
                 if (index == 303)

@@ -15,11 +15,11 @@ namespace BinningSkill
         internal static Config Config;
         internal static Assets Assets;
 
-        internal static bool RSVLoaded;
-        internal static bool AutomateLoaded;
-        internal static bool JALoaded;
-        internal static bool DGALoaded;
-        internal static bool MargoLoaded;
+        internal static bool RSVLoaded => ModEntry.Instance.Helper.ModRegistry.IsLoaded("Rafseazz.RidgesideVillage");
+        internal static bool AutomateLoaded => ModEntry.Instance.Helper.ModRegistry.IsLoaded("Pathoschild.Automate");
+        internal static bool JALoaded => ModEntry.Instance.Helper.ModRegistry.IsLoaded("spacechase0.JsonAssets");
+        internal static bool DGALoaded => ModEntry.Instance.Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets");
+        internal static bool MargoLoaded => ModEntry.Instance.Helper.ModRegistry.IsLoaded("DaLion.Overhaul");
 
         internal static IJsonAssetsApi JsonAssets;
         internal static IDynamicGameAssetsApi DynamicGameAssets;
@@ -47,11 +47,6 @@ namespace BinningSkill
             new Harmony(this.ModManifest.UniqueID).PatchAll();
             new CommandClassParser(this.Helper.ConsoleCommands, new Command()).ParseCommands();
 
-            RSVLoaded = this.Helper.ModRegistry.IsLoaded("Rafseazz.RidgesideVillage");
-            AutomateLoaded = this.Helper.ModRegistry.IsLoaded("Pathoschild.Automate");
-            JALoaded = this.Helper.ModRegistry.IsLoaded("spacechase0.JsonAssets");
-            DGALoaded = this.Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets");
-            MargoLoaded = this.Helper.ModRegistry.IsLoaded("DaLion.Overhaul");
 
             // Register binning skill after checking if MARGO is loaded.
             SpaceCore.Skills.RegisterSkill(new BinningSkill());

@@ -18,7 +18,7 @@ namespace SocializingSkill
         internal static Config Config;
         internal static Assets Assets;
 
-        internal static bool MargoLoaded;
+        internal static bool MargoLoaded => ModEntry.Instance.Helper.ModRegistry.IsLoaded("DaLion.Overhaul");
         internal static IMargo MargoAPI;
 
         internal ITranslationHelper I18n => this.Helper.Translation;
@@ -47,7 +47,6 @@ namespace SocializingSkill
             new Harmony(this.ModManifest.UniqueID).PatchAll();
             new CommandClassParser(this.Helper.ConsoleCommands, new Command()).ParseCommands();
 
-            MargoLoaded = this.Helper.ModRegistry.IsLoaded("DaLion.Overhaul");
 
             Skills.RegisterSkill(new SocializingSkill());
 

@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BirbShared;
-using BirbShared.Asset;
-using BirbShared.Command;
-using BirbShared.Config;
+using BirbShared.Mod;
 using StardewModdingAPI;
 using StardewValley;
 
@@ -21,24 +17,23 @@ namespace LookToTheSky
     // Content pack functionality
     public class ModEntry : Mod
     {
-
+        [SmapiInstance]
         internal static ModEntry Instance;
+        [SmapiConfig]
         internal static Config Config;
+        [SmapiCommand]
+        internal static Command Command;
+        [SmapiAsset]
         internal static Assets Assets;
-
 
         public readonly List<SkyObject> SkyObjects = new();
         public readonly List<SkyProjectile> Projectiles = new();
 
         public override void Entry(IModHelper helper)
         {
-            Instance = this;
-            Log.Init(this.Monitor);
-            Config = helper.ReadConfig<Config>();
-            Assets = new Assets();
-            new AssetClassParser(this, Assets).ParseAssets();
+            ModClass mod = new ModClass();
+            mod.Parse(this);
 
-            this.Helper.Events.GameLoop.GameLaunched += this.GameLoop_GameLaunched;
             this.Helper.Events.Input.ButtonPressed += this.Input_ButtonPressed;
             this.Helper.Events.GameLoop.UpdateTicked += this.GameLoop_UpdateTicked;
             this.Helper.Events.GameLoop.OneSecondUpdateTicked += this.GameLoop_OneSecondUpdateTicked;
@@ -139,12 +134,6 @@ namespace LookToTheSky
                     }
                 }
             }
-        }
-
-        private void GameLoop_GameLaunched(object sender, StardewModdingAPI.Events.GameLaunchedEventArgs e)
-        {
-            new ConfigClassParser(this, Config).ParseConfigs();
-            new CommandClassParser(this.Helper.ConsoleCommands, new Command()).ParseCommands();
         }
 
         // Open and close the sky menu

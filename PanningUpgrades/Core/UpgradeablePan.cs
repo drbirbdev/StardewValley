@@ -45,7 +45,7 @@ namespace PanningUpgrades
 
         protected override string loadDisplayName()
         {
-            return ModEntry.Instance.I18n.Get("tool.orepan.name").ToString();
+            return ModEntry.Instance.Helper.Translation.Get("tool.orepan.name").ToString();
         }
 
         public static bool CanBeUpgraded()

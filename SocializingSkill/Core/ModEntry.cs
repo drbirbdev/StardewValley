@@ -29,8 +29,8 @@ namespace SocializingSkill
                 {
                     return false;
                 }
-                object config = MargoAPI.GetConfig();
-                return Instance.Helper.Reflection.GetProperty<bool>(config, "EnableProfessions").GetValue();
+                IMargo.IModConfig config = MargoAPI.GetConfig();
+                return config.EnableProfessions;
             }
         }
 

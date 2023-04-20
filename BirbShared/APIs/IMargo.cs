@@ -4,6 +4,11 @@ namespace BirbShared.APIs
     {
         void RegisterCustomSkillForPrestige(string id);
 
-        object GetConfig();
+        IModConfig GetConfig();
+
+        public interface IModConfig
+        {
+            bool EnableProfessions { get; }
+        }
     }
 }

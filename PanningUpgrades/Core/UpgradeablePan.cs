@@ -126,7 +126,8 @@ namespace PanningUpgrades
             who.stopJittering();
             who.canReleaseTool = false;
             who.currentLocation.removeTemporarySpritesWithID(this.tempSprite.id);
-            ((FarmerSprite)who.Sprite).animateOnce(303, 50f, 4);
+            who.FarmerSprite.setOwner(who);
+            who.FarmerSprite.animateOnce(303, 50f, 4);
         }
 
         public static Rectangle IconSourceRectangle(int upgradeLevel)

@@ -17,9 +17,9 @@ namespace BinningSkill
         [SmapiAsset]
         internal static Assets Assets;
 
-        [SmapiApi(UniqueID = "spacechase0.JsonAssets")]
+        [SmapiApi(UniqueID = "spacechase0.JsonAssets", IsRequired = false)]
         internal static IJsonAssetsApi JsonAssets;
-        [SmapiApi(UniqueID = "spacechase0.DynamicGameAssets")]
+        [SmapiApi(UniqueID = "spacechase0.DynamicGameAssets", IsRequired = false)]
         internal static IDynamicGameAssetsApi DynamicGameAssets;
         [SmapiApi(UniqueID = "DaLion.Overhaul", IsRequired = false)]
         internal static IMargo MargoAPI;
@@ -39,7 +39,7 @@ namespace BinningSkill
         public override void Entry(IModHelper helper)
         {
             ModClass mod = new ModClass();
-            mod.Parse(this);
+            mod.Parse(this, true);
             mod.ApisLoaded += this.ModClassParser_ApisLoaded;
             this.Helper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded;
         }

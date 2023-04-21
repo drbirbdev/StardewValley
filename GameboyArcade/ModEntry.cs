@@ -25,7 +25,7 @@ namespace GameboyArcade
         public override void Entry(IModHelper helper)
         {
             ModClass mod = new ModClass();
-            mod.Parse(this);
+            mod.Parse(this, true);
             this.Helper.Events.GameLoop.GameLaunched += this.GameLoop_GameLaunched;
             this.Helper.Events.Multiplayer.ModMessageReceived += this.Multiplayer_ModMessageReceived_SaveRequest;
             this.Helper.Events.Multiplayer.ModMessageReceived += this.Multiplayer_ModMessageReceived_LoadRequest;

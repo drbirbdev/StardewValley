@@ -41,7 +41,7 @@ namespace SocializingSkill
         public override void Entry(IModHelper helper)
         {
             ModClass mod = new ModClass();
-            mod.Parse(this);
+            mod.Parse(this, true);
             mod.ApisLoaded += this.ModClassParser_ApisLoaded;
 
             this.Helper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded;

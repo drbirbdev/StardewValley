@@ -20,7 +20,7 @@ namespace WinterStarSpouse
         public override void Entry(IModHelper helper)
         {
             ModClass mod = new ModClass();
-            mod.Parse(this);
+            mod.Parse(this, true);
         }
     }
 

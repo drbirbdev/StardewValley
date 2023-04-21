@@ -32,7 +32,7 @@ namespace LookToTheSky
         public override void Entry(IModHelper helper)
         {
             ModClass mod = new ModClass();
-            mod.Parse(this);
+            mod.Parse(this, false);
 
             this.Helper.Events.Input.ButtonPressed += this.Input_ButtonPressed;
             this.Helper.Events.GameLoop.UpdateTicked += this.GameLoop_UpdateTicked;

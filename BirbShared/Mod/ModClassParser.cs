@@ -102,7 +102,7 @@ namespace BirbShared.Mod
             {
                 mod.Helper.Events.GameLoop.GameLaunched += (object sender, GameLaunchedEventArgs e) =>
                 {
-                    new Harmony(mod.ModManifest.UniqueID).PatchAll();
+                    new Harmony(mod.ModManifest.UniqueID).PatchAll(Assembly.GetExecutingAssembly());
                 };
             }
         }

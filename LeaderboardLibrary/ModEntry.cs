@@ -27,7 +27,7 @@ namespace LeaderboardLibrary
         public override void Entry(IModHelper helper)
         {
             ModClass mod = new ModClass();
-            mod.Parse(this);
+            mod.Parse(this, false);
 
             GlobalModData.SetValueForScreen(0, this.Helper.Data.ReadGlobalData<GlobalModData>(GLOBAL_DATA_KEY));
             if (GlobalModData.Value is null)

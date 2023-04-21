@@ -9,16 +9,18 @@ using StardewValley;
 // TODO: not working
 namespace GameboyArcade
 {
-    class GameboySoundOutput : ISoundOutput, IDisposable
+    public delegate void SoundProducedEventHandler(object sender, byte[] soundData);
+
+    class GameboySoundOutput : ISoundOutput
     {
-        private const int SAMPLE_RATE = 22050;
+        public const int SAMPLE_RATE = 22050;
+
+        public event SoundProducedEventHandler OnSoundProduced;
+
         private const int BUFFER_SIZE = 1024;
         private readonly int DIVIDER = Gameboy.TicksPerSec / SAMPLE_RATE;
 
         private byte[] Buffer;
-        private SoundEffect Effect;
-        private CueDefinition Cue;
-        private SoundEffectInstance SoundInstance;
 
         private int i;
         private int tick;
@@ -26,15 +28,6 @@ namespace GameboyArcade
         public GameboySoundOutput()
         {
             this.Buffer = new byte[BUFFER_SIZE];
-            this.Effect = new SoundEffect(this.Buffer, SAMPLE_RATE, AudioChannels.Stereo);
-
-            this.Cue = new CueDefinition();
-            this.Cue.name = "gameboySound";
-            this.Cue.instanceLimit = 1;
-            this.Cue.limitBehavior = CueDefinition.LimitBehavior.ReplaceOldest;
-            this.Cue.SetSound(Effect, Game1.audioEngine.GetCategoryIndex("Sound"), false);
-            Game1.soundBank.AddCue(this.Cue);
-
         }
 
         public void Play(int left, int right)
@@ -51,10 +44,7 @@ namespace GameboyArcade
             Buffer[this.i++] = (byte)right;
             if (this.i >= BUFFER_SIZE)
             {
-#pragma warning disable CA2000 // Dispose objects before losing scope
-                this.Cue.SetSound(new SoundEffect(this.Buffer, SAMPLE_RATE, AudioChannels.Stereo), Game1.audioEngine.GetCategoryIndex("Sound"));
-#pragma warning restore CA2000 // Dispose objects before losing scope
-                Game1.playSound("gameboySound");
+                OnSoundProduced?.Invoke(this, this.Buffer);
                 this.i = 0;
                 for (int i = 0; i < BUFFER_SIZE; i++)
                 {
@@ -65,11 +55,6 @@ namespace GameboyArcade
 
         public void Start()
         {
-            if (SoundInstance is not null)
-            {
-                Log.Debug("Sound already started");
-                return;
-            }
             Log.Debug("Start Sound");
             /*
             SoundInstance = Effect.CreateInstance();
@@ -102,9 +87,6 @@ namespace GameboyArcade
             */
         }
 
-        public void Dispose()
-        {
-            this.Effect.Dispose();
-        }
+
     }
 }

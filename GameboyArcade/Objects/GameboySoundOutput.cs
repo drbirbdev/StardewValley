@@ -6,21 +6,16 @@ using CoreBoy.sound;
 using Microsoft.Xna.Framework.Audio;
 using StardewValley;
 
-// TODO: not working
+// TODO: not working perfectly
 namespace GameboyArcade
 {
-    public delegate void SoundProducedEventHandler(object sender, byte[] soundData);
-
-    class GameboySoundOutput : ISoundOutput
+    class GameboySoundOutput : ISoundOutput, IDisposable
     {
-        public const int SAMPLE_RATE = 22050;
-
-        public event SoundProducedEventHandler OnSoundProduced;
-
-        private const int BUFFER_SIZE = 1024;
-        private readonly int DIVIDER = Gameboy.TicksPerSec / SAMPLE_RATE;
+        private const int BUFFER_SIZE = 2048;
+        private readonly int DIVIDER = Gameboy.TicksPerSec / 22050;
 
         private byte[] Buffer;
+        private SoundEffect SoundEffect;
 
         private int i;
         private int tick;
@@ -40,11 +35,17 @@ namespace GameboyArcade
 
             // TODO: make play signiture provide bytes
 
+            Buffer[this.i++] = 0;
             Buffer[this.i++] = (byte)left;
+            Buffer[this.i++] = 0;
             Buffer[this.i++] = (byte)right;
+
             if (this.i >= BUFFER_SIZE)
             {
-                OnSoundProduced?.Invoke(this, this.Buffer);
+                this.SoundEffect.Dispose();
+                this.SoundEffect = new SoundEffect((byte[])this.Buffer.Clone(), ModEntry.Config.MusicSampleRate, AudioChannels.Stereo);
+                this.SoundEffect.Play();
+                
                 this.i = 0;
                 for (int i = 0; i < BUFFER_SIZE; i++)
                 {
@@ -55,38 +56,24 @@ namespace GameboyArcade
 
         public void Start()
         {
-            Log.Debug("Start Sound");
-            /*
-            SoundInstance = Effect.CreateInstance();
-            SoundInstance.Play();
-            */
-            Game1.playSound("gameboySound");
             for (int i = 0; i < BUFFER_SIZE; i++)
             {
                 Buffer[i] = 0;
             }
+            this.SoundEffect = new SoundEffect((byte[])this.Buffer.Clone(), ModEntry.Config.MusicSampleRate, AudioChannels.Stereo);
         }
 
         public void Stop()
         {
-            Log.Debug("Stop sound called, but ignored");
-            /*
-            if (SoundInstance is null)
-            {
-                Log.Debug("Sound wasn't started");
-                return;
-            }
-
-            SoundInstance.IsLooped = false;
-            while (SoundInstance.State == SoundState.Playing)
-            {
-                Thread.Sleep(1);
-            }
-            SoundInstance.Dispose();
-            SoundInstance = null;
-            */
+            this.SoundEffect.Dispose();
         }
 
-
+        public void Dispose()
+        {
+            if (this.SoundEffect is not null && !this.SoundEffect.IsDisposed)
+            {
+                this.SoundEffect.Dispose();
+            }
+        }
     }
 }

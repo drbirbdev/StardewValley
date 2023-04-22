@@ -9,7 +9,6 @@ using CoreBoy.memory.cart.battery;
 using CoreBoy.serial;
 using CoreBoy.sound;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StardewModdingAPI;
@@ -34,18 +33,6 @@ namespace GameboyArcade
         private static readonly PerScreen<ushort[]> NextFrame = new PerScreen<ushort[]>(() => new ushort[GBWidth * GBHeight]);
         private static readonly PerScreen<Texture2D> ScreenBuffer = new PerScreen<Texture2D>(() => new Texture2D(Game1.graphics.GraphicsDevice, GBWidth, GBHeight, false, SurfaceFormat.Bgra5551));
         private Rectangle ScreenArea = new Rectangle(0, 0, GBWidth, GBHeight);
-
-        private static readonly PerScreen<byte[]> NextSound = new PerScreen<byte[]>(() => new byte[1024]);
-        private static readonly PerScreen<CueDefinition> SoundCue = new PerScreen<CueDefinition>(() =>
-        {
-            CueDefinition cue = new CueDefinition();
-            cue.name = "gameboySound";
-            cue.instanceLimit = 10;
-            cue.limitBehavior = CueDefinition.LimitBehavior.ReplaceOldest;
-            cue.SetSound(new SoundEffect(NextSound.Value, GameboySoundOutput.SAMPLE_RATE, AudioChannels.Stereo), Game1.audioEngine.GetCategoryIndex("Sound"), true);
-            Game1.soundBank.AddCue(cue);
-            return cue;
-        });
 
         private Stopwatch FrameSw = new Stopwatch();
         private bool IsTurbo = false;
@@ -106,9 +93,6 @@ namespace GameboyArcade
 
             this.Emulator.Display.OnFrameProduced += this.BitmapDisplay_OnFrameProduced;
             if (this.Emulator.SoundOutput is GameboySoundOutput soundOutput)
-            {
-                soundOutput.OnSoundProduced += this.SoundOutput_OnSoundProduced;
-            }
 
             this.Cancellation = new CancellationTokenSource();
 
@@ -128,13 +112,6 @@ namespace GameboyArcade
             }
             Thread.Sleep(Math.Max(0, (int)(16 - FrameSw.ElapsedMilliseconds)));
             FrameSw.Restart();
-        }
-
-        private void SoundOutput_OnSoundProduced(object sender, byte[] soundData)
-        {
-            byte[] copy = (byte[])soundData.Clone();
-            // TODO: locking maybe?
-            NextSound.Value = copy;
         }
 
         public void changeScreenSize()
@@ -160,17 +137,9 @@ namespace GameboyArcade
         public void draw(SpriteBatch b)
         {
             ScreenBuffer.Value.SetData<ushort>(NextFrame.Value);
-#pragma warning disable CA2000 // Dispose objects before losing scope
-            SoundEffect se = new SoundEffect(NextSound.Value, 22050, AudioChannels.Stereo);
-            se.Play();
-            se.Dispose();
-            // SoundCue.Value.SetSound(new SoundEffect(NextSound.Value, 22050, AudioChannels.Stereo), Game1.audioEngine.GetCategoryIndex("Sound"));
-#pragma warning restore CA2000 // Dispose objects before losing scope
 
             b.Begin();
             b.Draw(ScreenBuffer.Value, this.ScreenArea, Color.White);
-
-            // Game1.playSound("gameboySound");
 
             // TODO: cursor has artifacts or is blurry?
             b.Draw(Game1.mouseCursors, new Vector2(Game1.getMouseX(), Game1.getMouseY()), new Rectangle(0, 0, 15, 15), Color.White, 0f, Vector2.Zero, 4f + Game1.dialogueButtonScale / 150f, SpriteEffects.None, 1f);
@@ -307,6 +276,10 @@ namespace GameboyArcade
             if (this.Emulator.SerialEndpoint is IDisposable serialEndpoint)
             {
                 serialEndpoint.Dispose();
+            }
+            if (this.Emulator.SoundOutput is IDisposable soundOutput)
+            {
+                soundOutput.Dispose();
             }
             this.Emulator.Stop(this.Cancellation);
             FrameSw.Reset();

@@ -1,10 +1,7 @@
 using System;
-using System.Threading;
-using BirbShared;
 using CoreBoy;
 using CoreBoy.sound;
 using Microsoft.Xna.Framework.Audio;
-using StardewValley;
 
 // TODO: not working perfectly
 namespace GameboyArcade
@@ -44,6 +41,7 @@ namespace GameboyArcade
             {
                 this.SoundEffect.Dispose();
                 this.SoundEffect = new SoundEffect((byte[])this.Buffer.Clone(), ModEntry.Config.MusicSampleRate, AudioChannels.Stereo);
+                // TODO: look into SoundEffect.CreateHandle.  Maybe I can use 8bit PCM natively
                 this.SoundEffect.Play();
                 
                 this.i = 0;

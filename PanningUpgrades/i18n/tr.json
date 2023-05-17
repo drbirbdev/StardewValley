@@ -6,7 +6,7 @@
   "config.BuyCost.name": "Tepsi Ücreti",
   "config.BuyCost.tooltip": "Willy'den yeni bir tepsi almanın maliyeti.",
   "config.UpgradeCostMultiplier.name": "Yükseltme Ücreti Çarpanı",
-  "config.UpgradeCostMultiplier.tooltip": "Tepsi yükseltme ücretinin çarpanı. 1.0 ise diğer araçlarla aynı maliyete sahip olur. 0.5 ise çöp kutusu ile aynı maliyete sahip olur.",
+  "config.UpgradeCostMultiplier.tooltip": "Tepsi yükseltme ücretinin çarpanı. 1.0 ise diğer aletlerle aynı maliyete sahip olur. 0.5 ise çöp kutusu ile aynı maliyete sahip olur.",
   "config.UpgradeCostBars.name": "Yükseltme İçin Gereken Külçe",
   "config.UpgradeCostBars.tooltip": "Tepsiyi yükseltmek için gereken külçe (bakır, demir, vb.) sayısı.",
   "config.UpgradeDays.name": "Yükseltme İçin Gereken Gün",

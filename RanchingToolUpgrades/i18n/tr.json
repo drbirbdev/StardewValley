@@ -1,0 +1,37 @@
+{
+  "config.pail.buy_cost": "Süt Kovası Ücreti",
+  "config.pail.buy_cost.tooltip": "Marnie'den yeni bir süt kovası almanın maliyeti.",
+  "config.pail.upgrade_cost_mult": "Süt Kovası Yükseltme Ücreti Çarpanı",
+  "config.pail.upgrade_cost_mult.tooltip": "Süt kovasını yükseltmek için ücret çarpanı. 1.0 ise diğer aletlerle aynı maliyete sahip olur. 0.5 ise çöp kovası ile aynı maliyete sahip olur.",
+  "config.pail.upgrade_cost_bars": "Süt Kovası Yükseltme İçin Gereken Külçe",
+  "config.pail.upgrade_cost_bars.tooltip": "Süt kovasını yükseltmek için gereken külçe (bakır, demir, vb.) sayısı.",
+  "config.pail.upgrade_days": "Süt Kovası Yükseltme İçin Gereken Gün",
+  "config.pail.upgrade_days.tooltip": "Süt kovasını yükseltmek için geçmesi gereken gün sayısı.",
+
+  "config.shears.buy_cost": "Makas Ücreti",
+  "config.shears.buy_cost.tooltip": "Marnie'den yeni bir makas almanın maliyeti.",
+  "config.shears.upgrade_cost_mult": "Shears Upgrade Cost Multiplier",
+  "config.shears.upgrade_cost_mult.tooltip": "Cost multiplier for upgrading the shears. 1.0 will cost the same as other tools. 0.5 will cost the same as trash can.",
+  "config.shears.upgrade_cost_bars": "Shears Upgrade Bars Required",
+  "config.shears.upgrade_cost_bars.tooltip": "Number of Bars (copper, iron, etc.) required to upgrade shears.",
+  "config.shears.upgrade_days": "Shears Upgrade Days",
+  "config.shears.upgrade_days.tooltip": "Number of days required to upgrade shears.",
+
+  "config.autograbber.buyable": "Buyable Auto-Grabber",
+  "config.autograbber.buyable.tooltip": "Allow auto-grabber to be bought from Marnies shop. If false, auto-grabbers will need to be found elsewhere.",
+  "config.autograbber.buy_cost": "Auto-Grabber Cost",
+  "config.autograbber.buy_cost.tooltip": "Cost to buy new auto-grabber from Marnie.",
+  "config.autograbber.upgrade_cost_mult": "Auto-Grabber Upgrade Cost Multiplier",
+  "config.autograbber.upgrade_cost_mult.tooltip": "Cost multiplier for upgrading an auto-grabber. 1.0 will cost the same as other tools. 0.5 will cost the same as trash can.",
+  "config.autograbber.upgrade_cost_bars": "Auto-Grabber Upgrade Bars Required",
+  "config.autograbber.upgrade_cost_bars.tooltip": "Number of Bars (copper, iron, etc.) required to upgrade auto-grabber.",
+  "config.autograbber.upgrade_days": "Auto-Grabber Upgrade Days",
+  "config.autograbber.upgrade_days.tooltip": "Number of days required to upgrade auto-grabber.",
+
+  "config.extra_friendship_base": "Extra Friendship Base",
+  "config.extra_friendship_base.tooltip": "Base amount of extra friendship given when using pail or shears. Amount is multiplied by tool level.",
+  "config.quality_bump_chance_base": "Quality Bump Base Chance",
+  "config.quality_bump_chance_base.tooltip": "Chance of produce being bumped a quality level. Base chance is multiplied by tool level.",
+  "config.extra_produce_chance_base": "Extra Produce Chance",
+  "config.extra_produce_chance_base.tooltip":  "Chance of getting an extra produce item. Number of potential extra produce is same as tool level."
+}

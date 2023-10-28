@@ -24,10 +24,10 @@ jobs:
 
       - name: Set Matrix
         id: set_matrix
-        if: ${{ steps.get_new.output.added_files != '[]'}}
+        if: ${{ steps.get_new.output.all_changed_files != '[]'}}
         run: |
-          echo ${{ steps.get_new.outputs.added_files }}
-          echo "matrix={\"file\":${{ steps.get_new.outputs.added_files }}}" >> "$GITHUB_OUTPUT"
+          echo ${{ steps.get_new.outputs.all_changed_files }}
+          echo "matrix={\"file\":${{ steps.get_new.outputs.all_changed_files }}}" >> "$GITHUB_OUTPUT"
 
     outputs:
       matrix: ${{ steps.set_matrix.outputs.matrix }}

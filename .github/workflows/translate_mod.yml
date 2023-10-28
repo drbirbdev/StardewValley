@@ -1,0 +1,54 @@
+name: Machine Translate Mod and Create Translation Files
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '*/i18n/**'
+      - '**/i18n/default.json'
+
+jobs:
+  changes_json:
+    name: Get New Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get Changes Json
+        id: get_new
+        uses: tj-actions/changed-files@v35
+        with:
+          files: '**/i18n/default.json'
+          json: 'true'
+
+      - name: Set Matrix
+        id: set_matrix
+        if: ${{ steps.get_new.output.added_files != '[]'}}
+        run: |
+          echo ${{ steps.get_new.outputs.added_files }}
+          echo "matrix={\"file\":${{ steps.get_new.outputs.added_files }}}" >> "$GITHUB_OUTPUT"
+
+    outputs:
+      matrix: ${{ steps.set_matrix.outputs.matrix }}
+
+  translate_file:
+    name: Get Translation
+    runs-on: ubuntu-latest
+    needs: changes_json
+    if: ${{ needs.changes_json.outputs.matrix != '' }}
+    strategy:
+      matrix: ${{ fromJson(needs.changes_json.outputs.matrix) }}
+    steps:
+      - name: Get Folder
+        id: parse_folder
+        run: |
+          echo "folder=$(echo ${{ matrix.file }} | rev | cut -c 12- | rev)" >> "$GITHUB_OUTPUT"
+
+      - name: DeepL Translate Github Action
+        uses: lyqht/deepl-translate-github-action@v2.0.0
+        with:
+          target_languages: de,es,fr,hu,id,it,ja,ko,pl,pt,ru,th,tr,vi,zh
+          input_file_path: ${{ matrix.file }}
+          output_file_path_pattern: ${{ steps.parse_folder.outputs.folder }}/{language}.json
+          deepl_api_key: ${{ secrets.DEEPL_API_KEY }}

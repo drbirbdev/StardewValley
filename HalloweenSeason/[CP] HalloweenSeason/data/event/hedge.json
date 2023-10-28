@@ -1,11 +1,11 @@
-﻿{
+{
     "Changes": [
         {
             "Action": "EditMap",
-            "Target": "Custom_drbirbdev_HalloweenSeason_BackwoodsHedge",
+            "Target": "Maps/Custom_drbirbdev_HalloweenSeason_BackwoodsHedge",
             "PatchMode": "Replace",
             "AddWarps": [
-                "24 39 Backwoods 24 8"
+                "24 40 Backwoods 35 8"
             ]
         },
         {
@@ -35,15 +35,15 @@
                         "Y": 7
                     },
                     "mapSize": {
-                        "X": 49,
+                        "X": 48,
                         "Y": 31
                     },
                     "entranceSide": "Bottom",
                     "bottomEntranceOffsets": [
-                        24
+                        23
                     ],
                     "topEntranceOffsets": [
-                        24
+                        23
                     ],
                     "HideMaze": false,
                     "HideBorders": false,

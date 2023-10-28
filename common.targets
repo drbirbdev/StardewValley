@@ -11,6 +11,7 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <EnableHarmony>true</EnableHarmony>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <!--import mod build package-->

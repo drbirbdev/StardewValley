@@ -1,4 +1,4 @@
-﻿{
+{
     "Format": "1.29.0",
     "DynamicTokens": [
         {
@@ -11,7 +11,7 @@
         },
         {
             "Name": "HalloweenEvent",
-            "Value": "{{Random: {{Range: 1, 10}} |key=halloween_event}}"
+            "Value": "{{Random: {{Range: 3, 10}} |key=halloween_event}}"
         },
         {
             "Name": "TVChannel",
@@ -74,7 +74,7 @@
             "Action": "EditData",
             "Target": "Characters/Dialogue/Abigail, Characters/Dialogue/Alex, Characters/Dialogue/Caroline, Characters/Dialogue/Clint, Characters/Dialogue/Demetrius, Characters/Dialogue/Elliott, Characters/Dialogue/Emily, Characters/Dialogue/Evelyn, Characters/Dialogue/George, Characters/Dialogue/Gus, Characters/Dialogue/Haley, Characters/Dialogue/Harvey, Characters/Dialogue/Jas, Characters/Dialogue/Jodi, Characters/Dialogue/Kent, Characters/Dialogue/Krobus, Characters/Dialogue/Leah, Characters/Dialogue/Leo, Characters/Dialogue/LeoMainland, Characters/Dialogue/Lewis, Characters/Dialogue/Linus, Characters/Dialogue/Marnie, Characters/Dialogue/Maru, Characters/Dialogue/Pam, Characters/Dialogue/Penny, Characters/Dialogue/Pierre, Characters/Dialogue/Robin, Characters/Dialogue/Sam, Characters/Dialogue/Sandy, Characters/Dialogue/Sebastian, Characters/Dialogue/Shane, Characters/Dialogue/Vincent, Characters/Dialogue/Willy, Characters/Dialogue/Wizard",
             "Entries": {
-                "GiftReaction_Halloween_Candy": "{{i18n:dialogue.HalloweenGiftTo.{{TargetWithoutPath}} | default={{i18n:dialogue.HalloweenGiftTo}} }}"
+                "GiftReaction_Halloween_Candy": "{{i18n:dialogue.HalloweenGiftTo.{{TargetWithoutPath}} | default={{i18n:dialogue.HalloweenGiftTo{{Random: 1, 2, 3, 4|key={{Target}}}}}} }}"
             },
             "When": {
                 "IsHalloween": true
@@ -84,7 +84,7 @@
             "Action": "EditData",
             "Target": "Characters/Dialogue/Abigail, Characters/Dialogue/Alex, Characters/Dialogue/Caroline, Characters/Dialogue/Clint, Characters/Dialogue/Demetrius, Characters/Dialogue/Elliott, Characters/Dialogue/Emily, Characters/Dialogue/Evelyn, Characters/Dialogue/George, Characters/Dialogue/Gus, Characters/Dialogue/Haley, Characters/Dialogue/Harvey, Characters/Dialogue/Jas, Characters/Dialogue/Jodi, Characters/Dialogue/Kent, Characters/Dialogue/Krobus, Characters/Dialogue/Leah, Characters/Dialogue/Leo, Characters/Dialogue/LeoMainland, Characters/Dialogue/Lewis, Characters/Dialogue/Linus, Characters/Dialogue/Marnie, Characters/Dialogue/Maru, Characters/Dialogue/Pam, Characters/Dialogue/Penny, Characters/Dialogue/Pierre, Characters/Dialogue/Robin, Characters/Dialogue/Sam, Characters/Dialogue/Sandy, Characters/Dialogue/Sebastian, Characters/Dialogue/Shane, Characters/Dialogue/Vincent, Characters/Dialogue/Willy, Characters/Dialogue/Wizard",
             "Entries": {
-                "GiftReaction_Halloween_Candy": "{{i18n:dialogue.NotHalloweenGiftTo.{{TargetWithoutPath}} | default={{i18n:dialogue.NotHalloweenGiftTo}} }}"
+                "GiftReaction_Halloween_Candy": "{{i18n:dialogue.NotHalloweenGiftTo.{{TargetWithoutPath}} | default={{i18n:dialogue.NotHalloweenGiftTo{{Random: 1, 2, 3, 4|key={{Target}}}}}} }}"
             },
             "When": {
                 "IsHalloween": false

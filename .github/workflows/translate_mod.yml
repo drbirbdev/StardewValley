@@ -46,7 +46,7 @@ jobs:
           echo "folder=$(echo ${{ matrix.file }} | rev | cut -c 12- | rev)" >> "$GITHUB_OUTPUT"
 
       - name: DeepL Translate Github Action
-        uses: lyqht/deepl-translate-github-action@v2.0.0
+        uses: lyqht/deepl-translate-github-action@v2.1.1
         with:
           target_languages: de,es,fr,hu,id,it,ja,ko,pl,pt,ru,th,tr,vi,zh
           input_file_path: ${{ matrix.file }}

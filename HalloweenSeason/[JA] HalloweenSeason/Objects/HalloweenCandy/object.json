@@ -1,8 +1,9 @@
-﻿{
+{
     "Name": "Halloween Candy",
     "Description": "Candy that is loved by all for Halloween.",
     "Category": "ArtisanGoods",
     "Edibility": 30,
     "Price": 100,
-    "Recipe": null
+    "Recipe": null,
+    "TranslationKey": "item.halloween_candy"
 }

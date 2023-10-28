@@ -43,7 +43,7 @@ jobs:
       - name: Get Folder
         id: parse_folder
         run: |
-          echo "folder=$(echo ${{ matrix.file }} | rev | cut -c 12- | rev)" >> "$GITHUB_OUTPUT"
+          echo "folder=$(echo ${{ matrix.file }} | rev | cut -c 13- | rev)" >> "$GITHUB_OUTPUT"
 
       - name: DeepL Translate Github Action
         uses: lyqht/deepl-translate-github-action@v2.1.1

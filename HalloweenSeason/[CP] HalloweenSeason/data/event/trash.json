@@ -1,0 +1,12 @@
+﻿{
+    "Changes": [
+        {
+            "Action": "EditData",
+            "Target": "Mods/drbirbdev.BinningSkill/TrashTable",
+            "Entries": {
+                "Town.*.0": ["ja_item.Halloween Candy"],
+                "RSV.*.0": ["ja_item.Halloween Candy"]
+            }
+        }
+    ]
+}

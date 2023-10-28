@@ -1,0 +1,13 @@
+﻿{
+    "Name": "[JA] HalloweenSeason",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Add halloween seasonal event.",
+    "UniqueID": "drbirbdev.HalloweenSeason.JA",
+    "ContentPackFor": {
+        "UniqueID": "spacechase0.JsonAssets"
+    },
+    "UpdateKeys": [
+        "Nexus:18916"
+    ]
+}

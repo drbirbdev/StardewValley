@@ -1,0 +1,60 @@
+﻿{
+    "Changes": [
+        {
+            "Action": "EditMap",
+            "Target": "Custom_drbirbdev_HalloweenSeason_BackwoodsHedge",
+            "PatchMode": "Replace",
+            "AddWarps": [
+                "24 39 Backwoods 24 8"
+            ]
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Backwoods",
+            "FromFile": "assets/Backwoods_HedgeEntrance.tmx",
+            "ToArea": {
+                "X": 33,
+                "Y": 5,
+                "Width": 5,
+                "Height": 5,
+            },
+            "PatchMode": "Replace",
+            "AddWarps": [
+                "35 7 Custom_drbirbdev_HalloweenSeason_BackwoodsHedge 24 38"
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "aedenthorn.HedgeMaze/dictionary",
+            "LogName": "drbirbdev.HalloweenSeason/HedgeMaze",
+            "Entries": {
+                "drbirbdev.HalloweenSeason/HedgeMaze": {
+                    "gameLocation": "Custom_drbirbdev_HalloweenSeason_BackwoodsHedge",
+                    "corner": {
+                        "X": 1,
+                        "Y": 7
+                    },
+                    "mapSize": {
+                        "X": 49,
+                        "Y": 31
+                    },
+                    "entranceSide": "Bottom",
+                    "bottomEntranceOffsets": [
+                        24
+                    ],
+                    "topEntranceOffsets": [
+                        24
+                    ],
+                    "HideMaze": false,
+                    "HideBorders": false,
+                    "AddTorches": false,
+                    "AddDwarf": false,
+                    "SlimeMin": 5,
+                    "SlimeMax": 7,
+                    "BatMin": 3,
+                    "BatMax": 3
+                }
+            }
+        }
+    ]
+}

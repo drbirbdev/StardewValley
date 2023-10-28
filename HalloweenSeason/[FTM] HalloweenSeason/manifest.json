@@ -1,0 +1,14 @@
+﻿{
+    "Name": "[FTM] HalloweenSeason",
+    "Author": "drbirbdev",
+    "version": "1.0.0",
+    "Description": "Add halloween seasonal event.",
+    "UniqueID": "drbirbdev.HalloweenSeason.FTM",
+    "ContentPackFor": {
+        "UniqueID": "Esca.FarmTypeManager",
+        "MinimumVersion": "1.10.1"
+    },
+    "UpdateKeys": [
+        "Nexus:18916"
+    ]
+}

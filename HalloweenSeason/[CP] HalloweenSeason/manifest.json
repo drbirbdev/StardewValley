@@ -1,0 +1,42 @@
+﻿{
+    "Name": "[CP] HalloweenSeason",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Add halloween seasonal event changes.",
+    "UniqueID": "drbirbdev.HalloweenSeason.CP",
+    "ContentPackFor": {
+        "UniqueID": "Pathoschild.ContentPatcher"
+    },
+    "UpdateKeys": [
+        "Nexus:18916"
+    ],
+    "Dependencies": [
+        {
+            "UniqueID": "drbirbdev.RealtimeFramework"
+        },
+        {
+            "UniqueID": "spacechase0.JsonAssets"
+        },
+        {
+            "UniqueID": "Platonymous.CustomTV"
+        },
+        {
+            "UniqueID": "drbirbdev.HalloweenSeason.JA"
+        },
+        {
+            "UniqueID": "drbirbdev.HalloweenSeason.FTM"
+        },
+        {
+            "UniqueID": "aedenthorn.CustomOreNodes"
+        },
+        {
+            "UniqueID": "Esca.FarmTypeManager"
+        },
+        {
+            "UniqueID": "aedenthorn.HedgeMaze"
+        },
+        {
+            "UniqueID": "aedenthorn.BuffFramework"
+        }
+    ]
+}

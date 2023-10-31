@@ -29,3 +29,6 @@ _ReSharper*/
 _releases/Debug/*
 /UpgradeLog.htm
 /Backup
+
+# generated manifest
+*/manifest.json

@@ -9,107 +9,10 @@ using BirbShared;
 using System.Reflection;
 using StardewValley.Tools;
 using System.Reflection.Emit;
+using StardewValley.Internal;
 
 namespace PanningUpgrades
 {
-    [HarmonyPatch(typeof(Utility), nameof(Utility.getBlacksmithUpgradeStock))]
-    class Utility_GetBlacksmithUpgradeStock
-    {
-        /// <summary>
-        /// Tries to add cooking tool to Blacksmith shop stock.
-        /// </summary>
-        static void Postfix(
-            Dictionary<ISalable, int[]> __result,
-            Farmer who)
-        {
-            try
-            {
-                UpgradeablePan.AddToShopStock(itemPriceAndStock: __result, who: who);
-
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(Farmer), nameof(Farmer.showHoldingItem))]
-    class Farmer_ShowHoldingItem
-    {
-
-        /// <summary>
-        /// Draws the correct tool sprite when receiving an upgrade.
-        /// </summary>
-        static bool Prefix(
-            Farmer who)
-        {
-            try
-            {
-                if (who.mostRecentlyGrabbedItem is UpgradeablePan)
-                {
-                    Game1.currentLocation.temporarySprites.Add(new TemporaryAnimatedSprite(
-                        textureName: ModEntry.Assets.SpritesPath,
-                        sourceRect: UpgradeablePan.IconSourceRectangle((who.mostRecentlyGrabbedItem as Tool).UpgradeLevel),
-                        animationInterval: 2500f,
-                        animationLength: 1,
-                        numberOfLoops: 0,
-                        position: who.Position + new Vector2(0f, -124f),
-                        flicker: false,
-                        flipped: false,
-                        layerDepth: 1f,
-                        alphaFade: 0f,
-                        color: Color.White,
-                        scale: 4f,
-                        scaleChange: 0f,
-                        rotation: 0f,
-                        rotationChange: 0f)
-                    {
-                        motion = new Vector2(0f, -0.1f)
-                    });
-                    return false;
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(Utility), nameof(Utility.getFishShopStock))]
-    class Utility_GetFishShopStock
-    {
-
-        /// <summary>
-        /// Removes the old Copper Pan tool from the fishing shop.
-        /// </summary>
-        public static void Postfix(Dictionary<ISalable, int[]> __result)
-        {
-            try
-            {
-                // Keying off of `new Pan()` doesn't work.
-                // Iterate over items for sale, and remove any by the name "Copper Pan".
-                foreach (ISalable key in __result.Keys)
-                {
-                    if (key.Name.Equals("Copper Pan"))
-                    {
-                        __result.Remove(key);
-                    }
-                }
-                if (ModEntry.Config.BuyablePan)
-                {
-                    __result.Add(new UpgradeablePan(0), new int[2] { ModEntry.Config.BuyCost, 2147483647 });
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-        }
-    }
-
     [HarmonyPatch(typeof(Utility), nameof(Utility.PerformSpecialItemPlaceReplacement))]
     class Utility_PerformSpecialItemPlaceReplacement
     {
@@ -149,32 +52,27 @@ namespace PanningUpgrades
         {
             try
             {
-                if (heldItem != null && heldItem is Hat)
+                if (heldItem != null && heldItem is Hat hat)
                 {
-                    int hatId = (int)(heldItem as Hat).which;
-                    if (hatId == ModEntry.JsonAssets.GetHatId("Pan"))
+                    switch (hat.ItemId)
                     {
-                        __result = new UpgradeablePan(0);
-                    }
-                    else if (hatId == 71) // Using original copper pan hat.
-                    {
-                        __result = new UpgradeablePan(1);
-                    }
-                    else if (hatId == ModEntry.JsonAssets.GetHatId("Steel Pan"))
-                    {
-                        __result = new UpgradeablePan(2);
-                    }
-                    else if (hatId == ModEntry.JsonAssets.GetHatId("Gold Pan"))
-                    {
-                        __result = new UpgradeablePan(3);
-                    }
-                    else if (hatId == ModEntry.JsonAssets.GetHatId("Iridium Pan"))
-                    {
-                        __result = new UpgradeablePan(4);
-                    }
-                    else
-                    {
-                        return true;
+                        case "(H)drbirbdev.PanningUpgrades_PanHat":
+                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradablePan");
+                            break;
+                        case "(H)drbirbdev.PanningUpgrades_CopperPanHat":
+                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradableCopperPan");
+                            break;
+                        case "(H)drbirbdev.PanningUpgrades_SteelPanHat":
+                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradableSteelPan");
+                            break;
+                        case "(H)drbirbdev.PanningUpgrades_GoldPanHat":
+                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradableGoldPan");
+                            break;
+                        case "(H)drbirbdev.PanningUpgrades_IridiumPanHat":
+                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradableIridiumPan");
+                            break;
+                        default:
+                            return true;
                     }
                     return false;
                 }
@@ -284,7 +182,7 @@ namespace PanningUpgrades
                                 animationInterval: ModEntry.Config.AnimationFrameDuration,
                                 animationLength: 3,
                                 numberOfLoops: 0,
-                                position: owner.position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                                position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
                                 flicker: false,
                                 flipped: false,
                                 layerDepth: 1f,
@@ -303,7 +201,7 @@ namespace PanningUpgrades
                                         animationInterval: ModEntry.Config.AnimationFrameDuration * 2.5f,
                                         animationLength: 1,
                                         numberOfLoops: 0,
-                                        position: owner.position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                                        position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
                                         flicker: false,
                                         flipped: false,
                                         layerDepth: 1f,
@@ -326,7 +224,7 @@ namespace PanningUpgrades
         }
     }
 
-    [HarmonyPatch(typeof(Event), nameof(Event.command_awardFestivalPrize))]
+    [HarmonyPatch(typeof(Event), nameof(Event.DefaultCommands.AwardFestivalPrize))]
     class Event_Command_AwardFestivalPrize
     {
         /// <summary>
@@ -355,7 +253,7 @@ namespace PanningUpgrades
         }
     }
 
-    [HarmonyPatch(typeof(Event), nameof(Event.command_itemAboveHead))]
+    [HarmonyPatch(typeof(Event), nameof(Event.DefaultCommands.ItemAboveHead))]
     class Event_Command_ItemAboveHead
     {
         /// <summary>
@@ -392,7 +290,7 @@ namespace PanningUpgrades
         {
             try
             {
-                if (__instance.id == 404798)
+                if (__instance.id == "404798")
                 {
                     // Generic skip logic copied from skipEvent.
                     // If other mods patch skipEvent to change this logic, things might break.

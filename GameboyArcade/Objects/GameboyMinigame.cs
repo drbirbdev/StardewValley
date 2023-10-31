@@ -253,16 +253,17 @@ namespace GameboyArcade
         }
         public bool tick(GameTime time)
         {
-            if (this.IsEvent)
+            // TODO: fix events
+            /*if (this.IsEvent)
             {
-                Game1.currentLocation.currentEvent.checkForNextCommand(Game1.currentLocation, time);
+                Game1.currentLocation.currentEvent.CheckForNextCommand(Game1.currentLocation, time);
                 if (Game1.activeClickableMenu != null)
                 {
                     Game1.PushUIMode();
                     Game1.activeClickableMenu.update(time);
                     Game1.PopUIMode();
                 }
-            }
+            }*/
 
             return false;
         }

@@ -3,10 +3,14 @@ using HarmonyLib;
 using SpaceCore;
 using StardewValley;
 using StardewValley.Characters;
+using StardewValley.GameData.Shops;
+using StardewValley.Internal;
 using StardewValley.Menus;
 using StardewValley.Quests;
+using StardewValley.SpecialOrders.Rewards;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace SocializingSkill
@@ -104,7 +108,7 @@ namespace SocializingSkill
     // Grant XP
     // Smooth Talker Profession
     //  - adjust friendship change during event
-    [HarmonyPatch(typeof(Event), nameof(Event.command_friendship))]
+    [HarmonyPatch(typeof(Event.DefaultCommands), nameof(Event.DefaultCommands.Friendship))]
     class Event_CommandFriendship
     {
         static void Postfix(
@@ -206,7 +210,7 @@ namespace SocializingSkill
         static IEnumerable<MethodBase> TargetMethods()
         {
             yield return AccessTools.Method(typeof(Quest), nameof(Quest.GetMoneyReward));
-            yield return AccessTools.Method(typeof(SpecialOrder), nameof(SpecialOrder.GetMoneyReward));
+            yield return AccessTools.Method(typeof(MoneyReward), nameof(MoneyReward.GetRewardMoneyAmount));
         }
 
         static void Postfix(ref int __result)
@@ -232,12 +236,13 @@ namespace SocializingSkill
         }
     }
 
+    // TODO: other shop constructors
     // Haggler Profession
     //  - Decrease shop prices if friends with the owner
-    [HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] {typeof(Dictionary<ISalable, int[]>), typeof(int), typeof(string), typeof(Func<ISalable, Farmer, int, bool>), typeof(Func<ISalable, bool>), typeof(string)})]
+    [HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] { typeof(string), typeof(ShopData), typeof(ShopOwnerData), typeof(NPC), typeof(Func<ISalable, Farmer, int, bool>), typeof(Func<ISalable>), typeof(bool)})]
     class ShopMenu_Constructor1
     {
-        internal static void Postfix(int currency, ShopMenu __instance)
+        internal static void Postfix(int currency, NPC owner, ShopMenu __instance)
         {
             try
             {
@@ -249,21 +254,20 @@ namespace SocializingSkill
                 {
                     return;
                 }
-                NPC who = __instance.portraitPerson;
-                if (who == null)
+                if (owner == null)
                 {
                     return;
                 }
-                if (who.Name == null)
+                if (owner.Name == null)
                 {
                     return;
                 }
-                if (!Game1.player.friendshipData.ContainsKey(who.Name))
+                if (!Game1.player.friendshipData.ContainsKey(owner.Name))
                 {
                     return;
                 }
 
-                int heartLevel = Game1.player.getFriendshipHeartLevelForNPC(who.Name);
+                int heartLevel = Game1.player.getFriendshipHeartLevelForNPC(owner.Name);
                 if (heartLevel < ModEntry.Config.HagglerMinHeartLevel)
                 {
                     return;
@@ -280,78 +284,12 @@ namespace SocializingSkill
                 }
 
                 float discount = (100f - discountPercent) / 100;
-                foreach (KeyValuePair<ISalable, int[]> item in __instance.itemPriceAndStock)
-                {
-                    if (item.Value != null && item.Value.Length > 0)
-                    {
-                        item.Value[0] = (int)Math.Max(1, discount * item.Value[0]);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-        }
-    }
 
-    // Haggler Profession
-    //  - Decrease shop prices if friends with the owner
-    [HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] { typeof(List<ISalable>), typeof(int), typeof(string), typeof(Func<ISalable, Farmer, int, bool>), typeof(Func<ISalable, bool>), typeof(string) })]
-    class ShopMenu_Constructor2
-    {
-
-        internal static void Postfix(ShopMenu __instance, int currency)
-        {
-            try
-            {
-                // TODO: Refactor into common location
-                if (!Game1.player.HasCustomProfession(SocializingSkill.Haggler))
+                foreach (KeyValuePair<ISalable, ItemStockInformation> item in __instance.itemPriceAndStock)
                 {
-                    return;
-                }
-                if (currency != 0)
-                {
-                    return;
-                }
-                NPC who = __instance.portraitPerson;
-                if (who == null)
-                {
-                    return;
-                }
-                if (who.Name == null)
-                {
-                    return;
-                }
-                if (!Game1.player.friendshipData.ContainsKey(who.Name))
-                {
-                    return;
-                }
-
-
-                int heartLevel = Game1.player.getFriendshipHeartLevelForNPC(who.Name);
-                if (heartLevel < ModEntry.Config.HagglerMinHeartLevel)
-                {
-                    return;
-                }
-                if (heartLevel > 10)
-                {
-                    heartLevel = 10;
-                }
-
-                int discountPercent = (heartLevel - ModEntry.Config.HagglerMinHeartLevel + 1) * ModEntry.Config.HagglerDiscountPercentPerHeartLevel;
-                if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.Haggler))
-                {
-                    discountPercent += 10;
-                }
-
-                float discount = (100f - discountPercent) / 100;
-                foreach (KeyValuePair<ISalable, int[]> item in __instance.itemPriceAndStock)
-                {
-                    if (item.Value != null && item.Value.Length > 0)
-                    {
-                        item.Value[0] = (int)Math.Max(0, discount * item.Value[0]);
-                    }
+                    ItemStockInformation info = item.Value;
+                    info.Price = (int)Math.Max(0, discount * info.Price);
+                    __instance.itemPriceAndStock[item.Key] = info;
                 }
             }
             catch (Exception e)
@@ -513,7 +451,7 @@ namespace SocializingSkill
                     1 => (string)ModEntry.Instance.I18n.Get("dialogue.beloved.rare", new { name = Game1.player.displayName }),
                     _ => (string)ModEntry.Instance.I18n.Get("dialogue.beloved.superrare"),
                 };
-                __instance.CurrentDialogue.Push(new Dialogue(dialogue, __instance));
+                __instance.CurrentDialogue.Push(new Dialogue(__instance, dialogue));
                 Game1.drawDialogue(__instance);
                 Game1.player.addItemByMenuIfNecessary(gift);
                 __result = true;

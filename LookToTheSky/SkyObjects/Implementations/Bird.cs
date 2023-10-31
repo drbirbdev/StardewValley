@@ -24,7 +24,7 @@ namespace LookToTheSky
 
         public override StardewValley.Object GetDropItem(int type = 0)
         {
-            return new StardewValley.Object(176, 1);
+            return new StardewValley.Object("(O)176", 1);
         }
 
         public override bool OnHit(StardewValley.Object ammo)

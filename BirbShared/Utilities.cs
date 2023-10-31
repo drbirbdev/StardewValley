@@ -79,107 +79,19 @@ namespace BirbShared
             try
             {
                 string[] parts = id.Split('.');
-                string itemType = parts[0];
-                string itemId = parts[1];
+                string itemId = parts[0];
                 int itemCount = 1;
-                if (parts.Length > 2)
+                if (parts.Length > 1)
                 {
-                    itemCount = int.Parse(parts[2]);
+                    itemCount = int.Parse(parts[1]);
                 }
 
-                if (jsonAssets == null && parts[0].StartsWith("ja_"))
-                {
-                    Log.Error($"Tried to parse JsonAssets trash drop but mod isn't loaded {id}");
-                    return new StardewValley.Object(168, 1);
-                }
-                if (dynamicGameAssets == null && parts[0].StartsWith("dga_"))
-                {
-                    Log.Error($"Tried to parse DynamicGameAssets trash drop but mod isn't loaded {id}");
-                    return new StardewValley.Object(168, 1);
-                }
-
-                int externalId = -1;
-                switch (itemType)
-                {
-                    case "item":
-                        return new StardewValley.Object(int.Parse(itemId), itemCount);
-                    case "bigcraftable":
-                        return new StardewValley.Object(Vector2.Zero, int.Parse(itemId));
-                    case "bedfurniture":
-                        return new BedFurniture(int.Parse(itemId), Vector2.Zero);
-                    case "boots":
-                        return new Boots(int.Parse(itemId));
-                    case "clothing":
-                        return new Clothing(int.Parse(itemId));
-                    case "furniture":
-                        return new Furniture(int.Parse(itemId), Vector2.Zero);
-                    case "hat":
-                        return new Hat(int.Parse(itemId));
-                    case "ring":
-                        return new Ring(int.Parse(itemId));
-                    case "storagefurniture":
-                        return new StorageFurniture(int.Parse(itemId), Vector2.Zero);
-                    case "weapon":
-                        return new MeleeWeapon(int.Parse(itemId));
-                    case "ja_item":
-                        externalId = jsonAssets.GetObjectId(itemId);
-                        if (externalId < 0)
-                        {
-                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
-                            return new StardewValley.Object(168, 1);
-                        }
-                        return new StardewValley.Object(externalId, itemCount);
-                    case "ja_bigcraftable":
-                        externalId = jsonAssets.GetBigCraftableId(itemId);
-                        if (externalId < 0)
-                        {
-                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
-                            return new StardewValley.Object(168, 1);
-                        }
-                        return new StardewValley.Object(Vector2.Zero, externalId);
-                    case "ja_hat":
-                        externalId = jsonAssets.GetHatId(itemId);
-                        if (externalId < 0)
-                        {
-                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
-                            return new StardewValley.Object(168, 1);
-                        }
-                        return new Hat(externalId);
-                    case "ja_weapon":
-                        externalId = jsonAssets.GetWeaponId(itemId);
-                        if (externalId < 0)
-                        {
-                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
-                            return new StardewValley.Object(168, 1);
-                        }
-                        return new MeleeWeapon(externalId);
-                    case "ja_clothing":
-                        externalId = jsonAssets.GetClothingId(itemId);
-                        if (externalId < 0)
-                        {
-                            Log.Error($"Tried to parse JsonAssets trash drop, but item was unknown {id}");
-                            return new StardewValley.Object(168, 1);
-                        }
-                        return new Clothing(externalId);
-                    case "dga_item":
-                        object dgaItem = dynamicGameAssets.SpawnDGAItem(itemId);
-                        if (dgaItem != null && dgaItem is Item item)
-                        {
-                            item.Stack = itemCount;
-                            return item;
-                        }
-                        Log.Error($"Tried to parse DynamicGameAssets trash drop, but item was unknown {id}");
-                        return new StardewValley.Object(168, 1);
-
-                    default:
-                        Log.Error($"Failed to parse drop type {id}");
-                        return new StardewValley.Object(168, 1);
-                }
+                return new StardewValley.Object(itemId, itemCount);
             }
             catch (Exception ex)
             {
                 Log.Error($"Failed to parse drop id {id}\n{ex}");
-                return new StardewValley.Object(168, 1);
+                return new StardewValley.Object("(O)168", 1);
             }
         }
     }

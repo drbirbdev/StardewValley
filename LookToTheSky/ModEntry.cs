@@ -95,7 +95,7 @@ namespace LookToTheSky
                         });
                     }
                 }
-                else if (rand <= 30 && Game1.player.eventsSeen.Contains(10))
+                else if (rand <= 30 && Game1.player.eventsSeen.Contains("10"))
                 {
                     SkyObjects.Add(new Robot(rand % 5 * 10, rand % 2 == 0));
                 }

@@ -103,7 +103,7 @@ namespace SocializingSkill
                 {
                     exp *= ModEntry.Config.LovedGiftExpMultiplier;
                 }
-                if (e.Npc.isBirthday(Game1.currentSeason, Game1.dayOfMonth))
+                if (e.Npc.isBirthday())
                 {
                     exp *= ModEntry.Config.BirthdayGiftExpMultiplier;
                 }

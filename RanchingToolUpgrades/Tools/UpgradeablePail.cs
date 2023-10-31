@@ -26,17 +26,6 @@ namespace RanchingToolUpgrades
             base.IndexOfMenuItemView = -1;
         }
 
-        public override Item getOne()
-        {
-            UpgradeablePail result = new()
-            {
-                UpgradeLevel = base.UpgradeLevel
-            };
-            this.CopyEnchantments(this, result);
-            result._GetOneFrom(this);
-            return result;
-        }
-
         public static bool CanBeUpgraded()
         {
             Tool pail = Game1.player.getToolFromName("Pail");
@@ -69,29 +58,6 @@ namespace RanchingToolUpgrades
             return false;
         }
 
-        public override bool actionWhenPurchased()
-        {
-            if (this.UpgradeLevel > 0 && Game1.player.toolBeingUpgraded.Value == null)
-            {
-                Tool t = Game1.player.getToolFromName("Pail");
-                Game1.player.removeItemFromInventory(t);
-                if (t is not UpgradeablePail)
-                {
-                    t = new UpgradeablePail(upgradeLevel: 1);
-                } else
-                {
-                    t.UpgradeLevel++;
-                }
-                Game1.player.toolBeingUpgraded.Value = t;
-                Game1.player.daysLeftForToolUpgrade.Value = ModEntry.Config.PailUpgradeDays;
-                Game1.playSound("parry");
-                Game1.exitActiveMenu();
-                Game1.drawDialogue(Game1.getCharacterFromName("Clint"), Game1.content.LoadString("Strings\\StringsFromCSFiles:Tool.cs.14317"));
-                return true;
-            }
-            return base.actionWhenPurchased();
-        }
-
         public static void AddToShopStock(Dictionary<ISalable, int[]> itemPriceAndStock, Farmer who)
         {
             if (who == Game1.player && CanBeUpgraded())
@@ -119,7 +85,7 @@ namespace RanchingToolUpgrades
         {
             FarmAnimal animal = ModEntry.Instance.Helper.Reflection.GetField<FarmAnimal>((MilkPail)this, "animal").GetValue();
 
-            if (animal != null && animal.currentProduce > 0 && animal.age >= animal.ageWhenMature && animal.toolUsedForHarvest.Equals(base.BaseName))
+            if (animal != null && animal.currentProduce.Value != null && animal.isAdult() && animal.CanGetProduceWithTool(this))
             {
                 // do extra friendship effect
                 int extraFriendship = ModEntry.Config.ExtraFriendshipBase * this.UpgradeLevel;
@@ -162,11 +128,7 @@ namespace RanchingToolUpgrades
                 Log.Debug($"Extra Produce Chance {ModEntry.Config.ExtraProduceChance} generated {extraProduce} additional produce from {this.UpgradeLevel} draws.");
                 if (extraProduce > 0)
                 {
-                    who.addItemToInventory(new StardewValley.Object(Vector2.Zero, animal.currentProduce, null, false, true, false, false)
-                    {
-                        Quality = animal.produceQuality,
-                        Stack = extraProduce
-                    });
+                    who.addItemToInventory(new StardewValley.Object(animal.currentProduce.Value, extraProduce, quality: animal.produceQuality.Value));
                 }
             }
 

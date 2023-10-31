@@ -1,4 +1,4 @@
-{
-    "festivalWarn": "The festival is ending soon!",
-    "festivalOver": "The festival has ended."
+﻿{
+    "festivalWarn": "The {{festival}} is ending soon!",
+    "festivalOver": "The {{festival}} has ended."
 }

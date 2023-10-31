@@ -82,10 +82,11 @@ namespace GameboyArcade
         }
     }
 
-    [HarmonyPatch(typeof(Event), nameof(Event.command_cutscene))]
+    // TODO: may need to make new event command instead
+    [HarmonyPatch(typeof(Event.DefaultCommands), nameof(Event.DefaultCommands.Cutscene))]
     class Event_Command_Cutscene
     {
-        internal static void Postfix(string[] split, Event __instance)
+        internal static void Postfix(string[] split, Event @event)
         {
             try
             {
@@ -103,7 +104,7 @@ namespace GameboyArcade
                     }
 
                     GameboyMinigame.LoadGame(content, true);
-                    __instance.CurrentCommand++;
+                    @event.CurrentCommand++;
                 }
             }
             catch (Exception e)

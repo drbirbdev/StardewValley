@@ -12,6 +12,7 @@ using StardewValley.Objects;
 using System.Reflection;
 using xTile.Dimensions;
 using System.Reflection.Emit;
+using StardewValley.Extensions;
 
 namespace BinningSkill
 {
@@ -102,7 +103,7 @@ namespace BinningSkill
                     int extraAmount = 0;
                     if (i.canBeTrashed())
                     {
-                        if (i is StardewValley.Object && !(i as StardewValley.Object).bigCraftable)
+                        if (i is StardewValley.Object && !(i as StardewValley.Object).HasTypeBigCraftable())
                         {
                             extraAmount = (int)((float)i.Stack * ((float)(i as StardewValley.Object).sellToStorePrice(-1L) * extraPercentage));
                         }
@@ -159,10 +160,7 @@ namespace BinningSkill
     {
         public static void Prefix(
             StardewValley.Object __instance,
-            ref StardewValley.Object __state,
-            Item dropInItem,
-            bool probe,
-            Farmer who)
+            ref StardewValley.Object __state)
         {
             try
             {
@@ -223,7 +221,7 @@ namespace BinningSkill
                             {
                                 friendshipGain *= 2;
                             }
-                            Utility.improveFriendshipWithEveryoneInRegion(who, friendshipGain, 2);
+                            Utility.improveFriendshipWithEveryoneInRegion(who, friendshipGain, "Town");
                         }
                     }
 
@@ -242,8 +240,7 @@ namespace BinningSkill
     {
         public static void Postfix(
             CraftingRecipe __instance,
-            string name,
-            bool isCookingRecipe)
+            string name)
         {
             try
             {
@@ -253,16 +250,16 @@ namespace BinningSkill
                     {
                         __instance.recipeList = new()
                         {
-                            { 334, 1 }
+                            { "(O)334", 1 }
                         };
                     }
                     else
                     {
                         __instance.recipeList = new()
                         {
-                            { 388, 15 },
-                            { 390, 15 },
-                            { 334, 1 }
+                            { "(O)388", 15 },
+                            { "(O)390", 15 },
+                            { "(O)334", 1 }
                         };
                     }
                 }
@@ -409,7 +406,6 @@ namespace BinningSkill
         }
 
         internal static void Postfix(
-            object input,
             bool __result,
             object __instance)
         {
@@ -431,7 +427,7 @@ namespace BinningSkill
                             {
                                 friendshipGain *= 2;
                             }
-                            Utility.improveFriendshipWithEveryoneInRegion(Game1.player, friendshipGain, 2);
+                            Utility.improveFriendshipWithEveryoneInRegion(Game1.player, friendshipGain, "Town");
                         }
                     }
 
@@ -517,7 +513,7 @@ namespace BinningSkill
                 __state = new object[]
                 {
                     whichCan,
-                    ____chest.items.Count,
+                    ____chest.Items.Count,
                 };
             }
             catch (Exception e)
@@ -535,7 +531,7 @@ namespace BinningSkill
                 if (__state != null && __state.Length > 0)
                 {
                     int exp = 0;
-                    if (____chest.items.Count > (int)__state[1])
+                    if (____chest.Items.Count > (int)__state[1])
                     {
                         exp = ModEntry.Config.ExperienceFromTrashSuccess;
                     } else
@@ -708,7 +704,7 @@ namespace BinningSkill
             }
             if (Game1.player.HasCustomPrestigeProfession(BinningSkill.Sneak))
             {
-                if (c != null && c is NPC npc && !(c is StardewValley.Characters.Horse))
+                if (c != null && c is NPC npc && c is not StardewValley.Characters.Horse)
                 {
                     // TODO: this plays weird with Garbage Day.
                     c.doEmote(32);

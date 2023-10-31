@@ -10,6 +10,10 @@ namespace BetterFestivalNotifications
         [ConfigOption]
         public string StartSound { get; set; } = "crystal";
 
+
+        [ConfigOption]
+        public int WarnHoursAheadOfTime { get; set; } = 2;
+
         [ConfigOption]
         public bool PlayWarnSound { get; set; } = true;
 
@@ -18,6 +22,7 @@ namespace BetterFestivalNotifications
 
         [ConfigOption]
         public string WarnSound { get; set; } = "phone";
+
 
         [ConfigOption]
         public bool PlayOverSound { get; set; } = false;

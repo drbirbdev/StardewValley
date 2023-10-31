@@ -22,7 +22,7 @@ namespace LookToTheSky
                 if (slingshot.attachments[0] is null)
                 {
                     // TODO: figure out better pitch or sound
-                    Game1.playSoundPitched("clam_tone", 0);
+                    Game1.playSound("clam_tone", 0);
                     return;
                 }
                 int speed = 1;

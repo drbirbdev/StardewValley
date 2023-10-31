@@ -35,7 +35,7 @@ namespace LookToTheSky
 
         public override void OnExit()
         {
-            Game1.createItemDebris(this.Dropped, Game1.player.position, 2, Game1.currentLocation);
+            Game1.createItemDebris(this.Dropped, Game1.player.getStandingPosition(), 2, Game1.currentLocation);
         }
     }
 }

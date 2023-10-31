@@ -32,17 +32,6 @@ namespace PanningUpgrades
             base.IndexOfMenuItemView = -1;
         }
 
-        public override Item getOne()
-        {
-            UpgradeablePan result = new()
-            {
-                UpgradeLevel = base.UpgradeLevel
-            };
-            this.CopyEnchantments(this, result);
-            result._GetOneFrom(this);
-            return result;
-        }
-
         protected override string loadDisplayName()
         {
             return ModEntry.Instance.Helper.Translation.Get("tool.orepan.name").ToString();
@@ -241,29 +230,6 @@ namespace PanningUpgrades
             return false;
         }
 
-        public override bool actionWhenPurchased()
-        {
-            if (this.UpgradeLevel > 0 && Game1.player.toolBeingUpgraded.Value == null)
-            {
-                Tool t = Game1.player.getToolFromName("Pan");
-                Game1.player.removeItemFromInventory(t);
-                if (t is not UpgradeablePan)
-                {
-                    t = new UpgradeablePan(upgradeLevel: 2);
-                } else
-                {
-                    t.UpgradeLevel++;
-                }
-                Game1.player.toolBeingUpgraded.Value = t;
-                Game1.player.daysLeftForToolUpgrade.Value = ModEntry.Config.UpgradeDays;
-                Game1.playSound("parry");
-                Game1.exitActiveMenu();
-                Game1.drawDialogue(Game1.getCharacterFromName("Clint"), Game1.content.LoadString("Strings\\StringsFromCSFiles:Tool.cs.14317"));
-                return true;
-            }
-            return base.actionWhenPurchased();
-        }
-
         public static void AddToShopStock(Dictionary<ISalable, int[]> itemPriceAndStock, Farmer who)
         {
             if (who == Game1.player && CanBeUpgraded())
@@ -292,12 +258,11 @@ namespace PanningUpgrades
         {
             return pan.UpgradeLevel switch
             {
-                0 => new Hat(ModEntry.JsonAssets.GetHatId("Pan")),
-                1 => new Hat(71),
-                2 => new Hat(ModEntry.JsonAssets.GetHatId("Steel Pan")),
-                3 => new Hat(ModEntry.JsonAssets.GetHatId("Gold Pan")),
-                4 => new Hat(ModEntry.JsonAssets.GetHatId("Iridium Pan")),
-                _ => new Hat(ModEntry.JsonAssets.GetHatId("Pan")),
+                0 => new Hat("drbirbdev.PanningUpgrades_PanHat"),
+                1 => new Hat("drbirbdev.PanningUpgrades_CopperPanHat"),
+                2 => new Hat("drbirbdev.PanningUpgrades_SteelPanHat"),
+                3 => new Hat("drbirbdev.PanningUpgrades_GoldPanHat"),
+                _ => new Hat("drbirbdev.PanningUpgrades_IridiumPanHat"),
             };
         }
     }

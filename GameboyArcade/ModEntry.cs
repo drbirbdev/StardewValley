@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using BirbShared;
 using BirbShared.APIs;
 using BirbShared.Mod;
+using Microsoft.Xna.Framework;
 using StardewModdingAPI;
+using StardewValley;
 
 namespace GameboyArcade
 {
@@ -15,7 +17,7 @@ namespace GameboyArcade
         internal static Config Config;
         [SmapiCommand]
         internal static Command Command;
-        [SmapiApi(UniqueID = "spacechase0.DynamicGameAssets")]
+        [SmapiApi(UniqueID = "spacechase0.DynamicGameAssets", IsRequired = false)]
         internal static IDynamicGameAssetsApi DynamicGameAssets;
 
         internal static Dictionary<string, Content> LoadedContentPacks = new Dictionary<string, Content>();
@@ -30,6 +32,34 @@ namespace GameboyArcade
             this.Helper.Events.Multiplayer.ModMessageReceived += this.Multiplayer_ModMessageReceived_SaveRequest;
             this.Helper.Events.Multiplayer.ModMessageReceived += this.Multiplayer_ModMessageReceived_LoadRequest;
 
+            GameLocation.RegisterTouchAction("drbirbdev.GameboyArcade_Play", this.HandlePlay);
+            Event.RegisterCustomCommand("drbirbdev.GameboyArcade_Cutscene", this.HandleCutscene);
+        }
+
+        private void HandleCutscene(Event @event, string[] args, EventContext context)
+        {
+            if (Game1.currentMinigame != null)
+            {
+                return;
+            }
+            if (ModEntry.LoadedContentPacks.ContainsKey(args[0]))
+            {
+                Content content = ModEntry.LoadedContentPacks[args[0]];
+                if (!content.EnableEvents)
+                {
+                    Log.Error($"Event is attempting to use minigame {content.UniqueID} in a cutscene, but that content pack has disallowed this.");
+                    return;
+                }
+
+                GameboyMinigame.LoadGame(content, true);
+                @event.CurrentCommand++;
+            }
+        }
+
+        private void HandlePlay(GameLocation location, string[] args, Farmer farmer, Vector2 vector)
+        {
+            Content content = ModEntry.LoadedContentPacks[args[0]];
+            Utilities.ShowArcadeMenu(content.UniqueID, content.Name);
         }
 
         public override object GetApi()

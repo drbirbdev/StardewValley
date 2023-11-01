@@ -18,39 +18,6 @@ namespace GameboyArcade
         }
     }
 
-    [HarmonyPatch(typeof(StardewValley.Object), nameof(StardewValley.Object.checkForAction))]
-    class Object_CheckForAction
-    {
-        internal static void Postfix(Farmer who, bool justCheckingForActivity, ref bool __result, StardewValley.Object __instance)
-        {
-            try
-            {
-                // TODO: check if BigCraftable is any of the loaded content packs
-                if (ModEntry.DynamicGameAssets is null)
-                {
-                    return;
-                }
-                string dgaId = ModEntry.DynamicGameAssets.GetDGAItemId(__instance);
-                if (dgaId is not null && ModEntry.BigCraftableIDMap.ContainsKey(dgaId))
-                {
-                    if (justCheckingForActivity)
-                    {
-                        __result = true;
-                        return;
-                    }
-                    string minigameId = ModEntry.BigCraftableIDMap[dgaId];
-
-                    Utilities.ShowArcadeMenu(minigameId, __instance.DisplayName);
-                }
-
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-        }
-    }
-
     [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.answerDialogueAction))]
     class GameLocation_AnswerDialogueAction
     {
@@ -81,68 +48,4 @@ namespace GameboyArcade
             }
         }
     }
-
-    // TODO: may need to make new event command instead
-    [HarmonyPatch(typeof(Event.DefaultCommands), nameof(Event.DefaultCommands.Cutscene))]
-    class Event_Command_Cutscene
-    {
-        internal static void Postfix(string[] split, Event @event)
-        {
-            try
-            {
-                if (Game1.currentMinigame != null)
-                {
-                    return;
-                }
-                if (ModEntry.LoadedContentPacks.ContainsKey(split[1]))
-                {
-                    Content content = ModEntry.LoadedContentPacks[split[1]];
-                    if (!content.EnableEvents)
-                    {
-                        Log.Error($"Event is attempting to use minigame {content.UniqueID} in a cutscene, but that content pack has disallowed this.");
-                        return;
-                    }
-
-                    GameboyMinigame.LoadGame(content, true);
-                    @event.CurrentCommand++;
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.performAction))]
-    class GameLocation_PerformAction
-    {
-        internal static void Postfix(string action, Farmer who)
-        {
-            try
-            {
-                if (action != null && who.IsLocalPlayer && action.StartsWith("drbirbdev.GameboyArcade "))
-                {
-                    string[] actionParams = action.Split(' ');
-                    if (actionParams.Length < 2)
-                    {
-                        Log.Error($"TileLocation is attempting to play a Gameboy Arcade minigame without specifying which game.");
-                        return;
-                    }
-                    if (!ModEntry.LoadedContentPacks.ContainsKey(actionParams[1]))
-                    {
-                        Log.Error($"TileLocation is attempting to play a non-existent Gameboy Arcade minigame.");
-                        return;
-                    }
-                    Content content = ModEntry.LoadedContentPacks[actionParams[1]];
-                    Utilities.ShowArcadeMenu(content.UniqueID, content.Name);
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-        }
-    }
-
 }

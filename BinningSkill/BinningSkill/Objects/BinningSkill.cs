@@ -75,7 +75,7 @@ namespace BinningSkill
                 string rarity = ModEntry.Instance.I18n.Get($"skill.perk_rarity_{level}");
                 result.Add(ModEntry.Instance.I18n.Get("skill.perk_bonus", new { rarity }));
             }
-            
+
             return result;
         }
 

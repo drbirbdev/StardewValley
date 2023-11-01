@@ -1,0 +1,135 @@
+﻿{
+    "Changes": [
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "#0" ],
+            "Entries": {
+                "MinStack": 3,
+                "MaxStack": 5
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "#1" ],
+            "Entries": {
+                "MinStack": 3,
+                "MaxStack": 5
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "#2" ],
+            "Entries": {
+                "MinStack": 3,
+                "MaxStack": 5
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Driftwood", "OutputItems", "#0" ],
+            "Entries": {
+                "MinStack": 3,
+                "MaxStack": 5
+
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Driftwood", "OutputItems", "#1" ],
+            "Entries": {
+                "MinStack": 3,
+                "MaxStack": 5
+
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_BrokenGlasses", "OutputItems", "#0" ],
+            "Entries": {
+                "MinStack": 1,
+                "MaxStack": 3
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_BrokenCd", "OutputItems", "#0" ],
+            "Entries": {
+                "MinStack": 1,
+                "MaxStack": 3
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_SoggyNewspaper", "OutputItems", "#0" ],
+            "Entries": {
+                "MinStack": 1,
+                "MaxStack": 3
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_SoggyNewspaper", "OutputItems", "#1" ],
+            "Entries": {
+                "MinStack": 5,
+                "MaxStack": 5
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)drbirbdev.BinningSkill_TrashCan", "OutputRules", "Default", "OutputItems", "Random Trash" ],
+            "Entries": {
+                "MinStack": 2,
+                "MaxStack": 4
+            },
+            "When": {
+                "HasProfession": "{{SalvagerP}}"
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)drbirbdev.BinningSkill_RecyclingBin", "OutputRules", "Default", "OutputItems", "Random Geode" ],
+            "Entries": {
+                "MinStack": 1,
+                "MaxStack": 3
+            },
+            "When": {
+                "HasProfession": "{{SalvagerP}}"
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)drbirbdev.BinningSkill_RecyclingBin", "OutputRules", "Default", "OutputItems", "Base Season Item" ],
+            "Entries": {
+                "MinStack": 1,
+                "MaxStack": 3
+            },
+            "When": {
+                "HasProfession": "{{SalvagerP}}"
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)drbirbdev.BinningSkill_RecyclingBin", "OutputRules", "Default", "OutputItems", "Random Trash" ],
+            "Entries": {
+                "MinStack": 2,
+                "MaxStack": 5
+            },
+            "When": {
+                "HasProfession": "{{SalvagerP}}"
+            }
+        }
+    ]
+}

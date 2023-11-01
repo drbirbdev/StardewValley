@@ -39,12 +39,5 @@ namespace BinningSkill
         public Texture2D SneakP { get; set; }
         [AssetProperty("assets/upsellerP.png")]
         public Texture2D UpsellerP { get; set; }
-
-
-        [AssetProperty("assets/trashtable.json")]
-        public Dictionary<string, List<string>> TrashTable { get; set; }
-
-        [AssetProperty("assets/salvagertable.json")]
-        public Dictionary<string, List<string>> SalvagerTable { get; set; }
     }
 }

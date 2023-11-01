@@ -12,16 +12,16 @@ namespace BinningSkill
         [ConfigPage("Experience")]
         [ConfigSectionTitle("Experience Modifiers")]
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromTrashFail { get; set; } = 10;
+        public int ExperienceFromCheckingTrash { get; set; } = 5;
 
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromTrashSuccess { get; set; } = 20;
+        public int ExperienceFromCheckingRecycling { get; set; } = 2;
 
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromTrashBonus { get; set; } = 30;
+        public int ExperienceFromComposting { get; set; } = 3;
 
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromRecycling { get; set; } = 5;
+        public int ExperienceFromRecycling { get; set; } = 2;
 
         [ConfigOption]
         public bool AutomateGrantsXp { get; set; } = true;
@@ -54,11 +54,14 @@ namespace BinningSkill
         // Environmentalist
         [ConfigSectionTitle("Environmentalist Profession Modifiers")]
         // Gain friendship for every N recyclables
-        [ConfigOption(Min = 10, Max = 1000, Interval = 10)]
-        public int RecyclingCountToGainFriendship { get; set; } = 100;
+        [ConfigOption(Min = 100, Max = 10000, Interval = 100)]
+        public int RecyclingCountToGainFriendship { get; set; } = 1000;
         // Amount of friendship to gain each time
-        [ConfigOption(Min = 0, Max = 10, Interval = 1)]
-        public int RecyclingFriendshipGain { get; set; } = 1;
+        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
+        public int RecyclingFriendshipGain { get; set; } = 10;
+        // Additional friendship if prestiged
+        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
+        public int RecyclingPrestigeFriendshipGain { get; set; } = 10;
 
         // Salvager
         [ConfigSectionTitle("Salvager Profession Modifiers")]

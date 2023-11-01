@@ -1,0 +1,25 @@
+﻿{
+    "Changes": [
+        {
+            "Action": "EditData",
+            "Target": "Data/CraftingRecipes",
+            "Fields": {
+                "Recycling Machine": {
+                    "0": "338 15 390 15 334 1"
+                }
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/CraftingRecipes",
+            "Fields": {
+                "drbirbdev.BinningSkill_AdvancedRecyclingMachine": {
+                    "0": "337 3 787 1 338 10"
+                }
+            },
+            "When": {
+                "HasProfessions": "{{RecyclerP}}"
+            }
+        }
+    ]
+}

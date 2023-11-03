@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using StardewValley;
 using SpaceCore;
-using Microsoft.Xna.Framework;
 using BirbShared;
 using System.Reflection;
+using StardewValley.GameData.GarbageCans;
+using StardewValley.Characters;
 using System.Reflection.Emit;
 
 namespace BinningSkill
@@ -33,13 +34,14 @@ namespace BinningSkill
                     return;
                 }
 
-                float extraPercentage = ModEntry.Config.ReclaimerExtraValuePercent / 100.0f;
+                float extraPercentage = ModEntry.Config.ReclaimerExtraValuePercent;
                 if (f.HasCustomPrestigeProfession(BinningSkill.Reclaimer))
                 {
-                    extraPercentage *= 1.5f;
+                    extraPercentage += ModEntry.Config.ReclaimerPrestigeExtraValuePercent;
                 }
+                int extraPrice = (int)(i.sellToStorePrice() * extraPercentage);
 
-                __result = (int)(__result * extraPercentage);
+                __result += extraPrice;
             }
             catch (Exception e)
             {
@@ -89,59 +91,191 @@ namespace BinningSkill
     }
 
     /// <summary>
-    /// Sneak Profession
+    /// No Default NPC Reactions
+    /// No animation if search failed
     /// </summary>
     [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.CheckGarbage))]
     class GameLocation_CheckGarbage
     {
+        public static void Prefix(ref bool reactNpcs)
+        {
+            reactNpcs = false;
+        }
+
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction instr in instructions)
+            foreach (CodeInstruction instruction in instructions)
             {
-                if (instr.Is(OpCodes.Call, AccessTools.Method(typeof(Utility), nameof(Utility.isThereAFarmerOrCharacterWithinDistance))))
+                if (instruction.LoadsConstant("LooseSprites\\Cursors2"))
                 {
-                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(GameLocation_CheckGarbage), nameof(CheckVicinity)));
+                    yield return new CodeInstruction(OpCodes.Ldarg_1).WithLabels(instruction.labels).WithBlocks(instruction.blocks);
+                    yield return CodeInstruction.Call(typeof(GameLocation_CheckGarbage), nameof(GameLocation_CheckGarbage.GetAnimationReplacement));
+                }
+                else if (instruction.Calls(AccessTools.DeclaredMethod(typeof(GameLocation), nameof(GameLocation.TryGetGarbageItem))))
+                {
+                    yield return instruction;
+
+                    Label doTrashAnimation = new Label();
+                    yield return new CodeInstruction(OpCodes.Brtrue, doTrashAnimation);
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return new CodeInstruction(OpCodes.Ret);
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_1).WithLabels(doTrashAnimation);
                 }
                 else
                 {
-                    yield return instr;
+                    yield return instruction;
                 }
             }
         }
 
-        public static Character CheckVicinity(Vector2 tileLocation, int tilesAway, GameLocation location)
+        public static string GetAnimationReplacement(string garbageCanId)
         {
-            Character c = Utility.isThereAFarmerOrCharacterWithinDistance(tileLocation, tilesAway, location);
-            if (c != null && c is NPC && c is not StardewValley.Characters.Horse && c.Name.Equals("Linus"))
-            {
-                return c;
-            }
-            if (!Game1.player.HasCustomProfession(BinningSkill.Sneak))
-            {
-                return c;
-            }
-            if (Game1.player.HasCustomPrestigeProfession(BinningSkill.Sneak))
-            {
-                if (c != null && c is NPC npc && c is not StardewValley.Characters.Horse)
-                {
-                    c.doEmote(32);
-                    Game1.player.changeFriendship(50, npc);
-                    switch (npc.Age)
-                    {
-                        case 1:
-                            npc.setNewDialogue(ModEntry.Instance.I18n.Get("sneak.prestige.dialogue.teen"), true, true);
-                            break;
-                        case 2:
-                            npc.setNewDialogue(ModEntry.Instance.I18n.Get("sneak.prestige.dialogue.child"), true, true);
-                            break;
-                        default:
-                            npc.setNewDialogue(ModEntry.Instance.I18n.Get("sneak.prestige.dialogue.adult"), true, true);
-                            break;
-                    }
-                    Game1.drawDialogue(npc);
-                }
-            }
-            return null;
+            GarbageCanData allData = Game1.content.Load<GarbageCanData>("Data\\GarbageCans");
+            allData.GarbageCans.TryGetValue(garbageCanId, out GarbageCanEntryData data);
+            string textureName = data?.CustomFields?.GetValueOrDefault("drbirbdev.BinningSkill_AnimationTexture", null);
+            return textureName ?? "LooseSprites\\Cursors2";
         }
     }
+
+    /// <summary>
+    /// Garbage Can Level Requirements
+    /// Sneak Profession
+    /// Custom Noise Level
+    /// Binning Level Bonuses
+    /// Mega, DoubleMega Level Requirements
+    /// Change return meaning
+    ///  true = not caught, high enough level
+    ///  false = caught, level too low
+    /// </summary>
+    [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.TryGetGarbageItem))]
+    class GameLocation_TryGetGarbageIItem
+    {
+        public static bool Prefix(string id, ref double dailyLuck, ref Random garbageRandom, GameLocation __instance, ref bool __state)
+        {
+            try
+            {
+                __state = true;
+
+                // Check garbage can level
+                GarbageCanData allData = Game1.content.Load<GarbageCanData>("Data\\GarbageCans");
+                allData.GarbageCans.TryGetValue(id, out GarbageCanEntryData data);
+                _ = int.TryParse(data?.CustomFields?.GetValueOrDefault("drbirbdev.BinningSkill_MinLevel", null), out int minLevel);
+                if (Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < minLevel)
+                {
+                    Game1.showGlobalMessage(ModEntry.Instance.I18n.Get("skill.required_level", new { level = minLevel } ));
+                    garbageRandom = Utility.CreateDaySaveRandom(777 + Utility.GetDeterministicHashCode(id));
+                    __state = false;
+                    return false;
+                }
+
+                // Sneak Profession, custom sound range
+                int noiseLevel = int.TryParse(data?.CustomFields?.GetValueOrDefault("drbirbdev.BinningSkill_NoiseLevel"), out noiseLevel) ? noiseLevel : 7;
+                if (Game1.player.HasCustomPrestigeProfession(BinningSkill.Sneak))
+                {
+                    noiseLevel += ModEntry.Config.PrestigeNoiseIncrease;
+                } else if (Game1.player.HasCustomProfession(BinningSkill.Sneak))
+                {
+                    noiseLevel -= ModEntry.Config.NoiseReduction;
+                }
+                if (noiseLevel > 0 && Utility.isThereAFarmerOrCharacterWithinDistance(Game1.player.Tile, noiseLevel, __instance) is NPC npc && !(npc is Horse))
+                {
+                    if (DoCaughtReactions(npc))
+                    {
+                        garbageRandom = Utility.CreateDaySaveRandom(777 + Utility.GetDeterministicHashCode(id));
+                        __state = false;
+                        __instance.playSound("trashcan");
+                        return false;
+                    }
+                }
+
+
+                // Alter dailyLuck, adding more luck depending on level
+                dailyLuck += ModEntry.Config.PerLevelBaseDropChanceBonus * Game1.player.GetCustomSkillLevel("drbirbdev.Binning") / 100.0f;
+
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            }
+            return true;
+        }
+
+        public static void Postfix(ref Item item, ref GarbageCanItemData selected, ref bool __result, bool __state)
+        {
+            try
+            {
+                __result = __state;
+                if (selected == null)
+                {
+                    return;
+                }
+                // Remove Mega, DoubleMega results if not meeting level requirements
+                if ((selected.IsMegaSuccess && Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < ModEntry.Config.MegaMinLevel) ||
+                    selected.IsDoubleMegaSuccess && Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < ModEntry.Config.DoubleMegaMinLevel)
+                {
+                    item = null;
+                    selected = null;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            }
+        }
+
+        // TODO: Reverse Patch for vanilla behavior
+        public static bool DoCaughtReactions(NPC npc)
+        {
+            bool isNegativeReaction = true;
+            if (npc.Name.Equals("Linus"))
+            {
+                npc.doEmote(32);
+                npc.setNewDialogue("Data\\ExtraDialogue:Town_DumpsterDiveComment_Linus", add: true, clearOnMovement: true);
+                Game1.player.changeFriendship(5, npc);
+                Game1.Multiplayer.globalChatInfoMessage("LinusTrashCan");
+                isNegativeReaction = false;
+            }
+            else if (Game1.player.HasCustomPrestigeProfession(BinningSkill.Sneak))
+            {
+                npc.doEmote(32);
+                Game1.player.changeFriendship(25, npc);
+                switch (npc.Age)
+                {
+                    case 1:
+                        npc.setNewDialogue(ModEntry.Instance.I18n.Get("sneak.prestige.dialogue.teen"), true, true);
+                        break;
+                    case 2:
+                        npc.setNewDialogue(ModEntry.Instance.I18n.Get("sneak.prestige.dialogue.child"), true, true);
+                        break;
+                    default:
+                        npc.setNewDialogue(ModEntry.Instance.I18n.Get("sneak.prestige.dialogue.adult"), true, true);
+                        break;
+                }
+                isNegativeReaction = false;
+            }
+            else
+            {
+                switch (npc.Age)
+                {
+                    case 2:
+                        npc.doEmote(28);
+                        npc.setNewDialogue("Data\\ExtraDialogue:Town_DumpsterDiveComment_Child", add: true, clearOnMovement: true);
+                        break;
+                    case 1:
+                        npc.doEmote(8);
+                        npc.setNewDialogue("Data\\ExtraDialogue:Town_DumpsterDiveComment_Teen", add: true, clearOnMovement: true);
+                        break;
+                    default:
+                        npc.doEmote(12);
+                        npc.setNewDialogue("Data\\ExtraDialogue:Town_DumpsterDiveComment_Adult", add: true, clearOnMovement: true);
+                        break;
+                }
+                Game1.player.changeFriendship(-25, npc);
+            }
+            Game1.drawDialogue(npc);
+
+            return isNegativeReaction;
+        }
+    }
+
 }

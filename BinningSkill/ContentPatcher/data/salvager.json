@@ -3,7 +3,7 @@
         {
             "Action": "EditData",
             "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "#0" ],
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "(O)382" ],
             "Entries": {
                 "MinStack": 3,
                 "MaxStack": 5
@@ -12,7 +12,7 @@
         {
             "Action": "EditData",
             "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "#1" ],
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "(O)380" ],
             "Entries": {
                 "MinStack": 3,
                 "MaxStack": 5
@@ -21,7 +21,7 @@
         {
             "Action": "EditData",
             "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "#2" ],
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Trash", "OutputItems", "(O)390" ],
             "Entries": {
                 "MinStack": 3,
                 "MaxStack": 5
@@ -30,17 +30,7 @@
         {
             "Action": "EditData",
             "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_Driftwood", "OutputItems", "#0" ],
-            "Entries": {
-                "MinStack": 3,
-                "MaxStack": 5
-
-            }
-        },
-        {
-            "Action": "EditData",
-            "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_Driftwood", "OutputItems", "#1" ],
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Driftwood", "OutputItems", "(O)382" ],
             "Entries": {
                 "MinStack": 3,
                 "MaxStack": 5
@@ -50,7 +40,17 @@
         {
             "Action": "EditData",
             "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_BrokenGlasses", "OutputItems", "#0" ],
+            "TargetField": [ "(BC)20", "OutputRules", "Default_Driftwood", "OutputItems", "(O)388" ],
+            "Entries": {
+                "MinStack": 3,
+                "MaxStack": 5
+
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/Machines",
+            "TargetField": [ "(BC)20", "OutputRules", "Default_BrokenGlasses", "OutputItems", "(O)338" ],
             "Entries": {
                 "MinStack": 1,
                 "MaxStack": 3
@@ -59,7 +59,7 @@
         {
             "Action": "EditData",
             "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_BrokenCd", "OutputItems", "#0" ],
+            "TargetField": [ "(BC)20", "OutputRules", "Default_BrokenCd", "OutputItems", "(O)338" ],
             "Entries": {
                 "MinStack": 1,
                 "MaxStack": 3
@@ -68,7 +68,7 @@
         {
             "Action": "EditData",
             "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_SoggyNewspaper", "OutputItems", "#0" ],
+            "TargetField": [ "(BC)20", "OutputRules", "Default_SoggyNewspaper", "OutputItems", "(O)428" ],
             "Entries": {
                 "MinStack": 1,
                 "MaxStack": 3
@@ -77,7 +77,7 @@
         {
             "Action": "EditData",
             "Target": "Data/Machines",
-            "TargetField": [ "(BC)20", "OutputRules", "Default_SoggyNewspaper", "OutputItems", "#1" ],
+            "TargetField": [ "(BC)20", "OutputRules", "Default_SoggyNewspaper", "OutputItems", "(O)93" ],
             "Entries": {
                 "MinStack": 5,
                 "MaxStack": 5

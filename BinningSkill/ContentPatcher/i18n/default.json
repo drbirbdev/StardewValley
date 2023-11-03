@@ -1,0 +1,10 @@
+﻿{
+    "bc.composter.name": "Composter",
+    "bc.composter.desc": "A machine that turns edible matter into fertilizer.",
+    "bc.trashcan.name": "Trash Bin",
+    "bc.trashcan.desc": "A trash can. Put them around town and people will throw trash away in them.",
+    "bc.recyclingbin.name": "Recycling Bin",
+    "bc.recyclingbin.desc": "An environmentally friendly alternative to trash. Put them around town and people might throw out some good stuff.",
+    "bc.advancedrecyclingmachine.name": "Advanced Recycling Machine",
+    "bc.advancedrecyclingmachine.desc": "A more advanced Recycling Machine. Turns trash into resources, but require"
+}

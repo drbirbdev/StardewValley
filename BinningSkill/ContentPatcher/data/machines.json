@@ -21,10 +21,10 @@
             "Action": "EditData",
             "Target": "Data/CraftingRecipes",
             "Entries": {
-                "drbirbdev.BinningSkill_TrashCan": "335 2 390 30/Field/drbirbdev.BinningSkill_TrashCan/BC/drbirbdev.Binning 2",
-                "drbirbdev.BinningSkill_Composter": "388 70 92 20 771 30/Field/drbirbdev.BinningSkill_Composter/BC/drbirbdev.Binning 4",
-                "drbirbdev.BinningSkill_RecyclingBin": "335 3 336 2 771 10/drbirbdev.BinningSkill_RecyclingBin/drbirbdev.Binning 7",
-                "drbirbdev.BinningSkill_AdvancedRecyclingMachine": "337 5 787 2 338 10/drbirbdev.BinningSkill_AdvancedRecyclingMachine/drbirbdev.Binning 8"
+                "drbirbdev.BinningSkill_TrashCan": "335 2 390 30/Field/drbirbdev.BinningSkill_TrashCan/BC/drbirbdev.Binning 2/{{i18n: bc.trashcan.name}}",
+                "drbirbdev.BinningSkill_Composter": "388 70 92 20 771 30/Field/drbirbdev.BinningSkill_Composter/BC/drbirbdev.Binning 4/{{i18n: bc.composter.name}}",
+                "drbirbdev.BinningSkill_RecyclingBin": "335 3 336 2 771 10/Field/drbirbdev.BinningSkill_RecyclingBin/BC/drbirbdev.Binning 7/{{i18n: bc.recyclingbin.name}}",
+                "drbirbdev.BinningSkill_AdvancedRecyclingMachine": "337 5 787 2 338 10/Field/drbirbdev.BinningSkill_AdvancedRecyclingMachine/BC/drbirbdev.Binning 8/{{i18n: bc.advancedrecyclingmachine.name}}"
             }
         },
 

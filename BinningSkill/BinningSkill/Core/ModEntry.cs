@@ -44,16 +44,38 @@ namespace BinningSkill
             this.Helper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded;
 
             // TODO: I don't think this includes buffs.  I don't know if buffs can affect custom skills.
-            GameStateQuery.Register("PLAYER_BINNING_LEVEL", (string[] query, GameLocation location, Farmer player, Item targetItem, Item inputItem, Random random) =>
+            GameStateQuery.Register("drbirbdev.BinningSkill_LEVEL", (string[] query, GameLocation location, Farmer player, Item targetItem, Item inputItem, Random random) =>
             {
                 return GameStateQuery.Helpers.PlayerSkillLevelImpl(query, player, (Farmer target) => SpaceCore.Skills.GetSkillLevel(target, "drbirbdev.Binning"));
+            });
+
+            GameStateQuery.Register("drbirbdev.BinningSkill_RANDOM", (string[] query, GameLocation location, Farmer player, Item targetItem, Item inputItem, Random random) =>
+            {
+                if (!ArgUtility.TryGetFloat(query, 1, out float chance, out string error))
+                {
+                    return GameStateQuery.Helpers.ErrorResult(query, error);
+                }
+                bool addDailyLuck = false;
+                for (int i = 2; i < query.Length; i++)
+                {
+                    if (string.Equals(query[i], "@addDailyLuck", StringComparison.OrdinalIgnoreCase))
+                    {
+                        addDailyLuck = true;
+                    }
+                }
+                if (addDailyLuck)
+                {
+                    chance += (float)Game1.player.DailyLuck;
+                }
+                chance += Config.PerLevelRareDropChanceBonus * player.GetCustomSkillLevel("drbirbdev.Binning");
+                return random.NextDouble() < (double)chance;
             });
 
             this.Helper.Events.GameLoop.TimeChanged += this.GameLoop_TimeChanged;
         }
 
 
-
+        // TODO: Move stat tracking
         private uint PreviousTrashCansChecked;
         private int PiecesOfTrashUntilFriendshipIncrease;
         private uint PreviousPiecesOfTrashRecycled;

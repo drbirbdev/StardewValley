@@ -56,6 +56,17 @@
             "Action": "Include",
             "FromFile": "data/machines.json"
         },
+        // Alter trash animations to work better with higher tier cans
+        {
+            "Action": "Include",
+            "FromFile": "data/textures.json"
+        },
+        // Add new cans to maps
+        {
+            "Action": "Include",
+            "FromFile": "data/map_replacements.json"
+        },
+        // Profession related patches
         {
             "Action": "Include",
             "FromFile": "data/recycler.json",

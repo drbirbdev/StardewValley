@@ -1,0 +1,24 @@
+﻿{
+    "Changes": [
+        {
+            "Action": "Load",
+            "Target": "Mods/drbirbdev.BinningSkill/CopperCanAnimation",
+            "FromFile": "assets/animation_copper_can.png"
+        },
+        {
+            "Action": "Load",
+            "Target": "Mods/drbirbdev.BinningSkill/IronCanAnimation",
+            "FromFile": "assets/animation_iron_can.png"
+        },
+        {
+            "Action": "Load",
+            "Target": "Mods/drbirbdev.BinningSkill/GoldCanAnimation",
+            "FromFile": "assets/animation_gold_can.png"
+        },
+        {
+            "Action": "Load",
+            "Target": "Mods/drbirbdev.BinningSkill/IridiumCanAnimation",
+            "FromFile": "assets/animation_iridium_can.png"
+        }
+    ]
+}

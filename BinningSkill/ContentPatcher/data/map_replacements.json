@@ -1,0 +1,1155 @@
+﻿{
+    "Changes": [
+        // Normal Cans
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Railroad",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 0,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 5,
+                "Y": 55,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 5,
+                        "Y": 56
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_RailroadNormal"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_RailroadNormal": {
+                    "Items": [
+                    ]
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Town",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 0,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 29,
+                "Y": 37,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 29,
+                        "Y": 38
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_TownNormal"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_TownNormal": {
+                    "Items": [
+                    ]
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Mountain",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 0,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 20,
+                "Y": 25,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 20,
+                        "Y": 26
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_MountainNormal1"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_MountainNormal1": {
+                    "Items": [
+                    ]
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Mountain",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 0,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 80,
+                "Y": 8,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 80,
+                        "Y": 9
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_MountainNormal2"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_MountainNormal2": {
+                    "Items": [
+                    ]
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/SeedShop",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 0,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 20,
+                "Y": 27,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 20,
+                        "Y": 28
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_SeedShopNormal"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_SeedShopNormal": {
+                    "Items": [
+                    ]
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Forest",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 0,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 79,
+                "Y": 13,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 79,
+                        "Y": 14
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_ForestNormal"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_ForestNormal": {
+                    "Items": [
+                    ]
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/BusStop",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 0,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 3,
+                "Y": 11,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 3,
+                        "Y": 12
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_BusStopNormal"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_BusStopNormal": {
+                    "Items": [
+                    ]
+                }
+            }
+        },
+        // Copper Cans
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Backwoods",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 1,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 27,
+                "Y": 26,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 27,
+                        "Y": 27
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_BackwoodsCopper"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_BackwoodsCopper": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "2",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/CopperCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Desert",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 1,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 9,
+                "Y": 51,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 9,
+                        "Y": 52
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_DesertCopper"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_DesertCopper": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "2",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/CopperCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Forest",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 1,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 3,
+                "Y": 33,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 3,
+                        "Y": 34
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_ForestCopper"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_ForestCopper": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "2",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/CopperCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Island_Resort",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 1,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 18,
+                "Y": 4,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 18,
+                        "Y": 5
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_IslandResortCopper"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_IslandResortCopper": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "2",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/CopperCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Town",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 1,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 102,
+                "Y": 40,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 102,
+                        "Y": 41
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_TownCopper"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_TownCopper": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "2",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/CopperCanAnimation"
+                    }
+                }
+            }
+        },
+
+        // Iron Cans
+        {
+            "Action": "EditMap",
+            "Target": "Maps/BugLand",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 2,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 48,
+                "Y": 45,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 48,
+                        "Y": 46
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_BugLandIron"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_BugLandIron": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "4",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IronCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Island_N",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 2,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 49,
+                "Y": 47,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 49,
+                        "Y": 48
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_IslandNIron"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_IslandNIron": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "4",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IronCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/IslandSouthEastCave",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 2,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 34,
+                "Y": 7,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 34,
+                        "Y": 8
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_IslandSouthEastCaveIron"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_IslandSouthEastCaveIron": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "4",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IronCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/WitchSwamp",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 2,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 22,
+                "Y": 20,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 22,
+                        "Y": 21
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_WitchSwampIron"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_WitchSwampIron": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "4",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IronCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Woods",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 2,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 45,
+                "Y": 17,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 45,
+                        "Y": 18
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_WoodsIron"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_WoodsIron": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "4",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IronCanAnimation"
+                    }
+                }
+            }
+        },
+
+        // Gold Cans
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Beach",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 3,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 90,
+                "Y": 3,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 90,
+                        "Y": 4
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_BeachGold"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_BeachGold": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "6",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/GoldCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Club",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 3,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 14,
+                "Y": 3,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 14,
+                        "Y": 4
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_ClubGold"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_ClubGold": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "6",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/GoldCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Forest",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 3,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 37,
+                "Y": 93,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 37,
+                        "Y": 94
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_ForestGold"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_ForestGold": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "6",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/GoldCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/MovieTheater",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 3,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 19,
+                "Y": 6,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 19,
+                        "Y": 7
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_MovieTheaterGold"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_MovieTheaterGold": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "6",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/GoldCanAnimation"
+                    }
+                }
+            }
+        },
+
+        // Iridium Cans
+        {
+            "Action": "EditMap",
+            "Target": "Maps/AbandonedJojaMart",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 4,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 12,
+                "Y": 6,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 12,
+                        "Y": 7
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_AbandonedJojaMartIridium"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_AbandonedJojaMartIridium": {
+                    "Items": [
+                        // Lost Bundle items
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "8",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IridiumCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/CommunityCenter_Joja",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 4,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 63,
+                "Y": 15,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 63,
+                        "Y": 16
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_CommunityCenterJojaIridium"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_CommunityCenterJojaIridium": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "8",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IridiumCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/CommunityCenter_Joja",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 4,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 63,
+                "Y": 15,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 63,
+                        "Y": 16
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_CommunityCenterJojaIridium"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_CommunityCenterJojaIridium": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "8",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IridiumCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/QiNutRoom",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 4,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 4,
+                "Y": 5,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 4,
+                        "Y": 6
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_QiNutRoomIridium"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_QiNutRoomIridium": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "8",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IridiumCanAnimation"
+                    }
+                }
+            }
+        },
+        {
+            "Action": "EditMap",
+            "Target": "Maps/Railroad",
+            "FromFile": "assets/Trashcans.tmx",
+            "FromArea": {
+                "X": 4,
+                "Y": 0,
+                "Width": 1,
+                "Height": 2
+            },
+            "ToArea": {
+                "X": 31,
+                "Y": 24,
+                "Width": 1,
+                "Height": 2
+            },
+            "PatchMode": "Overlay",
+            "MapTiles": [
+                {
+                    "Layer": "Buildings",
+                    "Position": {
+                        "X": 31,
+                        "Y": 25
+                    },
+                    "SetProperties": {
+                        "Action": "Garbage drbirbdev.BinningSkill_RailroadIridium"
+                    }
+                }
+            ]
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/GarbageCans",
+            "TargetField": [ "GarbageCans" ],
+            "Entries": {
+                "drbirbdev.BinningSkill_RailroadIridium": {
+                    "Items": [
+                    ],
+                    "CustomFields": {
+                        "drbirbdev.BinningSkill_MinLevel": "8",
+                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IridiumCanAnimation"
+                    }
+                }
+            }
+        }
+    ]
+}

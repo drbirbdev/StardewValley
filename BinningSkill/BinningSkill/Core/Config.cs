@@ -2,15 +2,15 @@ using BirbShared.Config;
 
 namespace BinningSkill
 {
-    [ConfigClass(I18NNameSuffix = "")]
+    [ConfigClass(I18NNameSuffix = "", I18NTextSuffix = "")]
     public class Config
     {
-        [ConfigPageLink("Experience", "Experience Modifiers")]
-        [ConfigPageLink("BonusDrops", "Bonus Drop Modifiers")]
-        [ConfigPageLink("Professions", "Profession Modifiers")]
+        [ConfigPageLink("Experience", "ExperienceModifiers")]
+        [ConfigPageLink("BonusDrops", "BonusDropModifiers")]
+        [ConfigPageLink("Professions", "ProfessionModifiers")]
 
         [ConfigPage("Experience")]
-        [ConfigSectionTitle("Experience Modifiers")]
+        [ConfigSectionTitle("ExperienceModifiers")]
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
         public int ExperienceFromCheckingTrash { get; set; } = 5;
 
@@ -18,41 +18,41 @@ namespace BinningSkill
         public int ExperienceFromCheckingRecycling { get; set; } = 2;
 
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromComposting { get; set; } = 3;
+        public int ExperienceFromComposting { get; set; } = 2;
 
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
         public int ExperienceFromRecycling { get; set; } = 2;
 
-        [ConfigOption]
-        public bool AutomateGrantsXp { get; set; } = true;
-
-        // Increase in chance of bonus drop per level.
+        // Increase in chance of any drop per level.
         [ConfigPage("BonusDrops")]
-        [ConfigSectionTitle("Bonus Drop Modifiers")]
+        [ConfigSectionTitle("BonusDropModifiers")]
+        [ConfigOption(Min = 0, Max = 1, Interval = 0.001f)]
+        public float PerLevelBaseDropChanceBonus { get; set; } = 0.03f;
+
+        // Increase in chance for rare drops (using drbirbdev.BinningSkill_RANDOM condition
+        [ConfigOption(Min = 0, Max = 1, Interval = 0.001f)]
+        public float PerLevelRareDropChanceBonus { get; set; } = 0.01f;
+
+        // What level to Mega drops become available
         [ConfigOption(Min = 0, Max = 10, Interval = 1)]
-        public int PerLevelBonusDropChance { get; set; } = 3;
+        public int MegaMinLevel { get; set; } = 4;
 
-        // If getting an bonus drop, what is the chance it is rare?
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int RareDropChance { get; set; } = 20;
-
-        // If getting a rare bonus drop, what is the chance it is super rare?
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int SuperRareDropChance { get; set; } = 20;
-
-        // If getting a super rare bonus drop, what is the chance it is ultra rare?
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int UltraRareDropChance { get; set; } = 20;
+        // What level to DoubleMega drops become available
+        [ConfigOption(Min = 0, Max = 10, Interval = 1)]
+        public int DoubleMegaMinLevel { get; set; } = 7;
 
         [ConfigPage("Professions")]
-        [ConfigSectionTitle("Profession Modifiers")]
+        [ConfigSectionTitle("ProfessionModifiers")]
+
+
         // Recycler
         // No configs associated
-        [ConfigSectionTitle("Recycler Profession Modifiers")]
+        [ConfigSectionTitle("RecyclerProfessionModifiers")]
         [ConfigParagraph("None")]
 
+
         // Environmentalist
-        [ConfigSectionTitle("Environmentalist Profession Modifiers")]
+        [ConfigSectionTitle("EnvironmentalistProfessionModifiers")]
         // Gain friendship for every N recyclables
         [ConfigOption(Min = 100, Max = 10000, Interval = 100)]
         public int RecyclingCountToGainFriendship { get; set; } = 1000;
@@ -63,35 +63,35 @@ namespace BinningSkill
         [ConfigOption(Min = 0, Max = 100, Interval = 1)]
         public int RecyclingPrestigeFriendshipGain { get; set; } = 10;
 
+
         // Salvager
-        [ConfigSectionTitle("Salvager Profession Modifiers")]
-        // Chance of rare recyleable output when salvaging
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int SalvagerRareDropChance { get; set; } = 20;
-        // If getting a rare salvage, what is the chance it is super rare?
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int SalvagerSuperRareDropChance { get; set; } = 20;
+        [ConfigSectionTitle("SalvagerProfessionModifiers")]
+        [ConfigParagraph("None")]
 
 
         // Sneak
-        [ConfigSectionTitle("Sneak Profession Modifiers")]
-        // The amount of friendship needed to undo getting caught digging through a garbage can.
-        // If this is customized in another mod, then adjust this value to have no impact on friendship when using Sneak profession.
-        [ConfigOption(Min = 0)]
-        public int FriendshipRecovery { get; set; } = 25;
+        [ConfigSectionTitle("SneakProfessionModifiers")]
+        // How quiet is sneaking.  Default noise range is 7, so a value of 7 removes all noise.
+        [ConfigOption(Min = 0, Max = 25, Interval = 1)]
+        public int NoiseReduction { get; set; } = 5;
+        // How loud when diging through trash gives friendship.
+        [ConfigOption(Min = 0, Max = 25, Interval = 1)]
+        public int PrestigeNoiseIncrease { get; set; } = 0;
+
 
         // Upseller
-        [ConfigSectionTitle("Upseller Profession Modifiers")]
+        [ConfigSectionTitle("UpsellerProfessionModifiers")]
         [ConfigParagraph("None")]
         // No configs associated
 
-        // Reclaimer
-        [ConfigSectionTitle("Reclaimer Profession Modifiers")]
-        // The amount of extra value that the reclaimer skill provides.
-        // TODO: Apply
-        [ConfigOption(Min = 0, Max = 35, Interval = 1)]
-        public int ReclaimerExtraValuePercent { get; set; } = 20;
 
+        // Reclaimer
+        [ConfigSectionTitle("ReclaimerProfessionModifiers")]
+        // The amount of extra value that the reclaimer skill provides.
+        [ConfigOption(Min = 0, Max = 1, Interval = 0.01f)]
+        public float ReclaimerExtraValuePercent { get; set; } = 0.2f;
+        [ConfigOption(Min = 0, Max = 1, Interval = 0.01f)]
+        public float ReclaimerPrestigeExtraValuePercent { get; set; } = 0.2f;
 
     }
 }

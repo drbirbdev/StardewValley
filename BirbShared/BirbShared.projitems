@@ -25,6 +25,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mod\ModClassParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mod\ModClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\TokenClassParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\TokenClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TranspilerExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
   </ItemGroup>

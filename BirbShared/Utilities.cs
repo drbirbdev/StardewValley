@@ -74,7 +74,7 @@ namespace BirbShared
             yield return $"*.*.*";
         }
 
-        public static Item ParseDropString(string id, IJsonAssetsApi jsonAssets = null, IDynamicGameAssetsApi dynamicGameAssets = null)
+        public static Item ParseDropString(string id)
         {
             try
             {

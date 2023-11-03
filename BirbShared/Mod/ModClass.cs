@@ -28,6 +28,12 @@ namespace BirbShared.Mod
     }
 
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    class SmapiToken : Attribute
+    {
+
+    }
+
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     class SmapiContent : Attribute
     {
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
 using SpaceCore.Interface;
@@ -12,32 +13,78 @@ namespace BirbShared
         readonly object Tokens;
         readonly ITranslationHelper I18n;
 
-        readonly bool PrestigeEnabled = false;
+        bool PrestigeEnabled { get => PrestigeIcon != null; }
         readonly Texture2D PrestigeIcon;
         readonly Texture2D NormalIcon;
         private bool IsPrestiged = false;
         readonly IModHelper ModHelper;
 
-        public KeyedProfession(Skills.Skill skill, string id, Texture2D icon, ITranslationHelper i18n, object tokens = null) : base(skill, id)
-        {
-            this.Icon = icon;
-            this.I18n = i18n;
-            this.Tokens = tokens;
-        }
-
-        public KeyedProfession(Skills.Skill skill, string id, Texture2D icon, Texture2D prestigeIcon, IModHelper modHelper, object tokens = null) : base(skill, id)
+        public KeyedProfession(Skills.Skill skill, string id, Texture2D icon, IModHelper modHelper, object tokens = null, Texture2D prestigeIcon = null) : base(skill, id)
         {
             this.Icon = icon;
             this.I18n = modHelper.Translation;
             this.Tokens = tokens;
-
-            this.PrestigeEnabled = true;
-            this.PrestigeIcon = prestigeIcon;
-            this.NormalIcon = icon;
             this.ModHelper = modHelper;
 
-            modHelper.Events.Display.MenuChanged += this.DisplayEvents_MenuChanged_MARGO;
-            modHelper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded_MARGO;
+            if (prestigeIcon != null)
+            {
+                this.PrestigeIcon = prestigeIcon;
+                this.NormalIcon = icon;
+
+                modHelper.Events.Display.MenuChanged += this.DisplayEvents_MenuChanged_MARGO;
+                modHelper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded_MARGO;
+            }
+
+            modHelper.Events.Display.MenuChanged += this.DisplayEvents_MenuChanged;
+        }
+
+        private void DisplayEvents_MenuChanged(object sender, MenuChangedEventArgs e)
+        {
+            if (e.NewMenu is not SkillLevelUpMenu levelUpMenu)
+            {
+                return;
+            }
+
+            string skill = ModHelper.Reflection.GetField<string>(levelUpMenu, "currentSkill").GetValue();
+            if (skill != "drbirbdev.Binning")
+            {
+                return;
+            }
+
+            int level = ModHelper.Reflection.GetField<int>(levelUpMenu, "currentLevel").GetValue();
+
+            List<CraftingRecipe> newRecipes = new List<CraftingRecipe>();
+
+            int menuHeight = 0;
+            foreach (KeyValuePair<string, string> recipePair in CraftingRecipe.craftingRecipes)
+            {
+                string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 4, "");
+                if (conditions.Contains(skill) && conditions.Contains(level.ToString() ?? ""))
+                {
+                    CraftingRecipe recipe = new CraftingRecipe(recipePair.Key, isCookingRecipe: false);
+                    newRecipes.Add(recipe);
+                    Game1.player.craftingRecipes.TryAdd(recipePair.Key, 0);
+                    menuHeight += recipe.bigCraftable ? 128 : 64;
+                }
+            }
+            foreach (KeyValuePair<string, string> recipePair in CraftingRecipe.cookingRecipes)
+            {
+                string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 3, "");
+                if (conditions.Contains(skill) && conditions.Contains(level.ToString() ?? ""))
+                {
+                    CraftingRecipe recipe = new CraftingRecipe(recipePair.Key, isCookingRecipe: true);
+                    newRecipes.Add(recipe);
+                    if (Game1.player.cookingRecipes.TryAdd(recipePair.Key, 0) && !Game1.player.hasOrWillReceiveMail("robinKitchenLetter"))
+                    {
+                        Game1.mailbox.Add("robinKitchenLetter");
+                    }
+                    menuHeight += recipe.bigCraftable ? 128 : 64;
+                }
+            }
+
+            ModHelper.Reflection.GetField<List<CraftingRecipe>>(levelUpMenu, "newCraftingRecipes").SetValue(newRecipes);
+
+            levelUpMenu.height = menuHeight + 256 + levelUpMenu.getExtraInfoForLevel(skill, level).Count * 64 * 3 / 4;
         }
 
         private void GameLoop_SaveLoaded_MARGO(object sender, SaveLoadedEventArgs e)
@@ -67,7 +114,7 @@ namespace BirbShared
         {
             if (CheckPrestigeMenu())
             {
-                return this.I18n.Get($"{this.Id}.prestige.desc", this.Tokens);
+                return this.I18n.Get($"{this.Id}.pdesc", this.Tokens);
             }
             else
             {

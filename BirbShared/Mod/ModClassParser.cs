@@ -3,6 +3,7 @@ using System.Reflection;
 using BirbShared.Asset;
 using BirbShared.Command;
 using BirbShared.Config;
+using BirbShared.Token;
 using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -81,6 +82,20 @@ namespace BirbShared.Mod
                         mod.Helper.Events.GameLoop.GameLaunched += (object sender, GameLaunchedEventArgs e) =>
                         {
                             new ConfigClassParser(mod, config).ParseConfigs();
+                        };
+                    }
+                    else if (attr is SmapiToken tokenAttr)
+                    {
+                        object token = fieldInfo.FieldType.GetConstructor(Array.Empty<Type>())?.Invoke(Array.Empty<object>());
+                        if (token is null)
+                        {
+                            Log.Error($"[{fieldInfo.Name}] Token class must have zero-argument constructor");
+                            continue;
+                        }
+                        fieldInfo.SetValue(mod, token);
+                        mod.Helper.Events.GameLoop.GameLaunched += (object sender, GameLaunchedEventArgs e) =>
+                        {
+                            new TokenClassParser(mod, token).ParseTokens();
                         };
                     }
                     else if (attr is SmapiContent contentAttr)

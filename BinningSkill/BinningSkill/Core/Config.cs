@@ -26,12 +26,12 @@ namespace BinningSkill
         // Increase in chance of any drop per level.
         [ConfigPage("BonusDrops")]
         [ConfigSectionTitle("BonusDropModifiers")]
-        [ConfigOption(Min = 0, Max = 1, Interval = 0.001f)]
+        [ConfigOption(Min = 0, Max = 0.1f, Interval = 0.001f)]
         public float PerLevelBaseDropChanceBonus { get; set; } = 0.03f;
 
         // Increase in chance for rare drops (using drbirbdev.BinningSkill_RANDOM condition
-        [ConfigOption(Min = 0, Max = 1, Interval = 0.001f)]
-        public float PerLevelRareDropChanceBonus { get; set; } = 0.01f;
+        [ConfigOption(Min = 0, Max = 0.1f, Interval = 0.001f)]
+        public float PerLevelRareDropChanceBonus { get; set; } = 0.001f;
 
         // What level to Mega drops become available
         [ConfigOption(Min = 0, Max = 10, Interval = 1)]

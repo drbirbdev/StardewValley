@@ -962,7 +962,55 @@
             "Entries": {
                 "drbirbdev.BinningSkill_AbandonedJojaMartIridium": {
                     "Items": [
-                        // Lost Bundle items
+                        // The Missing Bundle items
+                        {
+                            "Id": "Silver_Wine",
+                            "ItemId": "(O)348",
+                            "Quality": 1,
+                            "IsMegaSuccess": true,
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01 @addDailyLuck"
+                        },
+                        {
+                            "Id": "Dinosaur_Mayo",
+                            "ItemId": "(O)807",
+                            "IsMegaSuccess": true,
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01 @addDailyLuck"
+                        },
+                        {
+                            "Id": "Ancient_Fruit",
+                            "ItemId": "(O)454",
+                            "Quality": 2,
+                            "MinStack": 5,
+                            "IsMegaSuccess": true,
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01 @addDailyLuck"
+                        },
+                        {
+                            "Id": "Void_Salmon",
+                            "ItemId": "(O)795",
+                            "Quality": 2,
+                            "IsMegaSuccess": true,
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01 @addDailyLuck"
+                        },
+                        {
+                            "Id": "Caviar",
+                            "ItemId": "(O)445",
+                            "IsMegaSuccess": true,
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01 @addDailyLuck"
+                        },
+                        {
+                            "Id": "Prismatic_Shard",
+                            "ItemId": "(O)74",
+                            "IsDoubleMegaSuccess": true,
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.001 @addDailyLuck"
+                        },
+                        {
+                            "Id": "Joja_Cola",
+                            "ItemId": "(O)167",
+                            "CreateMultipleDebris": true,
+                            "MinStack": 10,
+                            "MaxStack": 15,
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.05 @addDailyLuck"
+                        }
                     ],
                     "CustomFields": {
                         "drbirbdev.BinningSkill_MinLevel": "8",
@@ -1008,51 +1056,12 @@
             "Entries": {
                 "drbirbdev.BinningSkill_CommunityCenterJojaIridium": {
                     "Items": [
-                    ],
-                    "CustomFields": {
-                        "drbirbdev.BinningSkill_MinLevel": "8",
-                        "drbirbdev.BinningSkill_AnimationTexture": "Mods/drbirbdev.BinningSkill/IridiumCanAnimation"
-                    }
-                }
-            }
-        },
-        {
-            "Action": "EditMap",
-            "Target": "Maps/CommunityCenter_Joja",
-            "FromFile": "assets/Trashcans.tmx",
-            "FromArea": {
-                "X": 4,
-                "Y": 0,
-                "Width": 1,
-                "Height": 2
-            },
-            "ToArea": {
-                "X": 63,
-                "Y": 15,
-                "Width": 1,
-                "Height": 2
-            },
-            "PatchMode": "Overlay",
-            "MapTiles": [
-                {
-                    "Layer": "Buildings",
-                    "Position": {
-                        "X": 63,
-                        "Y": 16
-                    },
-                    "SetProperties": {
-                        "Action": "Garbage drbirbdev.BinningSkill_CommunityCenterJojaIridium"
-                    }
-                }
-            ]
-        },
-        {
-            "Action": "EditData",
-            "Target": "Data/GarbageCans",
-            "TargetField": [ "GarbageCans" ],
-            "Entries": {
-                "drbirbdev.BinningSkill_CommunityCenterJojaIridium": {
-                    "Items": [
+                        {
+                            "Id": "Joja_Cola",
+                            "ItemId": "(O)167",
+                            "CreateMultipleDebris": true,
+                            "MinStack": 999
+                        }
                     ],
                     "CustomFields": {
                         "drbirbdev.BinningSkill_MinLevel": "8",

@@ -39,7 +39,7 @@ namespace BinningSkill
                 {
                     extraPercentage += ModEntry.Config.ReclaimerPrestigeExtraValuePercent;
                 }
-                int extraPrice = (int)(i.sellToStorePrice() * extraPercentage);
+                int extraPrice = (int)(i.Stack * i.sellToStorePrice() * extraPercentage);
 
                 __result += extraPrice;
             }
@@ -92,6 +92,7 @@ namespace BinningSkill
 
     /// <summary>
     /// No Default NPC Reactions
+    /// Custom animation texture if provided
     /// No animation if search failed
     /// </summary>
     [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.CheckGarbage))]

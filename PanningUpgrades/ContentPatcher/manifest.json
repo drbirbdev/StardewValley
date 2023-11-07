@@ -1,0 +1,16 @@
+﻿{
+    "Name": "[CP] Panning Upgrades",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Panning Upgrades Content Patcher",
+    "UniqueID": "drbirbdev.PanningUpgrades.CP",
+    "ContentPackFor": {
+        "UniqueID": "Pathoschild.ContentPatcher"
+    },
+    "UpdateKeys": [],
+    "Dependencies": [
+        {
+            "UniqueID": "drbirbdev.PanningUpgrades"
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+﻿{
+    "h.panhat.name": "Pan",
+    "h.panhat.desc": "You wear the pan as a hat...",
+    "h.steelpanhat.name": "Steel Pan",
+    "h.steelpanhat.desc": "The steel pan fits snuggly on your noggin...",
+    "h.goldpanhat.name": "Gold Pan",
+    "h.goldpanhat.desc": "Your gold pan makes for stylish headwear!",
+    "h.iridiumpanhat.name": "Iridium Pan",
+    "h.iridiumpanhat.desc": "Your iridium pan is the envy of the whole town!",
+
+    "t.pan.name": "Pan",
+    "t.pan.desc": "Use to gather ore from streams."
+}

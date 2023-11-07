@@ -8,11 +8,88 @@ using System.Collections.Generic;
 using BirbShared;
 using System.Reflection;
 using StardewValley.Tools;
-using System.Reflection.Emit;
-using StardewValley.Internal;
 
 namespace PanningUpgrades
 {
+    class PanUtility
+    {
+        public static Hat PanToHat(Pan pan)
+        {
+            return pan.UpgradeLevel switch
+            {
+                0 => (Hat)ItemRegistry.Create("(H)drbirbdev.PanningUpgrades_NormalPanHat"),
+                1 => (Hat)ItemRegistry.Create("(H)71"),
+                2 => (Hat)ItemRegistry.Create("(H)drbirbdev.PanningUpgrades_SteelPanHat"),
+                3 => (Hat)ItemRegistry.Create("(H)drbirbdev.PanningUpgrades_GoldPanHat"),
+                4 => (Hat)ItemRegistry.Create("(H)drbirbdev.PanningUpgrades_IridiumPanHat"),
+                _ => (Hat)ItemRegistry.Create("(H)drbirbdev.PanningUpgrades_IridiumPanHat")
+            };
+        }
+
+        public static Pan HatToPan(Hat hat)
+        {
+            return hat.QualifiedItemId switch
+            {
+                "(H)drbirbdev.PanningUpgrades_NormalPanHat" => (Pan)ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_NormalPan"),
+                "(H)71" => (Pan)ItemRegistry.Create("(T)Pan"),
+                "(H)drbirbdev.PanningUpgrades_SteelPanHat" => (Pan)ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_SteelPan"),
+                "(H)drbirbdev.PanningUpgrades_GoldPanHat" => (Pan)ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_GoldPan"),
+                "(H)drbirbdev.PanningUpgrades_IridiumPanHat" => (Pan)ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_IridiumPan"),
+                _ => null
+            };
+        }
+    }
+
+    [HarmonyPatch(typeof(Pan), nameof(Pan.DoFunction))]
+    class Pan_DoFunction
+    {
+        public static void Postfix(Pan __instance, GameLocation location, int x, int y, Farmer who)
+        {
+            try
+            {
+                List<Item> extraPanItems = new();
+                float dailyLuck = (float)who.DailyLuck * ModEntry.Config.DailyLuckMultiplier;
+                Log.Debug($"Daily Luck {who.DailyLuck} * Multiplier {ModEntry.Config.DailyLuckMultiplier} = Weighted Daily Luck {dailyLuck}");
+                float buffLuck = who.LuckLevel * ModEntry.Config.LuckLevelMultiplier;
+                Log.Debug($"Buff Luck {who.LuckLevel} * Multiplier {ModEntry.Config.LuckLevelMultiplier} = Weighted Buff Luck {buffLuck}");
+                float chance = ModEntry.Config.ExtraDrawBaseChance + dailyLuck + buffLuck;
+                Log.Debug($"Chance of Extra Draw {chance} = Base Chance {ModEntry.Config.ExtraDrawBaseChance} + Weighted Daily Luck {dailyLuck} + Weighted Buff Luck {buffLuck}");
+                int panCount = 1;
+
+                for (int i = 0; i < __instance.UpgradeLevel; i++)
+                {
+                    if (chance > Game1.random.NextDouble())
+                    {
+                        // location is used to seed the random number for selecting which treasure is received in vanilla.
+                        // do something to reseed it so that we aren't just getting the same treasure up to 5 times.
+                        location.orePanPoint.X++;
+                        panCount++;
+                        extraPanItems.AddRange(__instance.getPanItems(location, who));
+                    }
+                }
+                Log.Debug($"Did {panCount} draws using level {__instance.UpgradeLevel} pan.");
+
+                who.addItemsByMenuIfNecessary(extraPanItems);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(Tool), nameof(Tool.doesShowTileLocationMarker))]
+    class Tool_DoesShowTileLocationMarker
+    {
+        public static void Postfix(ref bool __result, Tool __instance)
+        {
+            if (__instance is Pan)
+            {
+                __result = false;
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(Utility), nameof(Utility.PerformSpecialItemPlaceReplacement))]
     class Utility_PerformSpecialItemPlaceReplacement
     {
@@ -25,9 +102,9 @@ namespace PanningUpgrades
         {
             try
             {
-                if (placedItem != null && placedItem is UpgradeablePan upgradeablePan)
+                if (placedItem != null && placedItem is Pan pan)
                 {
-                    __result = UpgradeablePan.PanToHat(upgradeablePan);
+                    __result = PanUtility.PanToHat(pan);
                     return false;
                 }
             }
@@ -54,26 +131,7 @@ namespace PanningUpgrades
             {
                 if (heldItem != null && heldItem is Hat hat)
                 {
-                    switch (hat.ItemId)
-                    {
-                        case "(H)drbirbdev.PanningUpgrades_PanHat":
-                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradablePan");
-                            break;
-                        case "(H)drbirbdev.PanningUpgrades_CopperPanHat":
-                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradableCopperPan");
-                            break;
-                        case "(H)drbirbdev.PanningUpgrades_SteelPanHat":
-                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradableSteelPan");
-                            break;
-                        case "(H)drbirbdev.PanningUpgrades_GoldPanHat":
-                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradableGoldPan");
-                            break;
-                        case "(H)drbirbdev.PanningUpgrades_IridiumPanHat":
-                            __result = ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_UpgradableIridiumPan");
-                            break;
-                        default:
-                            return true;
-                    }
+                    __result = PanUtility.HatToPan(hat);
                     return false;
                 }
             }
@@ -94,7 +152,7 @@ namespace PanningUpgrades
         /// </summary>
         public static void Prefix(ref Item[] __state)
         {
-            if (Game1.player.CursorSlotItem is UpgradeablePan)
+            if (Game1.player.CursorSlotItem is Pan)
             {
                 __state = new Item[] {
                     Game1.player.CursorSlotItem,
@@ -111,26 +169,14 @@ namespace PanningUpgrades
         {
             try
             {
-                if (__state is not null && __state[0] is UpgradeablePan upgradeablePan && __state[1] != Game1.player.hat.Value)
+                if (__state is not null && __state[0] is Pan pan && __state[1] != Game1.player.hat.Value)
                 {
-                    Game1.player.hat.Value = UpgradeablePan.PanToHat(upgradeablePan);
+                    Game1.player.hat.Value = PanUtility.PanToHat(pan);
                 }
             }
             catch (Exception e)
             {
                 Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(Farmer), nameof(Farmer.toolPowerIncrease))]
-    class Farmer_ToolPowerIncrease
-    {
-        static void Postfix(Farmer __instance)
-        {
-            if (__instance.CurrentTool is UpgradeablePan)
-            {
-                __instance.FarmerSprite.CurrentFrame = 123;
             }
         }
     }
@@ -153,12 +199,16 @@ namespace PanningUpgrades
                         return;
                     }
 
+
+
                     int upgradeLevel = owner.CurrentTool.UpgradeLevel;
                     int genderOffset = owner.IsMale ? -1 : 0;
+                    string texture = "Mods/drbirbdev.PanningUpgrades/PanTool";
+                    Rectangle sourceRect = new Rectangle(16, upgradeLevel * 16, 16, 16);
                     GameLocation location = Game1.currentLocation;
                     location.temporarySprites.Add(new TemporaryAnimatedSprite(
-                        textureName: ModEntry.Assets.SpritesPath,
-                        sourceRect: UpgradeablePan.AnimationSourceRectangle(upgradeLevel),
+                        textureName: texture,
+                        sourceRect: sourceRect,
                         animationInterval: ModEntry.Config.AnimationFrameDuration,
                         animationLength: 4,
                         numberOfLoops: 3,
@@ -177,8 +227,8 @@ namespace PanningUpgrades
                         endFunction = extraInfo =>
                         {
                             location.temporarySprites.Add(new TemporaryAnimatedSprite(
-                                textureName: ModEntry.Assets.SpritesPath,
-                                sourceRect: UpgradeablePan.AnimationSourceRectangle(upgradeLevel),
+                                textureName: texture,
+                                sourceRect: sourceRect,
                                 animationInterval: ModEntry.Config.AnimationFrameDuration,
                                 animationLength: 3,
                                 numberOfLoops: 0,
@@ -196,8 +246,8 @@ namespace PanningUpgrades
                                 endFunction = extraInfo =>
                                 {
                                     location.temporarySprites.Add(new TemporaryAnimatedSprite(
-                                        textureName: ModEntry.Assets.SpritesPath,
-                                        sourceRect: UpgradeablePan.AnimationSourceRectangle(upgradeLevel),
+                                        textureName: texture,
+                                        sourceRect: sourceRect,
                                         animationInterval: ModEntry.Config.AnimationFrameDuration * 2.5f,
                                         animationLength: 1,
                                         numberOfLoops: 0,
@@ -224,24 +274,24 @@ namespace PanningUpgrades
         }
     }
 
-    [HarmonyPatch(typeof(Event), nameof(Event.DefaultCommands.AwardFestivalPrize))]
+    [HarmonyPatch(typeof(Event.DefaultCommands), nameof(Event.DefaultCommands.AwardFestivalPrize))]
     class Event_Command_AwardFestivalPrize
     {
         /// <summary>
         /// Changes which pan tool is rewarded during events.
         /// </summary>
-        public static bool Prefix(Event __instance, string[] split)
+        public static bool Prefix(Event @event, string[] args)
         {
             try
             {
-                if (split.Length > 1 && split[1].ToLower() == "pan")
+                if (args.Length > 1 && args[1].ToLower() == "pan")
                 {
-                    Game1.player.addItemByMenuIfNecessary(new UpgradeablePan());
+                    Game1.player.addItemByMenuIfNecessary(ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_NormalPan"));
                     if (Game1.activeClickableMenu == null)
                     {
-                        __instance.CurrentCommand++;
+                        @event.CurrentCommand++;
                     }
-                    __instance.CurrentCommand++;
+                    @event.CurrentCommand++;
                     return false;
                 }
             }
@@ -253,20 +303,20 @@ namespace PanningUpgrades
         }
     }
 
-    [HarmonyPatch(typeof(Event), nameof(Event.DefaultCommands.ItemAboveHead))]
+    [HarmonyPatch(typeof(Event.DefaultCommands), nameof(Event.DefaultCommands.ItemAboveHead))]
     class Event_Command_ItemAboveHead
     {
         /// <summary>
         /// Changes which pan tool is shown being held during events.
         /// </summary>
-        public static bool Prefix(Event __instance, string[] split)
+        public static bool Prefix(Event @event, string[] args)
         {
             try
             {
-                if (split.Length > 1 && split[1].Equals("pan"))
+                if (args.Length > 1 && args[1].Equals("pan"))
                 {
-                    __instance.farmer.holdUpItemThenMessage(new UpgradeablePan());
-                    __instance.CurrentCommand++;
+                    @event.farmer.holdUpItemThenMessage(ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_NormalPan"));
+                    @event.CurrentCommand++;
                     return false;
                 }
             }
@@ -318,7 +368,7 @@ namespace PanningUpgrades
                     // Event specific skip logic.
                     if (Game1.player.getToolFromName("Pan") is null)
                     {
-                        Game1.player.addItemByMenuIfNecessary(new UpgradeablePan());
+                        Game1.player.addItemByMenuIfNecessary(ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_NormalPan"));
                     }
                     __instance.endBehaviors(new string[1] { "end" }, Game1.currentLocation);
                     return false;
@@ -329,69 +379,6 @@ namespace PanningUpgrades
                 Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
             }
             return true;
-        }
-    }
-
-    // 3rd party
-    // Fix Wear More Rings incompatibility
-    [HarmonyPatch("StardewHack.WearMoreRings.ModEntry", "EquipmentClick")]
-    class WearMoreRings_ModEntry_EquipmentClick
-    {
-        public static bool Prepare()
-        {
-            return ModEntry.Instance.Helper.ModRegistry.IsLoaded("bcmpinc.WearMoreRings");
-        }
-
-        public static void Prefix(
-            ClickableComponent icon
-            )
-        {
-            try
-            {
-                if (icon.name == "Hat" && Game1.player.CursorSlotItem is UpgradeablePan pan)
-                {
-                    Game1.player.CursorSlotItem = UpgradeablePan.PanToHat(pan);
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
-            }
-        }
-
-    }
-
-    // Allow sending pan to upgrade in the mail with Mail Services
-    [HarmonyPatch("MailServicesMod.ToolUpgradeOverrides", "mailbox")]
-    class MailServicesMod_ToolUpgradeOverrides_Mailbox
-    {
-        public static bool Prepare()
-        {
-            return ModEntry.Instance.Helper.ModRegistry.IsLoaded("Digus.MailServicesMod");
-        }
-
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            var code = new List<CodeInstruction>(instructions);
-
-            for (int i = 0; i < code.Count; i++)
-            {
-                if (code[i].Is(OpCodes.Isinst, typeof(Axe)))
-                {
-                    yield return new CodeInstruction(OpCodes.Isinst, typeof(UpgradeablePan));
-                    yield return code[i + 1];
-                    yield return code[i + 2];
-                    // ILCode of newer versions is shorter for whatever reason
-                    if (ModEntry.Instance.Helper.ModRegistry.Get("Digus.MailServicesMod").Manifest.Version.IsOlderThan("1.5"))
-                    {
-                        yield return code[1 + 3];
-                    }
-                    yield return code[i];
-                } else
-                {
-                    yield return code[i];
-                }
-            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace WinterStarSpouse
         }
     }
 
+
     [HarmonyPatch(typeof(Event), nameof(Event.setUpPlayerControlSequence))]
     class Event_SetUpPlayerControlSequence
     {
@@ -36,28 +37,8 @@ namespace WinterStarSpouse
                     return;
                 }
 
-                NPC other = null;
-                if (Game1.player.getSpouse() != null)
-                {
-                    other = Game1.player.getSpouse();
-                }
-                else
-                {
-                    foreach (string friend in Game1.player.friendshipData.Keys)
-                    {
-                        Friendship friendship = Game1.player.friendshipData[friend];
-                        if (friendship.IsDating())
-                        {
-                            if (other != null)
-                            {
-                                // If you are dating multiple people, don't affect Christmas Star
-                                return;
-                            }
-                            other = Game1.getCharacterFromName(friend);
-                        }
-                    }
-                }
-                if (other == null)
+                NPC signiificantOther = Utilities.GetSoleSignificantOther();
+                if (signiificantOther == null)
                 {
                     // No spouse :(
                     return;
@@ -66,14 +47,14 @@ namespace WinterStarSpouse
                 Random random = new((int)(Game1.uniqueIDForThisGame / 2uL) ^ Game1.year ^ (int)Game1.player.UniqueMultiplayerID);
                 if (Utilities.SpouseAsRecipient())
                 {
-                    __instance.secretSantaRecipient = other;
-                    Log.Trace("Overrode secret santa recipient with " + other.Name);
+                    __instance.secretSantaRecipient = signiificantOther;
+                    Log.Trace("Overrode secret santa recipient with " + signiificantOther.Name);
                 }
 
                 if (random.Next(100) < ModEntry.Config.SpouseIsGiverChance)
                 {
-                    __instance.mySecretSanta = other;
-                    Log.Trace("Overrode secret santa giver with " + other.Name);
+                    __instance.mySecretSanta = signiificantOther;
+                    Log.Trace("Overrode secret santa giver with " + signiificantOther.Name);
                 }
             }
             catch (Exception e)
@@ -99,6 +80,11 @@ namespace WinterStarSpouse
                 {
                     return;
                 }
+                NPC significantOther = Utilities.GetSoleSignificantOther();
+                if (significantOther == null)
+                {
+                    return;
+                }
                 // Reload the mail text, because the parameter has already been changed in-place with the wrong gift recipient.
                 Dictionary<string, string> mailDict = Game1.content.Load<Dictionary<string, string>>("Data\\mail");
                 string mail = mailDict[mailTitle];
@@ -116,7 +102,7 @@ namespace WinterStarSpouse
                     return;
                 }
 
-                mail = mail.Replace("%secretsanta", Utilities.GetSoleSignificantOther().displayName);
+                mail = mail.Replace("%secretsanta", significantOther.displayName);
 
                 int page_height = __instance.height - 128;
                 if (__instance.HasInteractable())

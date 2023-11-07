@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\common.targets" />
-    <Import Project="..\common-contentpatcher.targets"/>
+    <Import Project="..\common-contentpatcher.targets" />
 
     <PropertyGroup>
         <Description>Add Pail, Shear, and Autograbber upgrades at the blacksmith.</Description>

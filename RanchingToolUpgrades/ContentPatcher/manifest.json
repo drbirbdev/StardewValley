@@ -1,0 +1,16 @@
+﻿{
+    "Name": "[CP] Ranching Tool Upgrades",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Ranching Tool Upgrades Content Patcher",
+    "UniqueID": "drbirbdev.RanchingToolUpgrades.CP",
+    "ContentPackFor": {
+        "UniqueID": "Pathoschild.ContentPatcher"
+    },
+    "UpdateKeys": [],
+    "Dependencies": [
+        {
+            "UniqueID": "drbirbdev.PanningUpgrades"
+        }
+    ]
+}

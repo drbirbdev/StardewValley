@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_root", "_root", "{7BB5EFE4
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		common.targets = common.targets
 		common-contentpatcher.targets = common-contentpatcher.targets
 		common-spacecore.targets = common-spacecore.targets
+		common.targets = common.targets
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
@@ -45,6 +45,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealtimeFramework", "RealtimeTokens\RealtimeFramework.csproj", "{A8419860-CE08-4545-A5E7-3BA1F41FFF2C}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HalloweenSeason", "HalloweenSeason\HalloweenSeason.shproj", "{100172ED-9F1B-4D78-8B4F-BB5C4F72537B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirbCore", "BirbCore\BirbCore.csproj", "{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,6 +106,10 @@ Global
 		{A8419860-CE08-4545-A5E7-3BA1F41FFF2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8419860-CE08-4545-A5E7-3BA1F41FFF2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8419860-CE08-4545-A5E7-3BA1F41FFF2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

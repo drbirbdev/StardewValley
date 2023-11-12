@@ -23,6 +23,18 @@
         <PackageReference Include="Leclair.Stardew.ModManifestBuilder" Version="2.1.0" />
     </ItemGroup>
 
+    <!--GMCM optional requirement-->
+    <ItemGroup>
+        <SMAPIDependency Include="drbirbdev.BirbCore" Required="true" />
+        <SMAPIDependency Include="spacechase0.GenericModConfigMenu" Required="false" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="BirbCore">
+            <HintPath>$(GamePath)\Mods\BirbCore\BirbCore.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
     <!--common mod build package options-->
     <PropertyGroup>
         <ModZipPath>$(SolutionDir)\_releases\$(Configuration)</ModZipPath>

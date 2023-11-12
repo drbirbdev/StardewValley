@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\common.targets" />
+
+    <PropertyGroup>
+        <Description>Core Functionality for drbirbdev mods</Description>
+        <Version>1.0.0</Version>
+        <UpdateKeys>Nexus:???</UpdateKeys>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <SMAPIDependency Include="Pathoschild.ContentPatcher" Required="false" />
+    </ItemGroup>
+    
+</Project>

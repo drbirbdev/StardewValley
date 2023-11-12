@@ -3,7 +3,7 @@ using BirbShared.Mod;
 using BirbShared.APIs;
 using StardewModdingAPI;
 using System.Collections.Generic;
-using BirbShared;
+using BirbCore;
 
 namespace RealtimeFramework
 {

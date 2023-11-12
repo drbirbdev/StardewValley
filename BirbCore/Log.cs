@@ -1,8 +1,8 @@
 using StardewModdingAPI;
 
-namespace BirbShared
+namespace BirbCore
 {
-	internal class Log
+	public class Log
 	{
 		public static IMonitor Monitor;
 

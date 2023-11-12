@@ -1,36 +1,36 @@
-using BirbShared.Config;
+using BirbCore.Annotations;
 
 namespace BetterFestivalNotifications
 {
-    [ConfigClass]
+    [SConfig]
     internal class Config
     {
-        [ConfigOption]
+        [SConfig.Option]
         public bool PlayStartSound { get; set; } = true;
-        [ConfigOption]
+        [SConfig.Option]
         public string StartSound { get; set; } = "crystal";
 
 
-        [ConfigOption]
+        [SConfig.Option]
         public int WarnHoursAheadOfTime { get; set; } = 2;
 
-        [ConfigOption]
+        [SConfig.Option]
         public bool PlayWarnSound { get; set; } = true;
 
-        [ConfigOption]
+        [SConfig.Option]
         public bool ShowWarnNotification { get; set; } = true;
 
-        [ConfigOption]
+        [SConfig.Option]
         public string WarnSound { get; set; } = "phone";
 
 
-        [ConfigOption]
+        [SConfig.Option]
         public bool PlayOverSound { get; set; } = false;
 
-        [ConfigOption]
+        [SConfig.Option]
         public bool ShowOverNotification { get; set; } = false;
 
-        [ConfigOption]
+        [SConfig.Option]
         public string OverSound { get; set; } = "ghost";
     }
 }

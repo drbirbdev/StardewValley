@@ -7,8 +7,4 @@
         <UpdateKeys>Nexus:14170</UpdateKeys>
     </PropertyGroup>
 
-    <ItemGroup>
-        <SMAPIDependency Include="spacechase0.GenericModConfigMenu" Required="false" />
-    </ItemGroup>
-
 </Project>

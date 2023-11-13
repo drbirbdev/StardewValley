@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -11,7 +12,7 @@ namespace BirbCore.Annotations;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class SCommand : ClassHandler
 {
-    private static Dictionary<string, Dictionary<string, Action<string[]>>> BaseCommands = new();
+    private static readonly Dictionary<string, Dictionary<string, Action<string[]>>> BaseCommands = new();
     public string Name;
 
     public SCommand(string name)
@@ -19,9 +20,15 @@ public class SCommand : ClassHandler
         this.Name = name;
     }
 
-    private static string GetHelp(string subcommand = null)
+    private static string GetHelp(string? subcommand = null)
     {
         return "";
+    }
+
+    public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
+    {
+        instance = Activator.CreateInstance(type);
+        base.Handle(type, instance, mod);
     }
 
     /// <summary>
@@ -57,9 +64,19 @@ public class SCommand : ClassHandler
             this.Help = help;
         }
 
-        public override void Handle(MethodInfo method, object type, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
-            string command = type.GetType().GetCustomAttribute<SCommand>().Name.ToLowerInvariant();
+            if (instance is null)
+            {
+                Log.Error("SCommand class may be static? Cannot parse subcommands.");
+                return;
+            }
+            string? command = instance.GetType().GetCustomAttribute<SCommand>()?.Name.ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(command))
+            {
+                Log.Error("Base command is null or empty, Cannot parse subcommands.");
+                return;
+            }
             if (!SCommand.BaseCommands.ContainsKey(command))
             {
                 mod.Helper.ConsoleCommands.Add(
@@ -82,7 +99,7 @@ public class SCommand : ClassHandler
 
                     if (parameter.GetCustomAttribute(typeof(ParamArrayAttribute), false) is not null)
                     {
-                        for (int j = i; j < args.Length; j++)
+                        for (int j = i; j < (args?.Length ?? 0); j++)
                         {
                             commandArgs.Add(ParseArg(args?[j], parameter));
                         }
@@ -93,12 +110,12 @@ public class SCommand : ClassHandler
                     }
                 }
 
-                method.Invoke(type, commandArgs.ToArray());
+                method.Invoke(instance, commandArgs.ToArray());
 
             });
         }
 
-        private static object ParseArg(string arg, ParameterInfo parameter)
+        private static object ParseArg(string? arg, ParameterInfo parameter)
         {
             if (arg == null)
             {
@@ -132,8 +149,9 @@ public class SCommand : ClassHandler
                 || args[0].Equals("h", StringComparison.InvariantCultureIgnoreCase))
             {
                 Log.Info(GetHelp(args?[1]));
+                return;
             }
-            SCommand.BaseCommands?[s]?[args?[0]]?.Invoke(args?[1..]);
+            SCommand.BaseCommands?[s]?[args[0]]?.Invoke(args[1..]);
         }
     }
 }

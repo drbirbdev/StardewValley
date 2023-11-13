@@ -16,7 +16,7 @@ public class SAsset : ClassHandler
 {
     private MemberInfo? ModAssets;
 
-    public override void Handle(Type type, object? instance, IMod mod)
+    public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
         this.ModAssets = mod.GetType().GetMemberOfType(type);
         if (this.ModAssets == null)

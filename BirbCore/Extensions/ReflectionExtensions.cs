@@ -44,6 +44,31 @@ public static class ReflectionExtensions
         return null;
     }
 
+    public static MemberInfo GetMemberWithCustomAttribute(this Type type, Type attributeType)
+    {
+        foreach (FieldInfo fieldInfo in type.GetFields(AllDeclared))
+        {
+            foreach (Attribute attribute in fieldInfo.GetCustomAttributes())
+            {
+                if (attribute.GetType() == attributeType)
+                {
+                    return fieldInfo;
+                }
+            }
+        }
+        foreach (PropertyInfo propertyInfo in type.GetProperties(AllDeclared))
+        {
+            foreach (Attribute attribute in propertyInfo.GetCustomAttributes())
+            {
+                if (attribute.GetType() == attributeType)
+                {
+                    return propertyInfo;
+                }
+            }
+        }
+        return null;
+    }
+
     public static Type GetReflectedType(this MemberInfo member)
     {
         if (member is FieldInfo field)

@@ -13,7 +13,7 @@ namespace BirbCore.Annotations;
 public class SToken : ClassHandler
 {
     private static IContentPatcherApi? Api;
-    public override void Handle(Type type, object? instance, IMod mod)
+    public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
         mod.Helper.Events.GameLoop.GameLaunched += (sender, e) =>
         {
@@ -31,7 +31,7 @@ public class SToken : ClassHandler
 
     public class Token : MethodHandler
     {
-        public override void Handle(MethodInfo method, object? instance, IMod mod)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             if (Api == null)
             {
@@ -44,7 +44,7 @@ public class SToken : ClassHandler
 
     public class AdvancedToken : ClassHandler
     {
-        public override void Handle(Type type, object? instance, IMod mod)
+        public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
         {
             instance = Activator.CreateInstance(type);
             if (instance is null)

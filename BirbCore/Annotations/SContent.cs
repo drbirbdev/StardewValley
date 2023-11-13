@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using BirbCore.Extensions;
 using HarmonyLib;
 using StardewModdingAPI;
@@ -21,38 +22,51 @@ public class SContent : ClassHandler
         this.IsDictionary = isDictionary;
     }
 
-    public override void Handle(Type type, object? instance, IMod mod)
+    public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
-        Type innerType = type;
+        // Get the type on ModEntry that stores all contents, and set it.
+        // Should be a Dictionary<string, T> where T can be a list, dictionary, or Content object.
+        Type modEntryValueType = type;
         if (this.IsList)
         {
-            type = typeof(List<>).MakeGenericType(type);
+            modEntryValueType = typeof(List<>).MakeGenericType(type);
         }
         else if (this.IsDictionary)
         {
-            type = typeof(Dictionary<,>).MakeGenericType(typeof(string), type);
+            modEntryValueType = typeof(Dictionary<,>).MakeGenericType(typeof(string), type);
         }
 
-        Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(typeof(string), type);
+        Type modEntryType = typeof(Dictionary<,>).MakeGenericType(typeof(string), modEntryValueType);
 
-        MemberInfo modContent = mod.GetType().GetMemberOfType(dictionaryType);
+        MemberInfo modContent = mod.GetType().GetMemberOfType(modEntryType);
         if (modContent is null)
         {
             Log.Error("Mod must define a Content dictionary property");
             return;
         }
 
-        object contentDictionary = AccessTools.CreateInstance(dictionaryType);
+        object contentDictionary = AccessTools.CreateInstance(modEntryType);
         if (contentDictionary is null)
         {
             Log.Error("contentDictionary was null.  Underlying type might be static? Cannot initialize.");
             return;
         }
+        modContent.GetSetter()(mod, contentDictionary);
 
+
+        MemberInfo? idMember = type.GetMemberWithCustomAttribute(typeof(ContentId));
+        if (idMember is not null && idMember.GetCustomAttribute<JsonIgnoreAttribute>() is not null)
+        {
+            // The provided ContentID is not serialized, so it's not provided to us.
+            idMember = null;
+        }
+
+        // Iterate through all mods which provide content packs.
+        // A content pack type will match the modEntryValueType, ie a list, dictionary, or content object
         foreach (IContentPack contentPack in mod.Helper.ContentPacks.GetOwned())
         {
             object? content = contentPack.GetType().GetMethod("ReadJsonFile")
-                ?.MakeGenericMethod(type)
+                ?.MakeGenericMethod(modEntryValueType)
                 .Invoke(contentPack, new object[] { this.FileName });
 
             if (content is null)
@@ -61,59 +75,41 @@ public class SContent : ClassHandler
                 continue;
             }
 
-            Dictionary<string, object> modContents = new();
+            // Figure out a unique ID for each content within the content pack.
+            // Will use key value for dictionary, array index for list, or empty string for content object.
             if (this.IsList)
             {
-                int i = 0;
-                foreach (object c in (List<object>)content)
+                List<object> contentList = (List<object>)content;
+                for (int i = 0; i < contentList.Count; i++)
                 {
-                    modContents.Add(i + "", c);
-                    i++;
+                    string id = (string)(idMember?.GetGetter()(contentList[i]) ?? i);
+
+                    base.Handle(type, contentList[i], mod, new object[] { contentPack, id });
                 }
             }
             else if (this.IsDictionary)
             {
-                modContents = (Dictionary<string, object>)content;
+                Dictionary<string, object> contentDict = (Dictionary<string, object>)content;
+                foreach (string key in contentDict.Keys)
+                {
+                    string id = (string)(idMember?.GetGetter()(contentDict[key]) ?? key);
+
+                    base.Handle(type, contentDict[key], mod, new object[] { contentPack, id });
+                }
             }
             else
             {
-                modContents.Add("", content);
-            }
-            foreach (string contentId in modContents.Keys)
-            {
-                object contentValue = modContents[contentId];
-                foreach (PropertyInfo propertyInfo in contentValue.GetType().GetProperties(ReflectionExtensions.AllDeclared))
-                {
-                    foreach (Attribute attribute in propertyInfo.GetCustomAttributes())
-                    {
-                        if (attribute is FieldHandler handler)
-                        {
-                            handler.Handle(propertyInfo, content, mod, new object[] { contentPack, contentId });
-                        }
-                    }
-                }
-                foreach (FieldInfo fieldInfo in contentValue.GetType().GetFields(ReflectionExtensions.AllDeclared))
-                {
-                    foreach (Attribute attribute in fieldInfo.GetCustomAttributes())
-                    {
-                        if (attribute is FieldHandler handler)
-                        {
-                            handler.Handle(fieldInfo, content, mod, new object[] { contentPack, contentId });
-                        }
-                    }
-                }
-            }
+                string id = (string)(idMember?.GetGetter()(content) ?? "");
 
+                base.Handle(type, content, mod, new object[] { contentPack, id });
+            }
 
             string modId = contentPack.Manifest.UniqueID;
 
             contentDictionary.GetType().GetMethod("Add")
-                ?.MakeGenericMethod(typeof(string), type)
+                ?.MakeGenericMethod(typeof(string), modEntryValueType)
                 .Invoke(contentDictionary, new object[] { modId, content });
         }
-
-        modContent.GetSetter()(mod, contentDictionary);
-
         return;
     }
 

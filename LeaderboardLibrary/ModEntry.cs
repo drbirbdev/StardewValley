@@ -16,8 +16,8 @@ public class ModEntry : Mod
     private static readonly RegionEndpoint REGION = RegionEndpoint.USWest2;
     private static readonly string GLOBAL_DATA_KEY = "leaderboard-global";
 
+    [SMod.Instance]
     internal static ModEntry Instance;
-    internal static Command Command;
     internal static readonly PerScreen<GlobalModData> GlobalModData = new PerScreen<GlobalModData>();
     internal static LocalModData LocalModData;
 

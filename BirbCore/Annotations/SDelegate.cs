@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Reflection;
 using BirbCore.Extensions;
@@ -14,7 +15,7 @@ public class SDelegate : ClassHandler
 
     public class EventCommand : MethodHandler
     {
-        public override void Handle(MethodInfo method, object instance, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             Event.RegisterCustomCommand($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<EventCommandDelegate>(instance));
         }
@@ -22,7 +23,7 @@ public class SDelegate : ClassHandler
 
     public class EventPrecondition : MethodHandler
     {
-        public override void Handle(MethodInfo method, object instance, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             Event.RegisterCustomPrecondition($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<EventPreconditionDelegate>(instance));
         }
@@ -30,7 +31,7 @@ public class SDelegate : ClassHandler
 
     public class GameStateQuery : MethodHandler
     {
-        public override void Handle(MethodInfo method, object instance, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             StardewValley.GameStateQuery.Register($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<GameStateQueryDelegate>(instance));
         }
@@ -38,7 +39,7 @@ public class SDelegate : ClassHandler
 
     public class ResolveItemQuery : MethodHandler
     {
-        public override void Handle(MethodInfo method, object instance, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             ItemQueryResolver.ItemResolvers.Add($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<ResolveItemQueryDelegate>(instance));
         }
@@ -46,7 +47,7 @@ public class SDelegate : ClassHandler
 
     public class TokenParser : MethodHandler
     {
-        public override void Handle(MethodInfo method, object instance, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             StardewValley.TokenParser.RegisterParser($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<TokenParserDelegate>(instance));
         }
@@ -54,7 +55,7 @@ public class SDelegate : ClassHandler
 
     public class TouchAction : MethodHandler
     {
-        public override void Handle(MethodInfo method, object instance, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             GameLocation.RegisterTouchAction($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<Action<GameLocation, string[], Farmer, Vector2>>(instance));
         }
@@ -62,7 +63,7 @@ public class SDelegate : ClassHandler
 
     public class TileAction : MethodHandler
     {
-        public override void Handle(MethodInfo method, object instance, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             GameLocation.RegisterTileAction($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<Func<GameLocation, string[], Farmer, Point, bool>>(instance));
         }

@@ -19,7 +19,7 @@ public class RealtimeAPI : IRealtimeAPI
         foreach (string holiday in ModEntry.Assets.Holidays.Keys)
         {
             HolidayModel m = ModEntry.Assets.Holidays[holiday];
-            DateTime start = this.GetStart(m, DateTime.Today.Year);
+            DateTime start = GetStart(m, DateTime.Today.Year);
 
             if (DateTime.Now < start && DateTime.Now >= start.AddDays(-m.ComingDays))
             {
@@ -28,7 +28,7 @@ public class RealtimeAPI : IRealtimeAPI
             else
             {
                 // Check if we are coming up on this holiday next year
-                start = this.GetStart(m, DateTime.Today.Year + 1);
+                start = GetStart(m, DateTime.Today.Year + 1);
                 if (DateTime.Now < start && DateTime.Now >= start.AddDays(-m.ComingDays))
                 {
                     yield return holiday;
@@ -42,8 +42,8 @@ public class RealtimeAPI : IRealtimeAPI
         foreach (string holiday in ModEntry.Assets.Holidays.Keys)
         {
             HolidayModel m = ModEntry.Assets.Holidays[holiday];
-            DateTime start = this.GetStart(m, DateTime.Today.Year);
-            DateTime end = this.GetEnd(m, DateTime.Today.Year);
+            DateTime start = GetStart(m, DateTime.Today.Year);
+            DateTime end = GetEnd(m, DateTime.Today.Year);
 
             if (DateTime.Now >= start && DateTime.Now <= end)
             {
@@ -57,7 +57,7 @@ public class RealtimeAPI : IRealtimeAPI
         foreach (string holiday in ModEntry.Assets.Holidays.Keys)
         {
             HolidayModel m = ModEntry.Assets.Holidays[holiday];
-            DateTime end = this.GetEnd(m, DateTime.Today.Year);
+            DateTime end = GetEnd(m, DateTime.Today.Year);
 
             if (DateTime.Now > end && DateTime.Now <= end.AddDays(m.PassingDays))
             {
@@ -66,7 +66,7 @@ public class RealtimeAPI : IRealtimeAPI
             else
             {
                 // Check if we have passed this holiday in the previous year
-                end = this.GetEnd(m, DateTime.Today.Year - 1);
+                end = GetEnd(m, DateTime.Today.Year - 1);
                 if (DateTime.Now > end && DateTime.Now <= end.AddDays(m.PassingDays))
                 {
                     yield return holiday;
@@ -75,17 +75,17 @@ public class RealtimeAPI : IRealtimeAPI
         }
     }
 
-    private DateTime GetStart(HolidayModel m, int year)
+    private static DateTime GetStart(HolidayModel m, int year)
     {
-        return this.GetDate(m, year).AddHours(m.StartDelayHours);
+        return GetDate(m, year).AddHours(m.StartDelayHours);
     }
 
-    private DateTime GetEnd(HolidayModel m, int year)
+    private static DateTime GetEnd(HolidayModel m, int year)
     {
-        return this.GetDate(m, year).AddHours(24 + m.EndDelayHours);
+        return GetDate(m, year).AddHours(24 + m.EndDelayHours);
     }
 
-    private DateTime GetDate(HolidayModel m, int year)
+    private static DateTime GetDate(HolidayModel m, int year)
     {
         int[] monthDay = m.Date;
         if (monthDay is null || monthDay.Length == 0)
@@ -95,7 +95,7 @@ public class RealtimeAPI : IRealtimeAPI
 
         if (monthDay.Length != 2)
         {
-            throw new ArgumentOutOfRangeException("m", "Included month/day value array without exactly 2 elements.");
+            throw new ArgumentOutOfRangeException(nameof(m), "Included month/day value array without exactly 2 elements.");
         }
 
         return new DateTime(year, monthDay[0], monthDay[1], 0, 0, 0);

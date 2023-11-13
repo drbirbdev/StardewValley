@@ -72,7 +72,7 @@ public class Parser
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public abstract class ClassHandler : Attribute
 {
-    public virtual void Handle(Type type, object? instance, IMod mod)
+    public virtual void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
         foreach (FieldInfo fieldInfo in type.GetFields(ReflectionExtensions.AllDeclared))
         {
@@ -110,7 +110,7 @@ public abstract class ClassHandler : Attribute
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public abstract class MethodHandler : Attribute
 {
-    public abstract void Handle(MethodInfo method, object? instance, IMod mod);
+    public abstract void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null);
 }
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]

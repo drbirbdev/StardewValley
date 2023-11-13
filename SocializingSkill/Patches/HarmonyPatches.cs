@@ -111,19 +111,19 @@ class NPCDialogueResponse_Constructor
 class Event_CommandFriendship
 {
     static void Postfix(
-            string[] split)
+            string[] args)
     {
         try
         {
             if (Game1.player.HasCustomProfession(SocializingSkill.SmoothTalker))
             {
-                NPC character = Game1.getCharacterFromName(split[1]);
+                NPC character = Game1.getCharacterFromName(args[1]);
                 if (character == null)
                 {
                     return;
                 }
 
-                int friendship = Convert.ToInt32(split[2]);
+                int friendship = Convert.ToInt32(args[2]);
 
                 // Undo original method friendship change
                 Game1.player.changeFriendship(-friendship, character);
@@ -238,7 +238,7 @@ class Quest_GetMoneyReward
 // TODO: other shop constructors
 // Haggler Profession
 //  - Decrease shop prices if friends with the owner
-[HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] { typeof(string), typeof(ShopData), typeof(ShopOwnerData), typeof(NPC), typeof(Func<ISalable, Farmer, int, bool>), typeof(Func<ISalable>), typeof(bool) })]
+/*[HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] { typeof(string), typeof(ShopData), typeof(ShopOwnerData), typeof(NPC), typeof(Func<ISalable, Farmer, int, bool>), typeof(Func<ISalable, bool>), typeof(bool) })]
 class ShopMenu_Constructor1
 {
     internal static void Postfix(int currency, NPC owner, ShopMenu __instance)
@@ -296,7 +296,7 @@ class ShopMenu_Constructor1
             Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
         }
     }
-}
+}*/
 
 // Skill perk
 //  - Reduce friendship decay

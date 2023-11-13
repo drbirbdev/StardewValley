@@ -9,7 +9,7 @@ namespace BirbCore.Annotations;
 
 public class SData : ClassHandler
 {
-    public override void Handle(Type type, object? instance, IMod mod)
+    public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
         MemberInfo modData = mod.GetType().GetMemberOfType(type);
         if (modData == null)

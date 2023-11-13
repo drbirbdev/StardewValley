@@ -120,7 +120,7 @@ class Command
             foreach (string stat in ModEntry.LocalModData.LocalLeaderboards[modId].Keys)
             {
                 Log.Info($"    Stat = {stat}");
-                foreach (LeaderboardStat record in ModEntry.LocalModData.LocalLeaderboards[modId][stat] )
+                foreach (LeaderboardStat record in ModEntry.LocalModData.LocalLeaderboards[modId][stat])
                 {
                     Log.Info($"        User = {record.UserUUID}");
                     Log.Info($"            Name = {record.Name}");

@@ -13,7 +13,7 @@ namespace BirbShared
         readonly object Tokens;
         readonly ITranslationHelper I18n;
 
-        bool PrestigeEnabled { get => PrestigeIcon != null; }
+        bool PrestigeEnabled { get => this.PrestigeIcon != null; }
         readonly Texture2D PrestigeIcon;
         readonly Texture2D NormalIcon;
         private bool IsPrestiged = false;
@@ -45,13 +45,13 @@ namespace BirbShared
                 return;
             }
 
-            string skill = ModHelper.Reflection.GetField<string>(levelUpMenu, "currentSkill").GetValue();
+            string skill = this.ModHelper.Reflection.GetField<string>(levelUpMenu, "currentSkill").GetValue();
             if (skill != "drbirbdev.Binning")
             {
                 return;
             }
 
-            int level = ModHelper.Reflection.GetField<int>(levelUpMenu, "currentLevel").GetValue();
+            int level = this.ModHelper.Reflection.GetField<int>(levelUpMenu, "currentLevel").GetValue();
 
             List<CraftingRecipe> newRecipes = new List<CraftingRecipe>();
 
@@ -82,9 +82,9 @@ namespace BirbShared
                 }
             }
 
-            ModHelper.Reflection.GetField<List<CraftingRecipe>>(levelUpMenu, "newCraftingRecipes").SetValue(newRecipes);
+            this.ModHelper.Reflection.GetField<List<CraftingRecipe>>(levelUpMenu, "newCraftingRecipes").SetValue(newRecipes);
 
-            levelUpMenu.height = menuHeight + 256 + levelUpMenu.getExtraInfoForLevel(skill, level).Count * 64 * 3 / 4;
+            levelUpMenu.height = menuHeight + 256 + (levelUpMenu.getExtraInfoForLevel(skill, level).Count * 64 * 3 / 4);
         }
 
         private void GameLoop_SaveLoaded_MARGO(object sender, SaveLoadedEventArgs e)
@@ -112,7 +112,7 @@ namespace BirbShared
 
         public override string GetDescription()
         {
-            if (CheckPrestigeMenu())
+            if (this.CheckPrestigeMenu())
             {
                 return this.I18n.Get($"{this.Id}.pdesc", this.Tokens);
             }
@@ -140,12 +140,12 @@ namespace BirbShared
             {
                 return false;
             }
-            string currSkill = ModHelper.Reflection.GetField<string>(currMenu, "currentSkill").GetValue();
+            string currSkill = this.ModHelper.Reflection.GetField<string>(currMenu, "currentSkill").GetValue();
             if (currSkill != this.Skill.Id)
             {
                 return false;
             }
-            int currentLevel = ModHelper.Reflection.GetField<int>(currMenu, "currentLevel").GetValue();
+            int currentLevel = this.ModHelper.Reflection.GetField<int>(currMenu, "currentLevel").GetValue();
             if (currentLevel <= 10)
             {
                 return false;

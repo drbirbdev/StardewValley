@@ -15,7 +15,7 @@ namespace GameboyArcade
 
         public void LoadRam(int[] ram)
         {
-            SaveState loaded = ModEntry.Instance.Helper.Data.ReadJsonFile<SaveState>($"data/{MinigameId}/{Constants.SaveFolderName}/{Game1.player.UniqueMultiplayerID}.json");
+            SaveState loaded = ModEntry.Instance.Helper.Data.ReadJsonFile<SaveState>($"data/{this.MinigameId}/{Constants.SaveFolderName}/{Game1.player.UniqueMultiplayerID}.json");
             if (loaded is null)
             {
                 return;
@@ -25,7 +25,7 @@ namespace GameboyArcade
 
         public void LoadRamWithClock(int[] ram, long[] clockData)
         {
-            SaveState loaded = ModEntry.Instance.Helper.Data.ReadJsonFile<SaveState>($"data/{MinigameId}/{Constants.SaveFolderName}/{Game1.player.UniqueMultiplayerID}.json");
+            SaveState loaded = ModEntry.Instance.Helper.Data.ReadJsonFile<SaveState>($"data/{this.MinigameId}/{Constants.SaveFolderName}/{Game1.player.UniqueMultiplayerID}.json");
             if (loaded is null)
             {
                 return;
@@ -36,12 +36,13 @@ namespace GameboyArcade
 
         public void SaveRam(int[] ram)
         {
-            SaveRamWithClock(ram, null);
+            this.SaveRamWithClock(ram, null);
         }
 
         public void SaveRamWithClock(int[] ram, long[] clockData)
         {
-            ModEntry.Instance.Helper.Data.WriteJsonFile<SaveState>($"data/{MinigameId}/{Constants.SaveFolderName}/{Game1.player.UniqueMultiplayerID}.json", new SaveState {
+            ModEntry.Instance.Helper.Data.WriteJsonFile<SaveState>($"data/{this.MinigameId}/{Constants.SaveFolderName}/{Game1.player.UniqueMultiplayerID}.json", new SaveState
+            {
                 RAM = ram,
                 ClockData = clockData,
             });

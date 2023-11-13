@@ -1,5 +1,5 @@
-using StardewModdingAPI;
 using BirbCore.Annotations;
+using StardewModdingAPI;
 
 namespace PanningUpgrades;
 

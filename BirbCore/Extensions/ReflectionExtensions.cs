@@ -70,7 +70,8 @@ public static class ReflectionExtensions
         return null;
     }
 
-    public static Action<object, object> GetSetter(this MemberInfo member) {
+    public static Action<object, object> GetSetter(this MemberInfo member)
+    {
         if (member is FieldInfo field)
         {
             return field.SetValue;
@@ -87,7 +88,8 @@ public static class ReflectionExtensions
         if (method.IsStatic)
         {
             return (T)Delegate.CreateDelegate(typeof(T), method);
-        } else
+        }
+        else
         {
             return (T)Delegate.CreateDelegate(typeof(T), instance, method);
         }

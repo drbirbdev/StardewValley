@@ -23,8 +23,8 @@ public class SMod : ClassHandler
             {
                 object api = mod.Helper.ModRegistry.GetType().GetMethod("GetApi", 1, new Type[] { typeof(string) })
                     .MakeGenericMethod(fieldType)
-                    .Invoke(mod.Helper.ModRegistry, new object[] { UniqueID });
-                if (api is null && IsRequired)
+                    .Invoke(mod.Helper.ModRegistry, new object[] { this.UniqueID });
+                if (api is null && this.IsRequired)
                 {
                     Log.Error($"[{name}] Can't access required API");
                 }

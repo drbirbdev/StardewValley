@@ -58,7 +58,7 @@ class SkyMenu : IClickableMenu
 
     public override void draw(SpriteBatch b)
     {
-        drawBackground(b);
+        this.drawBackground(b);
         foreach (SkyObject skyObject in ModEntry.Instance.SkyObjects)
         {
             skyObject.draw(b);
@@ -73,7 +73,7 @@ class SkyMenu : IClickableMenu
         }
         else
         {
-            drawMouse(b, true);
+            this.drawMouse(b, true);
         }
     }
 }

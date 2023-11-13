@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using BirbCore;
 using HarmonyLib;
+using StardewValley;
 using StardewValley.BellsAndWhistles;
 using StardewValley.Menus;
-using StardewValley;
-using BirbCore;
 
 namespace WinterStarSpouse;
 
@@ -132,7 +132,7 @@ class Utilities
 
     internal static bool SpouseAsRecipient()
     {
-        Random random = new((int)(Game1.uniqueIDForThisGame / 2uL) ^ Game1.year ^ (int)Game1.player.UniqueMultiplayerID * 123);
+        Random random = new((int)(Game1.uniqueIDForThisGame / 2uL) ^ Game1.year ^ ((int)Game1.player.UniqueMultiplayerID * 123));
 
         return random.Next(100) < ModEntry.Config.SpouseIsRecipientChance;
     }

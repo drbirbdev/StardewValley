@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using BirbCore.Annotations;
 using StardewModdingAPI;
-using StardewValley;
 
 namespace LookToTheSky
 {

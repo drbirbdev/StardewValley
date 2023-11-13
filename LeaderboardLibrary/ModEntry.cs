@@ -45,10 +45,10 @@ public class ModEntry : Mod
             this.Helper.Data.WriteJsonFile<LocalModData>("data/cached_leaderboards.json", LocalModData);
         }
 
-        #pragma warning disable CA2000
+#pragma warning disable CA2000
         CognitoAWSCredentials credentials = new CognitoAWSCredentials(IDENTITY_POOL, REGION);
-        #pragma warning restore CA2000
-        Log.Debug("Using temporary credentials: " + credentials.GetIdentityId());            
+#pragma warning restore CA2000
+        Log.Debug("Using temporary credentials: " + credentials.GetIdentityId());
         DdbClient = new AmazonDynamoDBClient(credentials, REGION);
 
         this.Helper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded;
@@ -60,13 +60,13 @@ public class ModEntry : Mod
     {
         if (!Context.IsMainPlayer)
         {
-            Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { ModManifest.UniqueID });
+            this.Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { this.ModManifest.UniqueID });
         }
     }
 
     private void Multiplayer_PeerConnected(object sender, StardewModdingAPI.Events.PeerConnectedEventArgs e)
     {
-        Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { ModManifest.UniqueID });
+        this.Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { this.ModManifest.UniqueID });
         if (e.Peer.IsSplitScreen)
         {
             if (e.Peer.ScreenID != 0)

@@ -1,11 +1,10 @@
 using System;
 using System.Reflection;
+using BirbCore.Extensions;
+using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
-using StardewModdingAPI;
 using StardewValley;
-using System.Linq;
-using BirbCore.Extensions;
 
 namespace BirbCore.Annotations;
 

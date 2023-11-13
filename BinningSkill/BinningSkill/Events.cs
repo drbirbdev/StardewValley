@@ -2,8 +2,8 @@ using BirbCore.Annotations;
 using BirbShared;
 using SpaceCore;
 using StardewModdingAPI.Events;
-using StardewValley.Constants;
 using StardewValley;
+using StardewValley.Constants;
 
 namespace BinningSkill;
 
@@ -32,7 +32,7 @@ internal class Events
     private void TimeChanged(object sender, TimeChangedEventArgs e)
     {
         int recycled = (int)(Game1.stats.Get(StatKeys.PiecesOfTrashRecycled) - this.PreviousPiecesOfTrashRecycled);
-        PreviousPiecesOfTrashRecycled = Game1.stats.Get(StatKeys.PiecesOfTrashRecycled);
+        this.PreviousPiecesOfTrashRecycled = Game1.stats.Get(StatKeys.PiecesOfTrashRecycled);
         if (recycled > 0)
         {
             Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromRecycling * recycled);

@@ -10,12 +10,12 @@ public class LeaderboardAPI : ChainableLeaderboardAPI
     private string ModId;
 
     private ILeaderboardAPI DelegateAPI;
-    public override ILeaderboardAPI Delegate => DelegateAPI;
+    public override ILeaderboardAPI Delegate => this.DelegateAPI;
 
     public LeaderboardAPI(string modId)
     {
-        ModId = modId;
-        DelegateAPI = new ThrottledLeaderboardAPI(modId);
+        this.ModId = modId;
+        this.DelegateAPI = new ThrottledLeaderboardAPI(modId);
     }
 
 
@@ -23,7 +23,7 @@ public class LeaderboardAPI : ChainableLeaderboardAPI
     {
         try
         {
-            return Delegate.GetLocalRank($"{ModId}:{stat}");
+            return this.Delegate.GetLocalRank($"{this.ModId}:{stat}");
         }
         catch (Exception e)
         {
@@ -40,7 +40,7 @@ public class LeaderboardAPI : ChainableLeaderboardAPI
         }
         try
         {
-            return Delegate.GetLocalTopN($"{ModId}:{stat}", count);
+            return this.Delegate.GetLocalTopN($"{this.ModId}:{stat}", count);
         }
         catch (Exception e)
         {
@@ -53,7 +53,7 @@ public class LeaderboardAPI : ChainableLeaderboardAPI
     {
         try
         {
-            return Delegate.GetPersonalBest($"{ModId}:{stat}");
+            return this.Delegate.GetPersonalBest($"{this.ModId}:{stat}");
         }
         catch (Exception e)
         {
@@ -75,7 +75,7 @@ public class LeaderboardAPI : ChainableLeaderboardAPI
         }
         try
         {
-            return Delegate.GetTopN($"{ModId}:{stat}", count);
+            return this.Delegate.GetTopN($"{this.ModId}:{stat}", count);
         }
         catch (Exception e)
         {
@@ -88,7 +88,7 @@ public class LeaderboardAPI : ChainableLeaderboardAPI
     {
         try
         {
-            Delegate.RefreshCache($"{ModId}:{stat}");
+            this.Delegate.RefreshCache($"{this.ModId}:{stat}");
         }
         catch (Exception e)
         {
@@ -102,7 +102,7 @@ public class LeaderboardAPI : ChainableLeaderboardAPI
     {
         try
         {
-            Delegate.UploadScore($"{ModId}:{stat}", score);
+            this.Delegate.UploadScore($"{this.ModId}:{stat}", score);
         }
         catch (Exception e)
         {

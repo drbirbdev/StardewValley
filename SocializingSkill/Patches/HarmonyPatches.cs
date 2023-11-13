@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using BirbCore;
 using BirbShared;
 using HarmonyLib;
@@ -8,9 +11,6 @@ using StardewValley.GameData.Shops;
 using StardewValley.Menus;
 using StardewValley.Quests;
 using StardewValley.SpecialOrders.Rewards;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace SocializingSkill;
 
@@ -61,7 +61,7 @@ class Dialogue_ChooseResponse
 
 // Smooth Talker Profession
 //  - adjust friendship change during dialogue
-[HarmonyPatch(typeof(NPCDialogueResponse), MethodType.Constructor, new Type[] {typeof(string), typeof(int), typeof(string), typeof(string)})]
+[HarmonyPatch(typeof(NPCDialogueResponse), MethodType.Constructor, new Type[] { typeof(string), typeof(int), typeof(string), typeof(string) })]
 class NPCDialogueResponse_Constructor
 {
 
@@ -238,7 +238,7 @@ class Quest_GetMoneyReward
 // TODO: other shop constructors
 // Haggler Profession
 //  - Decrease shop prices if friends with the owner
-[HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] { typeof(string), typeof(ShopData), typeof(ShopOwnerData), typeof(NPC), typeof(Func<ISalable, Farmer, int, bool>), typeof(Func<ISalable>), typeof(bool)})]
+[HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] { typeof(string), typeof(ShopData), typeof(ShopOwnerData), typeof(NPC), typeof(Func<ISalable, Farmer, int, bool>), typeof(Func<ISalable>), typeof(bool) })]
 class ShopMenu_Constructor1
 {
     internal static void Postfix(int currency, NPC owner, ShopMenu __instance)
@@ -375,7 +375,8 @@ class NPC_GrantConversationFriendship
                     if (who.HasCustomPrestigeProfession(SocializingSkill.Friendly))
                     {
                         who.changeFriendship((int)(ModEntry.Config.FriendlyExtraFriendship * 1.5), __instance);
-                    } else
+                    }
+                    else
                     {
                         who.changeFriendship(ModEntry.Config.FriendlyExtraFriendship, __instance);
                     }
@@ -430,29 +431,29 @@ class NPC_CheckAction
             }
 
             //TODO: 1.6 update NPC gifts.  Use Item Queries maybe?
-/*            int rarity = 1;
-            if (rarity < 0)
-            {
-                return;
-            }
-            // Get a gift from Beloved profession
+            /*            int rarity = 1;
+                        if (rarity < 0)
+                        {
+                            return;
+                        }
+                        // Get a gift from Beloved profession
 
-            string heartLevel = who.getFriendshipHeartLevelForNPC(__instance.Name).ToString();
+                        string heartLevel = who.getFriendshipHeartLevelForNPC(__instance.Name).ToString();
 
-            string dropString = Utilities.GetRandomDropStringFromLootTable(ModEntry.Assets.BelovedTable, __instance.Name, heartLevel, rarity.ToString());
-            Item gift = Utilities.ParseDropString(dropString);
+                        string dropString = Utilities.GetRandomDropStringFromLootTable(ModEntry.Assets.BelovedTable, __instance.Name, heartLevel, rarity.ToString());
+                        Item gift = Utilities.ParseDropString(dropString);
 
-            string dialogue = rarity switch
-            {
-                0 => (string)ModEntry.Instance.I18n.Get("dialogue.beloved"),
-                1 => (string)ModEntry.Instance.I18n.Get("dialogue.beloved.rare", new { name = Game1.player.displayName }),
-                _ => (string)ModEntry.Instance.I18n.Get("dialogue.beloved.superrare"),
-            };
-            __instance.CurrentDialogue.Push(new Dialogue(__instance, dialogue));
-            Game1.drawDialogue(__instance);
-            // Game1.player.addItemByMenuIfNecessary(gift);
-            __result = true;
-*/
+                        string dialogue = rarity switch
+                        {
+                            0 => (string)ModEntry.Instance.I18n.Get("dialogue.beloved"),
+                            1 => (string)ModEntry.Instance.I18n.Get("dialogue.beloved.rare", new { name = Game1.player.displayName }),
+                            _ => (string)ModEntry.Instance.I18n.Get("dialogue.beloved.superrare"),
+                        };
+                        __instance.CurrentDialogue.Push(new Dialogue(__instance, dialogue));
+                        Game1.drawDialogue(__instance);
+                        // Game1.player.addItemByMenuIfNecessary(gift);
+                        __result = true;
+            */
         }
         catch (Exception e)
         {

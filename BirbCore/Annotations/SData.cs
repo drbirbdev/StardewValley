@@ -37,7 +37,7 @@ public class SData : ClassHandler
             {
                 object saveData = mod.Helper.Data.GetType().GetMethod("ReadSaveData")
                     .MakeGenericMethod(fieldType)
-                    .Invoke(mod.Helper.Data, new object[] { Key });
+                    .Invoke(mod.Helper.Data, new object[] { this.Key });
 
                 setter(instance, saveData);
             };
@@ -53,7 +53,7 @@ public class SData : ClassHandler
             {
                 object saveData = getter(instance);
 
-                mod.Helper.Data.WriteSaveData(Key, saveData);
+                mod.Helper.Data.WriteSaveData(this.Key, saveData);
             };
         }
     }
@@ -73,7 +73,7 @@ public class SData : ClassHandler
             {
                 object localData = mod.Helper.Data.GetType().GetMethod("ReadJsonFile")
                     .MakeGenericMethod(fieldType)
-                    .Invoke(mod.Helper.Data, new object[] { JsonFile });
+                    .Invoke(mod.Helper.Data, new object[] { this.JsonFile });
 
                 if (localData is null)
                 {
@@ -87,7 +87,7 @@ public class SData : ClassHandler
             {
                 object localData = getter(instance);
 
-                mod.Helper.Data.WriteJsonFile(JsonFile, localData);
+                mod.Helper.Data.WriteJsonFile(this.JsonFile, localData);
             };
         }
     }
@@ -107,7 +107,7 @@ public class SData : ClassHandler
             {
                 object globalData = mod.Helper.Data.GetType().GetMethod("ReadGlobalData")
                     .MakeGenericMethod(fieldType)
-                    .Invoke(mod.Helper.Data, new object[] { Key });
+                    .Invoke(mod.Helper.Data, new object[] { this.Key });
 
                 if (globalData is null)
                 {
@@ -121,7 +121,7 @@ public class SData : ClassHandler
             {
                 object globalData = getter(instance);
 
-                mod.Helper.Data.WriteGlobalData(Key, globalData);
+                mod.Helper.Data.WriteGlobalData(this.Key, globalData);
             };
         }
     }

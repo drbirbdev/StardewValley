@@ -13,7 +13,8 @@ public class SContent : ClassHandler
     public bool IsList;
     public bool IsDictionary;
 
-    public SContent(string fileName = "content.json", bool isList = false, bool isDictionary = false) {
+    public SContent(string fileName = "content.json", bool isList = false, bool isDictionary = false)
+    {
         this.FileName = fileName;
         this.IsList = isList;
         this.IsDictionary = isDictionary;
@@ -22,11 +23,11 @@ public class SContent : ClassHandler
     public override object Handle(Type type, IMod mod = null)
     {
         Type innerType = type;
-        if (IsList)
+        if (this.IsList)
         {
             type = typeof(List<>).MakeGenericType(type);
         }
-        else if (IsDictionary)
+        else if (this.IsDictionary)
         {
             type = typeof(Dictionary<,>).MakeGenericType(typeof(string), type);
         }
@@ -46,10 +47,10 @@ public class SContent : ClassHandler
         {
             object content = contentPack.GetType().GetMethod("ReadJsonFile")
                 .MakeGenericMethod(type)
-                .Invoke(contentPack, new object[] { FileName });
+                .Invoke(contentPack, new object[] { this.FileName });
 
             Dictionary<string, object> modContents = new();
-            if (IsList)
+            if (this.IsList)
             {
                 int i = 0;
                 foreach (object c in (List<object>)content)
@@ -58,7 +59,7 @@ public class SContent : ClassHandler
                     i++;
                 }
             }
-            else if (IsDictionary)
+            else if (this.IsDictionary)
             {
                 modContents = (Dictionary<string, object>)content;
             }
@@ -71,7 +72,7 @@ public class SContent : ClassHandler
                 object contentValue = modContents[contentId];
                 foreach (PropertyInfo propertyInfo in contentValue.GetType().GetProperties(ReflectionExtensions.AllDeclared))
                 {
-                    foreach (Attribute attribute in  propertyInfo.GetCustomAttributes())
+                    foreach (Attribute attribute in propertyInfo.GetCustomAttributes())
                     {
                         if (attribute is FieldHandler handler)
                         {

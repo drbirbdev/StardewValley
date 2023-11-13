@@ -1,9 +1,9 @@
 using System;
-using StardewModdingAPI;
 using System.Collections.Generic;
 using BirbCore;
 using BirbCore.Annotations;
 using BirbCore.APIs;
+using StardewModdingAPI;
 
 namespace RealtimeFramework;
 
@@ -37,23 +37,23 @@ public class ModEntry : Mod
             Log.Info("Content Patcher is not installed, will skip adding tokens");
             return;
         }
-        ContentPatcher.RegisterToken(Instance.ModManifest, "Hour", RegisterHourToken);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "DayOfMonth", RegisterDayOfMonth);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "DayOfWeek", RegisterDayOfWeek);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "DayOfYear", RegisterDayOfYear);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "Month", RegisterMonth);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "Year", RegisterYear);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "WeekdayLocal", RegisterWeekdayLocal);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "MonthLocal", RegisterMonthLocal);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "Hour", this.RegisterHourToken);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "DayOfMonth", this.RegisterDayOfMonth);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "DayOfWeek", this.RegisterDayOfWeek);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "DayOfYear", this.RegisterDayOfYear);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "Month", this.RegisterMonth);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "Year", this.RegisterYear);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "WeekdayLocal", this.RegisterWeekdayLocal);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "MonthLocal", this.RegisterMonthLocal);
 
-        ContentPatcher.RegisterToken(Instance.ModManifest, "AllHolidays", RegisterAllHolidays);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "ComingHolidays", RegisterComingHolidays);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "CurrentHolidays", RegisterCurrentHolidays);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "PassingHolidays", RegisterPassingHolidays);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "AllHolidaysLocal", RegisterAllHolidaysLocal);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "ComingHolidaysLocal", RegisterComingHolidaysLocal);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "CurrentHolidaysLocal", RegisterCurrentHolidaysLocal);
-        ContentPatcher.RegisterToken(Instance.ModManifest, "PassingHolidaysLocal", RegisterPassingHolidaysLocal);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "AllHolidays", this.RegisterAllHolidays);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "ComingHolidays", this.RegisterComingHolidays);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "CurrentHolidays", this.RegisterCurrentHolidays);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "PassingHolidays", this.RegisterPassingHolidays);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "AllHolidaysLocal", this.RegisterAllHolidaysLocal);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "ComingHolidaysLocal", this.RegisterComingHolidaysLocal);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "CurrentHolidaysLocal", this.RegisterCurrentHolidaysLocal);
+        ContentPatcher.RegisterToken(Instance.ModManifest, "PassingHolidaysLocal", this.RegisterPassingHolidaysLocal);
     }
 
     private IEnumerable<string> RegisterHourToken()

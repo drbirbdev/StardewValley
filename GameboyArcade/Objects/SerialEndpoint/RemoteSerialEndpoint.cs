@@ -29,7 +29,7 @@ namespace GameboyArcade
                 Minigame = this.MinigameId,
                 Id = this.CurrentByte,
             };
-            while (!Received)
+            while (!this.Received)
             {
                 Thread.Sleep(100);
                 time += 100;

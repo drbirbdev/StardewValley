@@ -8,7 +8,7 @@ class Firework : SkyObject
     public Firework(int xPos, int yPos, Color color) : base(new TemporaryAnimatedSprite(), 0, false)
     {
         this.Sprite.texture = ModEntry.Assets.Firework;
-        
+
         this.Sprite.position.X = xPos + 64;
         this.Sprite.position.Y = yPos + 64;
         this.Sprite.sourceRect = new Rectangle(0, 0, 64, 64);
@@ -18,7 +18,7 @@ class Firework : SkyObject
         this.Sprite.motion = new Vector2(-3.2f, -3.2f);
         this.Sprite.alphaFade = 0.00005f;
         this.Sprite.alphaFadeFade = -0.00016f;
-        this.Sprite.rotation = (float)Game1.random.Next(360);
+        this.Sprite.rotation = Game1.random.Next(360);
         this.Sprite.scale = 0.01f;
         this.Sprite.scaleChange = 0.1f;
         this.Sprite.scaleChangeChange = -0.001f;

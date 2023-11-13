@@ -1,8 +1,7 @@
+using System.Threading.Tasks;
 using BirbCore.Annotations;
 using StardewModdingAPI;
-using StardewValley.Projectiles;
 using StardewValley;
-using System.Threading.Tasks;
 
 namespace LookToTheSky;
 

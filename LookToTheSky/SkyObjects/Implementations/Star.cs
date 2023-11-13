@@ -7,7 +7,7 @@ namespace LookToTheSky;
 class Star : SkyObject
 {
 
-    public Star(int xPos, int yPos) : base (new TemporaryAnimatedSprite(), 0, false)
+    public Star(int xPos, int yPos) : base(new TemporaryAnimatedSprite(), 0, false)
     {
         this.Sprite.texture = Game1.content.Load<Texture2D>("LooseSprites\\Cursors");
         this.Sprite.position.X = xPos;

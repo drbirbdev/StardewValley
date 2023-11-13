@@ -93,9 +93,9 @@ namespace GameboyArcade
             this.Emulator.Display.OnFrameProduced += this.BitmapDisplay_OnFrameProduced;
             if (this.Emulator.SoundOutput is GameboySoundOutput soundOutput)
 
-            this.Cancellation = new CancellationTokenSource();
+                this.Cancellation = new CancellationTokenSource();
 
-            FrameSw.Start();
+            this.FrameSw.Start();
             this.Emulator.Run(this.Cancellation.Token);
 
         }
@@ -105,12 +105,12 @@ namespace GameboyArcade
             ushort[] copy = (ushort[])frameData.Clone();
             // TODO: locking maybe?  Seems to work fine without...
             NextFrame.Value = copy;
-            if (IsTurbo)
+            if (this.IsTurbo)
             {
                 return;
             }
-            Thread.Sleep(Math.Max(0, (int)(16 - FrameSw.ElapsedMilliseconds)));
-            FrameSw.Restart();
+            Thread.Sleep(Math.Max(0, (int)(16 - this.FrameSw.ElapsedMilliseconds)));
+            this.FrameSw.Restart();
         }
 
         public void changeScreenSize()
@@ -120,8 +120,8 @@ namespace GameboyArcade
 
         private void SetScreenArea()
         {
-            int XPos = (int)(Game1.viewport.Width * Game1.options.zoomLevel * (1 / Game1.options.uiScale)) / 2 - (UIWidth / 2);
-            int YPos = (int)(Game1.viewport.Height * Game1.options.zoomLevel * (1 / Game1.options.uiScale)) / 2 - (UIHeight / 2);
+            int XPos = ((int)(Game1.viewport.Width * Game1.options.zoomLevel * (1 / Game1.options.uiScale)) / 2) - (UIWidth / 2);
+            int YPos = ((int)(Game1.viewport.Height * Game1.options.zoomLevel * (1 / Game1.options.uiScale)) / 2) - (UIHeight / 2);
             this.ScreenArea.X = XPos;
             this.ScreenArea.Y = YPos;
             this.ScreenArea.Width = (int)(1 / Game1.options.uiScale) * UIWidth;
@@ -141,9 +141,9 @@ namespace GameboyArcade
             b.Draw(ScreenBuffer.Value, this.ScreenArea, Color.White);
 
             // TODO: cursor has artifacts or is blurry?
-            b.Draw(Game1.mouseCursors, new Vector2(Game1.getMouseX(), Game1.getMouseY()), new Rectangle(0, 0, 15, 15), Color.White, 0f, Vector2.Zero, 4f + Game1.dialogueButtonScale / 150f, SpriteEffects.None, 1f);
+            b.Draw(Game1.mouseCursors, new Vector2(Game1.getMouseX(), Game1.getMouseY()), new Rectangle(0, 0, 15, 15), Color.White, 0f, Vector2.Zero, 4f + (Game1.dialogueButtonScale / 150f), SpriteEffects.None, 1f);
             b.End();
-            
+
             if (this.IsEvent && Game1.activeClickableMenu != null)
             {
                 Game1.PushUIMode();
@@ -181,7 +181,7 @@ namespace GameboyArcade
         /// <param name="data"></param>
         public void receiveEventPoke(int data)
         {
-            if (Content.EnableEvents)
+            if (this.Content.EnableEvents)
             {
                 ((GameboyController)this.Emulator.Controller).ReceiveEventPoke(data);
             }
@@ -282,7 +282,7 @@ namespace GameboyArcade
                 soundOutput.Dispose();
             }
             this.Emulator.Stop(this.Cancellation);
-            FrameSw.Reset();
+            this.FrameSw.Reset();
             Game1.currentMinigame = null;
         }
 

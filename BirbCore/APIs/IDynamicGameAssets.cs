@@ -1,6 +1,3 @@
-using Microsoft.Xna.Framework;
-using StardewModdingAPI;
-
 namespace BirbCore.APIs;
 
 public interface IDynamicGameAssetsApi

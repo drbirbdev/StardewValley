@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using System;
-using BirbCore.Annotations;
+using System.Collections.Generic;
 using BirbCore;
-using StardewValley.GameData;
+using BirbCore.Annotations;
 using StardewValley;
+using StardewValley.GameData;
 
 namespace BetterFestivalNotifications;
 
@@ -36,9 +36,9 @@ internal class Events
             this.FestivalName = festivalData["name"];
             string startAndEnd = festivalData["conditions"].Split('/')[1];
             this.StartTime = Convert.ToInt32(ArgUtility.SplitBySpaceAndGet(startAndEnd, 0, "-1"));
-            EndTime = Convert.ToInt32(ArgUtility.SplitBySpaceAndGet(startAndEnd, 1, "-1"));
+            this.EndTime = Convert.ToInt32(ArgUtility.SplitBySpaceAndGet(startAndEnd, 1, "-1"));
 
-            if (StartTime < 600 || StartTime >= 2600 || EndTime < 600 || EndTime > 2600)
+            if (this.StartTime < 600 || this.StartTime >= 2600 || this.EndTime < 600 || this.EndTime > 2600)
             {
                 Log.Warn("Festival start or end time is invalid");
                 return;
@@ -53,17 +53,17 @@ internal class Events
 
             }
 
-            FestivalName = data.DisplayName;
-            StartTime = data.StartTime;
-            EndTime = 2600;
+            this.FestivalName = data.DisplayName;
+            this.StartTime = data.StartTime;
+            this.EndTime = 2600;
         }
 
-        ModEntry.Instance.Helper.Events.GameLoop.TimeChanged += GameLoop_TimeChanged;
+        ModEntry.Instance.Helper.Events.GameLoop.TimeChanged += this.GameLoop_TimeChanged;
     }
 
     private void GameLoop_TimeChanged(object sender, StardewModdingAPI.Events.TimeChangedEventArgs e)
     {
-        if (e.NewTime == StartTime)
+        if (e.NewTime == this.StartTime)
         {
             if (ModEntry.Config.PlayStartSound)
             {

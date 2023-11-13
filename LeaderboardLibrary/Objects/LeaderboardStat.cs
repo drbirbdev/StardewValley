@@ -41,7 +41,8 @@ public class LeaderboardStat : IComparable
 
     public static LeaderboardStat FromDdbShape(Dictionary<string, AttributeValue> ddb)
     {
-        if (!int.TryParse(ddb.GetValueOrDefault("Score", new AttributeValue()).N, out int score)) {
+        if (!int.TryParse(ddb.GetValueOrDefault("Score", new AttributeValue()).N, out int score))
+        {
             Log.Warn("Failed to parse score from DDB document");
             score = 0;
         }

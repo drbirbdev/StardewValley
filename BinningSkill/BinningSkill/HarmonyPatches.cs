@@ -1,14 +1,14 @@
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using StardewValley;
-using SpaceCore;
+using System.Reflection;
+using System.Reflection.Emit;
 using BirbCore;
 using BirbShared;
-using System.Reflection;
-using StardewValley.GameData.GarbageCans;
+using HarmonyLib;
+using SpaceCore;
+using StardewValley;
 using StardewValley.Characters;
-using System.Reflection.Emit;
+using StardewValley.GameData.GarbageCans;
 
 namespace BinningSkill;
 
@@ -214,8 +214,8 @@ class GameLocation_TryGetGarbageIItem
                 return;
             }
             // Remove Mega, DoubleMega results if not meeting level requirements
-            if (selected.IsMegaSuccess && Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < ModEntry.Config.MegaMinLevel ||
-                selected.IsDoubleMegaSuccess && Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < ModEntry.Config.DoubleMegaMinLevel)
+            if ((selected.IsMegaSuccess && Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < ModEntry.Config.MegaMinLevel) ||
+                (selected.IsDoubleMegaSuccess && Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < ModEntry.Config.DoubleMegaMinLevel))
             {
                 item = null;
                 selected = null;

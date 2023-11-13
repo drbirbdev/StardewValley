@@ -52,10 +52,11 @@ public abstract class SkyObject
     /// </summary>
     public virtual void tick()
     {
-        Sprite.update(Game1.currentGameTime);
-        foreach(SkyProjectile projectile in ModEntry.Instance.Projectiles)
+        this.Sprite.update(Game1.currentGameTime);
+        foreach (SkyProjectile projectile in ModEntry.Instance.Projectiles)
         {
-            if (this.IsHit(new Vector2(projectile.X, projectile.Y))) {
+            if (this.IsHit(new Vector2(projectile.X, projectile.Y)))
+            {
                 if (this.OnHit(projectile.Ammo))
                 {
                     ModEntry.Instance.Projectiles.Remove(projectile);

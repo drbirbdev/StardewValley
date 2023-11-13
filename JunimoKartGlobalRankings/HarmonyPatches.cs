@@ -15,7 +15,7 @@ class MineCart_Die
     {
         try
         {
-            if(!ModEntry.LeaderboardAPI.UploadScore("JunimoKartScore", ___score))
+            if (!ModEntry.LeaderboardAPI.UploadScore("JunimoKartScore", ___score))
             {
                 Log.Error("Failed to upload JunimoKart high score");
             }

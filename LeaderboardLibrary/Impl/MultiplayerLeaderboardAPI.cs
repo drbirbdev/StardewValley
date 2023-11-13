@@ -6,30 +6,30 @@ class MultiplayerLeaderboardAPI : ChainableLeaderboardAPI
 {
     private string ModId;
     private ILeaderboardAPI DelegateApi;
-    public override ILeaderboardAPI Delegate => DelegateApi;
+    public override ILeaderboardAPI Delegate => this.DelegateApi;
 
     public MultiplayerLeaderboardAPI(string modId)
     {
-        ModId = modId;
-        DelegateApi = new CachedLeaderboardAPI(modId);
+        this.ModId = modId;
+        this.DelegateApi = new CachedLeaderboardAPI(modId);
         ModEntry.Instance.Helper.Events.Multiplayer.ModMessageReceived += this.Multiplayer_ModMessageReceived;
     }
 
     private void Multiplayer_ModMessageReceived(object sender, StardewModdingAPI.Events.ModMessageReceivedEventArgs e)
     {
-        if (e.FromModID == ModEntry.Instance.ModManifest.UniqueID && e.Type == $"{ModId}:UploadScore" && e.FromPlayerID != Game1.player.UniqueMultiplayerID)
+        if (e.FromModID == ModEntry.Instance.ModManifest.UniqueID && e.Type == $"{this.ModId}:UploadScore" && e.FromPlayerID != Game1.player.UniqueMultiplayerID)
         {
             string name = Game1.getFarmer(e.FromPlayerID)?.Name;
             UploadScoreMessage message = e.ReadAs<UploadScoreMessage>();
-            ((CachedLeaderboardAPI)Delegate).UpdateCache(message.Stat, message.Score, message.UserUUID, name);
+            ((CachedLeaderboardAPI)this.Delegate).UpdateCache(message.Stat, message.Score, message.UserUUID, name);
         }
     }
 
     public override bool UploadScore(string stat, int score)
     {
         UploadScoreMessage message = new UploadScoreMessage(stat, score, ModEntry.GlobalModData.Value.UserUUID);
-        ModEntry.Instance.Helper.Multiplayer.SendMessage<UploadScoreMessage>(message, $"{ModId}:UploadScore", new[] { ModEntry.Instance.ModManifest.UniqueID });
-        return Delegate.UploadScore(stat, score);
+        ModEntry.Instance.Helper.Multiplayer.SendMessage<UploadScoreMessage>(message, $"{this.ModId}:UploadScore", new[] { ModEntry.Instance.ModManifest.UniqueID });
+        return this.Delegate.UploadScore(stat, score);
     }
 }
 
@@ -41,8 +41,8 @@ class UploadScoreMessage
 
     public UploadScoreMessage(string stat, int score, string userUuid)
     {
-        Stat = stat;
-        Score = score;
-        UserUUID = userUuid;
+        this.Stat = stat;
+        this.Score = score;
+        this.UserUUID = userUuid;
     }
 }

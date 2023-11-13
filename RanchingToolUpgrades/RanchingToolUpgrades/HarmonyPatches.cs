@@ -1,9 +1,9 @@
+using System;
+using System.Reflection;
 using BirbCore;
 using HarmonyLib;
 using StardewValley;
 using StardewValley.Tools;
-using System;
-using System.Reflection;
 
 namespace RanchingToolUpgrades;
 

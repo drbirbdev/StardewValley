@@ -10,8 +10,8 @@ namespace LeaderboardLibrary;
 class CachedLeaderboardAPI : ILeaderboardAPI
 {
 
-    private Dictionary<string, List<LeaderboardStat>> LocalLeaderboards => ModEntry.LocalModData.LocalLeaderboards[ModId];
-    private Dictionary<string, List<LeaderboardStat>> TopLeaderboards => ModEntry.LocalModData.TopLeaderboards[ModId];
+    private Dictionary<string, List<LeaderboardStat>> LocalLeaderboards => ModEntry.LocalModData.LocalLeaderboards[this.ModId];
+    private Dictionary<string, List<LeaderboardStat>> TopLeaderboards => ModEntry.LocalModData.TopLeaderboards[this.ModId];
     private LeaderboardDAO LeaderboardDAO = new LeaderboardDAO();
     private readonly string ModId;
 
@@ -22,36 +22,36 @@ class CachedLeaderboardAPI : ILeaderboardAPI
 
     private void LazyInitStat(string stat)
     {
-        if (!LocalLeaderboards.ContainsKey(stat))
+        if (!this.LocalLeaderboards.ContainsKey(stat))
         {
-            LocalLeaderboards[stat] = new List<LeaderboardStat>();
+            this.LocalLeaderboards[stat] = new List<LeaderboardStat>();
         }
-        if (!TopLeaderboards.ContainsKey(stat))
+        if (!this.TopLeaderboards.ContainsKey(stat))
         {
-            TopLeaderboards[stat] = new List<LeaderboardStat>();
+            this.TopLeaderboards[stat] = new List<LeaderboardStat>();
         }
     }
 
     public int GetLocalRank(string stat)
     {
-        LazyInitStat(stat);
-        return LocalLeaderboards[stat].FindIndex((match) => match.UserUUID == ModEntry.GlobalModData.Value.UserUUID) + 1;
+        this.LazyInitStat(stat);
+        return this.LocalLeaderboards[stat].FindIndex((match) => match.UserUUID == ModEntry.GlobalModData.Value.UserUUID) + 1;
     }
 
     public List<Dictionary<string, string>> GetLocalTopN(string stat, int count)
     {
-        LazyInitStat(stat);
-        if (count > LocalLeaderboards[stat].Count())
+        this.LazyInitStat(stat);
+        if (count > this.LocalLeaderboards[stat].Count())
         {
-            count = LocalLeaderboards[stat].Count();
+            count = this.LocalLeaderboards[stat].Count();
         }
-        return LeaderboardStat.ToApiList(LocalLeaderboards[stat].GetRange(0, count));
+        return LeaderboardStat.ToApiList(this.LocalLeaderboards[stat].GetRange(0, count));
     }
 
     public Dictionary<string, string> GetPersonalBest(string stat)
     {
-        LazyInitStat(stat);
-        return GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUUID).ToApiShape();
+        this.LazyInitStat(stat);
+        return this.GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUUID).ToApiShape();
     }
 
     public int GetRank(string stat)
@@ -61,18 +61,18 @@ class CachedLeaderboardAPI : ILeaderboardAPI
 
     public List<Dictionary<string, string>> GetTopN(string stat, int count)
     {
-        LazyInitStat(stat);
-        if (count > TopLeaderboards[stat].Count())
+        this.LazyInitStat(stat);
+        if (count > this.TopLeaderboards[stat].Count())
         {
-            count = TopLeaderboards[stat].Count();
+            count = this.TopLeaderboards[stat].Count();
         }
-        return LeaderboardStat.ToApiList(TopLeaderboards[stat].GetRange(0, count));
+        return LeaderboardStat.ToApiList(this.TopLeaderboards[stat].GetRange(0, count));
     }
 
     public virtual bool RefreshCache(string stat)
     {
-        LazyInitStat(stat);
-        LeaderboardDAO.GetLocalScores(stat).ContinueWith((task) =>
+        this.LazyInitStat(stat);
+        this.LeaderboardDAO.GetLocalScores(stat).ContinueWith((task) =>
         {
             if (CheckFailures(task, "GetLocalScores"))
             {
@@ -90,7 +90,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
             }
         });
 
-        LeaderboardDAO.GetTopScores(stat).ContinueWith((task) =>
+        this.LeaderboardDAO.GetTopScores(stat).ContinueWith((task) =>
         {
             if (CheckFailures(task, "GetTopScores"))
             {
@@ -113,20 +113,20 @@ class CachedLeaderboardAPI : ILeaderboardAPI
 
     public virtual bool UploadScore(string stat, int score)
     {
-        LazyInitStat(stat);
-        LeaderboardStat current = GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUUID);
+        this.LazyInitStat(stat);
+        LeaderboardStat current = this.GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUUID);
         if (current is null || current.Score < score)
         {
-            LeaderboardDAO.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name, Game1.player.farmName, ModEntry.GlobalModData.Value.Secret, this);
-            return UpdateCache(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name);
+            this.LeaderboardDAO.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name, Game1.player.farmName, ModEntry.GlobalModData.Value.Secret, this);
+            return this.UpdateCache(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name);
         }
         return true;
     }
 
     public bool UpdateCache(string stat, int score, string userUuid, string userName)
     {
-        LazyInitStat(stat);
-        LeaderboardStat current = GetPlayerStat(stat, userUuid);
+        this.LazyInitStat(stat);
+        LeaderboardStat current = this.GetPlayerStat(stat, userUuid);
         if (current is null || current.Score < score)
         {
             if (current is null)
@@ -136,28 +136,28 @@ class CachedLeaderboardAPI : ILeaderboardAPI
                     Stat = stat,
                     UserUUID = userUuid,
                 };
-                LocalLeaderboards[stat].Add(current);
+                this.LocalLeaderboards[stat].Add(current);
             }
             current.Name = userName;
             current.Farm = Game1.player.farmName;
             current.Score = score;
             current.DateTime = DateTimeOffset.Now.ToUnixTimeSeconds();
 
-            LocalLeaderboards[stat].Sort();
+            this.LocalLeaderboards[stat].Sort();
 
-            if (TopLeaderboards[stat].Count() < 10 || TopLeaderboards[stat].Last<LeaderboardStat>().Score < score)
+            if (this.TopLeaderboards[stat].Count() < 10 || this.TopLeaderboards[stat].Last<LeaderboardStat>().Score < score)
             {
-                LeaderboardStat existing = TopLeaderboards[stat].Find((match) => match.UserUUID == userUuid);
+                LeaderboardStat existing = this.TopLeaderboards[stat].Find((match) => match.UserUUID == userUuid);
                 if (existing is not null)
                 {
-                    TopLeaderboards[stat].Remove(existing);
+                    this.TopLeaderboards[stat].Remove(existing);
                 }
 
-                TopLeaderboards[stat].Add(current);
-                TopLeaderboards[stat].Sort();
-                if (TopLeaderboards[stat].Count() > 10)
+                this.TopLeaderboards[stat].Add(current);
+                this.TopLeaderboards[stat].Sort();
+                if (this.TopLeaderboards[stat].Count() > 10)
                 {
-                    TopLeaderboards[stat].RemoveAt(10);
+                    this.TopLeaderboards[stat].RemoveAt(10);
                 }
             }
 
@@ -182,8 +182,8 @@ class CachedLeaderboardAPI : ILeaderboardAPI
 
     protected LeaderboardStat GetPlayerStat(string stat, string userUuid)
     {
-        LazyInitStat(stat);
-        foreach (LeaderboardStat leaderboard in LocalLeaderboards[stat])
+        this.LazyInitStat(stat);
+        foreach (LeaderboardStat leaderboard in this.LocalLeaderboards[stat])
         {
             if (leaderboard.UserUUID == userUuid)
             {

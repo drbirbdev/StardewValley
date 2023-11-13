@@ -417,13 +417,13 @@ public class SEvent : ClassHandler
 
             mod.Helper.Events.GameLoop.GameLaunched += (object sender, GameLaunchedEventArgs e) =>
             {
-                mod.Helper.Events.GameLoop.OneSecondUpdateTicked += OneSecondUpdateTicked;
+                mod.Helper.Events.GameLoop.OneSecondUpdateTicked += this.OneSecondUpdateTicked;
             };
         }
 
         private void OneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
         {
-            this.Mod.Helper.Events.GameLoop.OneSecondUpdateTicked -= OneSecondUpdateTicked;
+            this.Mod.Helper.Events.GameLoop.OneSecondUpdateTicked -= this.OneSecondUpdateTicked;
             this.Method.Invoke(this.Instance, new object[] { sender, e });
         }
     }

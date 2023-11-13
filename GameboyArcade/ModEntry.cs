@@ -1,65 +1,63 @@
 using System.Collections.Generic;
-using BirbCore;
 using BirbCore.Annotations;
 using BirbCore.APIs;
 using StardewModdingAPI;
 
-namespace GameboyArcade
+namespace GameboyArcade;
+
+public class ModEntry : Mod
 {
-    public class ModEntry : Mod
+    internal static ModEntry Instance;
+    internal static Config Config;
+    internal static Command Command;
+    internal static Dictionary<string, Dictionary<string, Content>> Content;
+
+    [SMod.Api("spacechase0.DynamicGameAssets", IsRequired = false)]
+    internal static IDynamicGameAssetsApi DynamicGameAssets;
+
+    public override void Entry(IModHelper helper)
     {
-        internal static ModEntry Instance;
-        internal static Config Config;
-        internal static Command Command;
-        internal static Dictionary<string, Dictionary<string, Content>> Content;
+        Parser.ParseAll(this);
+    }
 
-        [SMod.Api("spacechase0.DynamicGameAssets", IsRequired = false)]
-        internal static IDynamicGameAssetsApi DynamicGameAssets;
+    public override object GetApi()
+    {
+        return new GameboyArcadeAPIImpl();
+    }
 
-        public override void Entry(IModHelper helper)
+    public static IEnumerable<Content> AllGames()
+    {
+        foreach (Dictionary<string, Content> modContent in ModEntry.Content.Values)
         {
-            Parser.ParseAll(this);
-        }
-
-        public override object GetApi()
-        {
-            return new GameboyArcadeAPIImpl();
-        }
-
-        public static IEnumerable<Content> AllGames()
-        {
-            foreach (Dictionary<string, Content> modContent in ModEntry.Content.Values)
+            foreach (Content content in modContent.Values)
             {
-                foreach (Content content in modContent.Values)
-                {
-                    yield return content;
-                }
+                yield return content;
             }
-            yield break;
         }
+        yield break;
+    }
 
-        public static Content SearchGames(string search)
+    public static Content SearchGames(string search)
+    {
+        foreach (Content content in AllGames())
         {
-            foreach (Content content in AllGames())
+            if (content.UniqueID == search || content.ModID == search || content.GameID == search || content.Name == search)
             {
-                if (content.UniqueID == search || content.ModID == search || content.GameID == search || content.Name == search)
-                {
-                    return content;
-                }
+                return content;
             }
-            return null;
         }
+        return null;
+    }
 
-        public static Content GetGame(string modId, string gameId = null)
+    public static Content GetGame(string modId, string gameId = null)
+    {
+        if (gameId is null)
         {
-            if (gameId is null)
-            {
-                string[] parts = modId.Split("/");
-                modId = parts[0];
-                gameId = parts[1];
-            }
-
-            return Content?[modId]?[gameId];
+            string[] parts = modId.Split("/");
+            modId = parts[0];
+            gameId = parts[1];
         }
+
+        return Content?[modId]?[gameId];
     }
 }

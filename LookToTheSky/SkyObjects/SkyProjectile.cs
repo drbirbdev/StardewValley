@@ -30,7 +30,7 @@ public class SkyProjectile : BasicProjectile
     public StardewValley.Object Ammo;
 
     public SkyProjectile(int parentSheetIndex, int xPos, string collisionSound, StardewValley.Object ammo, int clickY = 0, int speed = 1) :
-        base(0, parentSheetIndex, 0, 0, (float)(Math.PI / (double)(64f + (float)Game1.random.Next(-63, 64))), 0, -12 * speed, new Vector2(xPos, Game1.viewport.Height), collisionSound, null, null, false, false, null, Game1.player)
+        base(0, parentSheetIndex, 0, 0, (float)(Math.PI / (double)(64f + Game1.random.Next(-63, 64))), 0, -12 * speed, new Vector2(xPos, Game1.viewport.Height), collisionSound, null, null, false, false, null, Game1.player)
     {
         this.Ammo = ammo;
         this.ClickY = clickY;

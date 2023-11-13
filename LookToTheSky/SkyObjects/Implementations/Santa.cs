@@ -7,7 +7,7 @@ namespace LookToTheSky;
 class Santa : SkyObject
 {
 
-    public Santa(int yPos, bool moveRight) : base (new StardewValley.TemporaryAnimatedSprite(), yPos, moveRight)
+    public Santa(int yPos, bool moveRight) : base(new StardewValley.TemporaryAnimatedSprite(), yPos, moveRight)
     {
         this.Sprite.texture = Game1.content.Load<Texture2D>("LooseSprites\\Cursors");
         this.Sprite.sourceRect = new Rectangle(640, 800, 32, 16);

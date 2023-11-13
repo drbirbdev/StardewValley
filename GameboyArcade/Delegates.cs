@@ -40,7 +40,7 @@ internal class Delegates
 
         GameboyMinigame.LoadGame(content, true);
         @event.CurrentCommand++;
-        
+
     }
 
 }

@@ -10,7 +10,7 @@ class ThrottledLeaderboardAPI : ChainableLeaderboardAPI
     public DateTime UploadNextCall = DateTime.MinValue;
 
     private ILeaderboardAPI DelegateApi;
-    public override ILeaderboardAPI Delegate => DelegateApi;
+    public override ILeaderboardAPI Delegate => this.DelegateApi;
 
     public ThrottledLeaderboardAPI(string modId)
     {
@@ -19,10 +19,10 @@ class ThrottledLeaderboardAPI : ChainableLeaderboardAPI
 
     public override bool RefreshCache(string stat)
     {
-        if (DateTime.UtcNow > RefreshNextCall)
+        if (DateTime.UtcNow > this.RefreshNextCall)
         {
-            Delegate.RefreshCache(stat);
-            RefreshNextCall = DateTime.UtcNow.AddSeconds(5);
+            this.Delegate.RefreshCache(stat);
+            this.RefreshNextCall = DateTime.UtcNow.AddSeconds(5);
         }
         else
         {
@@ -35,7 +35,7 @@ class ThrottledLeaderboardAPI : ChainableLeaderboardAPI
     public override bool UploadScore(string stat, int score)
     {
         int oldScore = 0;
-        Dictionary<string, string> oldRecord = Delegate.GetLocalTopN(stat, 10).Find((match) => match["UserUUID"] == (ModEntry.GlobalModData.Value.UserUUID));
+        Dictionary<string, string> oldRecord = this.Delegate.GetLocalTopN(stat, 10).Find((match) => match["UserUUID"] == ModEntry.GlobalModData.Value.UserUUID);
         if (oldRecord is not null)
         {
             int.TryParse(oldRecord["Score"], out oldScore);
@@ -43,10 +43,10 @@ class ThrottledLeaderboardAPI : ChainableLeaderboardAPI
 
         if (score > oldScore)
         {
-            if (DateTime.UtcNow > UploadNextCall)
+            if (DateTime.UtcNow > this.UploadNextCall)
             {
-                Delegate.UploadScore(stat, score);
-                UploadNextCall = DateTime.UtcNow.AddSeconds(5);
+                this.Delegate.UploadScore(stat, score);
+                this.UploadNextCall = DateTime.UtcNow.AddSeconds(5);
             }
             else
             {

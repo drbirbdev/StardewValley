@@ -109,7 +109,7 @@ namespace SlimingSkill
             {
                 if (instr.Is(OpCodes.Ldstr, "slimedead"))
                 {
-                    
+
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Object_CheckForAction), nameof(Object_CheckForAction.OpenSlimeball)));
                 }

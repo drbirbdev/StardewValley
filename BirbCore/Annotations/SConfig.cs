@@ -89,7 +89,7 @@ public class SConfig : ClassHandler
 
         public Option(string[] allowedValues, string fieldId = null)
         {
-            this.FieldId= fieldId;
+            this.FieldId = fieldId;
             this.AllowedValues = allowedValues;
         }
 
@@ -131,9 +131,9 @@ public class SConfig : ClassHandler
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
-                    fieldId: FieldId,
+                    fieldId: this.FieldId,
                     min: this.Min == float.MaxValue ? null : this.Min,
-                    max: this.Max == float.MinValue ? null : Max,
+                    max: this.Max == float.MinValue ? null : this.Max,
                     interval: this.Interval == float.MinValue ? null : this.Interval,
                     formatValue: null
                 );
@@ -146,8 +146,8 @@ public class SConfig : ClassHandler
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
-                    fieldId: FieldId,
-                    allowedValues: AllowedValues,
+                    fieldId: this.FieldId,
+                    allowedValues: this.AllowedValues,
                     formatAllowedValue: null
                 );
             }
@@ -159,7 +159,7 @@ public class SConfig : ClassHandler
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
-                    fieldId: FieldId
+                    fieldId: this.FieldId
                 );
             }
             else if (fieldType == typeof(KeybindList))
@@ -170,7 +170,7 @@ public class SConfig : ClassHandler
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
-                    fieldId: FieldId
+                    fieldId: this.FieldId
                 );
             }
             else
@@ -197,8 +197,8 @@ public class SConfig : ClassHandler
         {
             SConfig.Api.AddSectionTitle(
                 mod: mod.ModManifest,
-                text: () => mod.Helper.Translation.Get($"config.{Key}") ?? Key,
-                tooltip: () => mod.Helper.Translation.Get($"config.{Key}.tooltip")
+                text: () => mod.Helper.Translation.Get($"config.{this.Key}") ?? this.Key,
+                tooltip: () => mod.Helper.Translation.Get($"config.{this.Key}.tooltip")
             );
         }
     }
@@ -220,7 +220,7 @@ public class SConfig : ClassHandler
         {
             SConfig.Api.AddParagraph(
                 mod: mod.ModManifest,
-                text: () => mod.Helper.Translation.Get($"config.{Key}") ?? Key
+                text: () => mod.Helper.Translation.Get($"config.{this.Key}") ?? this.Key
             );
         }
     }
@@ -242,8 +242,8 @@ public class SConfig : ClassHandler
         {
             SConfig.Api.AddPage(
                 mod: mod.ModManifest,
-                pageId: PageId,
-                pageTitle: () => mod.Helper.Translation.Get($"config.{PageId}")
+                pageId: this.PageId,
+                pageTitle: () => mod.Helper.Translation.Get($"config.{this.PageId}")
             );
         }
     }
@@ -265,9 +265,9 @@ public class SConfig : ClassHandler
         {
             SConfig.Api.AddPageLink(
                 mod: mod.ModManifest,
-                pageId: PageId,
-                text: () => mod.Helper.Translation.Get($"config.{PageId}"),
-                tooltip: () => mod.Helper.Translation.Get($"config.{PageId}.tooltip")
+                pageId: this.PageId,
+                text: () => mod.Helper.Translation.Get($"config.{this.PageId}"),
+                tooltip: () => mod.Helper.Translation.Get($"config.{this.PageId}.tooltip")
             );
         }
     }
@@ -302,8 +302,8 @@ public class SConfig : ClassHandler
         {
             SConfig.Api.AddImage(
                 mod: mod.ModManifest,
-                texture: () => mod.Helper.GameContent.Load<Texture2D>(Texture),
-                texturePixelArea: Width != 0 ? new Rectangle(X, Y, Width, Height) : null
+                texture: () => mod.Helper.GameContent.Load<Texture2D>(this.Texture),
+                texturePixelArea: this.Width != 0 ? new Rectangle(this.X, this.Y, this.Width, this.Height) : null
             );
         }
     }

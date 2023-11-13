@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -11,8 +12,8 @@ namespace BirbCore.Annotations;
 /// </summary>
 public class SToken : ClassHandler
 {
-    protected static IContentPatcherApi Api;
-    public override object Handle(Type type, IMod mod = null)
+    private static IContentPatcherApi? Api;
+    public override void Handle(Type type, object? instance, IMod mod)
     {
         mod.Helper.Events.GameLoop.GameLaunched += (sender, e) =>
         {
@@ -22,29 +23,44 @@ public class SToken : ClassHandler
                 Log.Error("Content Patcher is not enabled, so will skip parsing");
                 return;
             }
-            base.Handle(type, mod);
+            base.Handle(type, null, mod);
         };
 
-        return null;
+        return;
     }
 
     public class Token : MethodHandler
     {
-        public override void Handle(MethodInfo method, object instance, IMod mod = null)
+        public override void Handle(MethodInfo method, object? instance, IMod mod)
         {
+            if (Api == null)
+            {
+                Log.Error("Content Patcher is not enabled, so will skip parsing");
+                return;
+            }
             Api.RegisterToken(mod.ModManifest, method.Name, method.CreateDelegate<Func<IEnumerable<string>>>(instance));
         }
     }
 
     public class AdvancedToken : ClassHandler
     {
-        public override object Handle(Type type, IMod mod = null)
+        public override void Handle(Type type, object? instance, IMod mod)
         {
-            object instance = base.Handle(type, mod);
-
+            instance = Activator.CreateInstance(type);
+            if (instance is null)
+            {
+                Log.Error("Content Patcher advanced api requires an instance of token class. Provided token class may be static?");
+                return;
+            }
+            base.Handle(type, instance, mod);
+            if (Api == null)
+            {
+                Log.Error("Content Patcher is not enabled, so will skip parsing");
+                return;
+            }
             Api.RegisterToken(mod.ModManifest, type.Name, instance);
 
-            return instance;
+            return;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace GameboyArcade
 {
     class RemoteSerialEndpoint : SerialEndpoint, IDisposable
     {
-        private string MinigameId;
+        private readonly string MinigameId;
         private int ReceivedByte = 0xff;
         private bool Received = false;
         private int CurrentByte = 0;
@@ -44,7 +44,7 @@ namespace GameboyArcade
 
             int incoming = this.ReceivedByte;
             this.ReceivedByte = 0xff;
-            Log.Debug($"ID {this.CurrentByte} / Outgoing {outgoing.ToString("X2")} / Incoming {incoming.ToString("X2")}");
+            Log.Debug($"ID {this.CurrentByte} / Outgoing {outgoing:X2} / Incoming {incoming:X2}");
 
             return incoming;
         }

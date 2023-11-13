@@ -8,7 +8,7 @@ namespace LeaderboardLibrary;
 [SCommand("leaderboard")]
 class Command
 {
-    private static Dictionary<string, ILeaderboardAPI> Apis = new Dictionary<string, ILeaderboardAPI>();
+    private static readonly Dictionary<string, ILeaderboardAPI> Apis = new Dictionary<string, ILeaderboardAPI>();
 
     private static void LazyInitAPI(string modId)
     {
@@ -100,7 +100,7 @@ class Command
     [SCommand.Command("print_user", "Print leaderboard tracking data for the current user")]
     public static void PrintUserInfo()
     {
-        Log.Info($"User UUID = {ModEntry.GlobalModData.GetValueForScreen(0).UserUUID} and Secret starts with {ModEntry.GlobalModData.GetValueForScreen(0).Secret.Substring(0, 3)}");
+        Log.Info($"User UUID = {ModEntry.GlobalModData.GetValueForScreen(0).UserUUID} and Secret starts with {ModEntry.GlobalModData.GetValueForScreen(0).Secret[..3]}");
     }
 
     [SCommand.Command("dump_cache", "Dumps the contents of the local cache")]

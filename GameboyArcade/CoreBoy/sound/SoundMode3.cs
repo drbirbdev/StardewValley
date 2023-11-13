@@ -30,27 +30,27 @@ namespace CoreBoy.sound
         {
             foreach (var v in gbc ? CgbWave : DmgWave)
             {
-                _waveRam.SetByte(0xff30, v);
+                this._waveRam.SetByte(0xff30, v);
             }
         }
 
-        public override bool Accepts(int address) => _waveRam.Accepts(address) || base.Accepts(address);
+        public override bool Accepts(int address) => this._waveRam.Accepts(address) || base.Accepts(address);
 
         public override int GetByte(int address)
         {
-            if (!_waveRam.Accepts(address))
+            if (!this._waveRam.Accepts(address))
             {
                 return base.GetByte(address);
             }
 
-            if (!IsEnabled())
+            if (!this.IsEnabled())
             {
-                return _waveRam.GetByte(address);
+                return this._waveRam.GetByte(address);
             }
 
-            if (_waveRam.Accepts(_lastReadAddress) && (Gbc || _ticksSinceRead < 2))
+            if (this._waveRam.Accepts(this._lastReadAddress) && (this.Gbc || this._ticksSinceRead < 2))
             {
-                return _waveRam.GetByte(_lastReadAddress);
+                return this._waveRam.GetByte(this._lastReadAddress);
             }
 
             return 0xff;
@@ -59,52 +59,52 @@ namespace CoreBoy.sound
 
         public override void SetByte(int address, int value)
         {
-            if (!_waveRam.Accepts(address))
+            if (!this._waveRam.Accepts(address))
             {
                 base.SetByte(address, value);
                 return;
             }
 
-            if (!IsEnabled())
+            if (!this.IsEnabled())
             {
-                _waveRam.SetByte(address, value);
+                this._waveRam.SetByte(address, value);
             }
-            else if (_waveRam.Accepts(_lastReadAddress) && (Gbc || _ticksSinceRead < 2))
+            else if (this._waveRam.Accepts(this._lastReadAddress) && (this.Gbc || this._ticksSinceRead < 2))
             {
-                _waveRam.SetByte(_lastReadAddress, value);
+                this._waveRam.SetByte(this._lastReadAddress, value);
             }
         }
 
         protected override void SetNr0(int value)
         {
             base.SetNr0(value);
-            DacEnabled = (value & (1 << 7)) != 0;
-            ChannelEnabled &= DacEnabled;
+            this.DacEnabled = (value & (1 << 7)) != 0;
+            this.ChannelEnabled &= this.DacEnabled;
         }
 
         protected override void SetNr1(int value)
         {
             base.SetNr1(value);
-            Length.SetLength(256 - value);
+            this.Length.SetLength(256 - value);
         }
 
         protected override void SetNr4(int value)
         {
-            if (!Gbc && (value & (1 << 7)) != 0)
+            if (!this.Gbc && (value & (1 << 7)) != 0)
             {
-                if (IsEnabled() && _freqDivider == 2)
+                if (this.IsEnabled() && this._freqDivider == 2)
                 {
-                    var pos = _i / 2;
+                    var pos = this._i / 2;
                     if (pos < 4)
                     {
-                        _waveRam.SetByte(0xff30, _waveRam.GetByte(0xff30 + pos));
+                        this._waveRam.SetByte(0xff30, this._waveRam.GetByte(0xff30 + pos));
                     }
                     else
                     {
                         pos = pos & ~3;
                         for (var j = 0; j < 4; j++)
                         {
-                            _waveRam.SetByte(0xff30 + j, _waveRam.GetByte(0xff30 + ((pos + j) % 0x10)));
+                            this._waveRam.SetByte(0xff30 + j, this._waveRam.GetByte(0xff30 + ((pos + j) % 0x10)));
                         }
                     }
                 }
@@ -115,76 +115,76 @@ namespace CoreBoy.sound
 
         public override void Start()
         {
-            _i = 0;
-            _buffer = 0;
-            if (Gbc)
+            this._i = 0;
+            this._buffer = 0;
+            if (this.Gbc)
             {
-                Length.Reset();
+                this.Length.Reset();
             }
 
-            Length.Start();
+            this.Length.Start();
         }
 
         protected override void Trigger()
         {
-            _i = 0;
-            _freqDivider = 6;
-            _triggered = !Gbc;
-            if (Gbc)
+            this._i = 0;
+            this._freqDivider = 6;
+            this._triggered = !this.Gbc;
+            if (this.Gbc)
             {
-                GetWaveEntry();
+                this.GetWaveEntry();
             }
         }
 
         public override int Tick()
         {
-            _ticksSinceRead++;
-            if (!UpdateLength())
+            this._ticksSinceRead++;
+            if (!this.UpdateLength())
             {
                 return 0;
             }
 
-            if (!DacEnabled)
+            if (!this.DacEnabled)
             {
                 return 0;
             }
 
-            if ((GetNr0() & (1 << 7)) == 0)
+            if ((this.GetNr0() & (1 << 7)) == 0)
             {
                 return 0;
             }
 
-            _freqDivider--;
+            this._freqDivider--;
 
-            if (_freqDivider == 0)
+            if (this._freqDivider == 0)
             {
-                ResetFreqDivider();
-                if (_triggered)
+                this.ResetFreqDivider();
+                if (this._triggered)
                 {
-                    _lastOutput = (_buffer >> 4) & 0x0f;
-                    _triggered = false;
+                    this._lastOutput = (this._buffer >> 4) & 0x0f;
+                    this._triggered = false;
                 }
                 else
                 {
-                    _lastOutput = GetWaveEntry();
+                    this._lastOutput = this.GetWaveEntry();
                 }
 
-                _i = (_i + 1) % 32;
+                this._i = (this._i + 1) % 32;
             }
 
-            return _lastOutput;
+            return this._lastOutput;
         }
 
-        private int GetVolume() => (GetNr2() >> 5) & 0b11;
+        private int GetVolume() => (this.GetNr2() >> 5) & 0b11;
 
         private int GetWaveEntry()
         {
-            _ticksSinceRead = 0;
-            _lastReadAddress = 0xff30 + _i / 2;
-            _buffer = _waveRam.GetByte(_lastReadAddress);
+            this._ticksSinceRead = 0;
+            this._lastReadAddress = 0xff30 + (this._i / 2);
+            this._buffer = this._waveRam.GetByte(this._lastReadAddress);
 
-            var b = _buffer;
-            if (_i % 2 == 0)
+            var b = this._buffer;
+            if (this._i % 2 == 0)
             {
                 b = (b >> 4) & 0x0f;
             }
@@ -193,7 +193,7 @@ namespace CoreBoy.sound
                 b = b & 0x0f;
             }
 
-            return GetVolume() switch
+            return this.GetVolume() switch
             {
                 0 => 0,
                 1 => b,
@@ -203,6 +203,6 @@ namespace CoreBoy.sound
             };
         }
 
-        private void ResetFreqDivider() => _freqDivider = GetFrequency() * 2;
+        private void ResetFreqDivider() => this._freqDivider = this.GetFrequency() * 2;
     }
 }

@@ -5,6 +5,7 @@ namespace BetterFestivalNotifications;
 
 public class ModEntry : Mod
 {
+    [SMod.Instance]
     internal static ModEntry Instance;
     internal static Config Config;
 

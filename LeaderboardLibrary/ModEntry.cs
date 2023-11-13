@@ -12,9 +12,9 @@ namespace LeaderboardLibrary;
 
 public class ModEntry : Mod
 {
-    private static string IDENTITY_POOL = "us-west-2:2e234341-a166-4d68-94f8-f2e1ffb14e73";
-    private static RegionEndpoint REGION = RegionEndpoint.USWest2;
-    private static string GLOBAL_DATA_KEY = "leaderboard-global";
+    private static readonly string IDENTITY_POOL = "us-west-2:2e234341-a166-4d68-94f8-f2e1ffb14e73";
+    private static readonly RegionEndpoint REGION = RegionEndpoint.USWest2;
+    private static readonly string GLOBAL_DATA_KEY = "leaderboard-global";
 
     internal static ModEntry Instance;
     internal static Command Command;
@@ -34,7 +34,7 @@ public class ModEntry : Mod
             GlobalModData.SetValueForScreen(0, new GlobalModData());
             this.Helper.Data.WriteGlobalData<GlobalModData>(GLOBAL_DATA_KEY, GlobalModData.Value);
         }
-        Log.Debug($"Using leaderboard identity {GlobalModData?.Value?.UserUUID ?? ""} and secret staring with {GlobalModData?.Value?.Secret?.Substring(0, 3)}" ?? "");
+        Log.Debug($"Using leaderboard identity {GlobalModData?.Value?.UserUUID ?? ""} and secret staring with {GlobalModData?.Value?.Secret?[..3]}" ?? "");
 
 
         LocalModData = this.Helper.Data.ReadJsonFile<LocalModData>("data/cached_leaderboards.json");
@@ -91,14 +91,14 @@ public class ModEntry : Mod
 
     public override object GetApi(IModInfo mod)
     {
-        if (this.TryAddModToCache(mod.Manifest.UniqueID))
+        if (TryAddModToCache(mod.Manifest.UniqueID))
         {
             this.Helper.Data.WriteJsonFile<LocalModData>("data/cached_leaderboards.json", LocalModData);
         }
         return new LeaderboardAPI(mod.Manifest.UniqueID);
     }
 
-    public bool TryAddModToCache(string modId)
+    public static bool TryAddModToCache(string modId)
     {
         bool result = false;
         if (!LocalModData.LocalLeaderboards.ContainsKey(modId))

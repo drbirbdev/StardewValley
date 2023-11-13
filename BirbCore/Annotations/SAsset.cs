@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Reflection;
 using BirbCore.Extensions;
@@ -13,20 +14,20 @@ namespace BirbCore.Annotations;
 /// </summary>
 public class SAsset : ClassHandler
 {
-    protected MemberInfo ModAssets;
+    private MemberInfo? ModAssets;
 
-    public override object Handle(Type type, IMod mod = null)
+    public override void Handle(Type type, object? instance, IMod mod)
     {
         this.ModAssets = mod.GetType().GetMemberOfType(type);
         if (this.ModAssets == null)
         {
             Log.Error("Mod must define an asset property");
-            return null;
+            return;
         }
 
-        object instance = base.Handle(type, mod);
+        instance = Activator.CreateInstance(type);
         this.ModAssets.GetSetter()(mod, instance);
-        return instance;
+        return;
     }
 
     /// <summary>
@@ -54,31 +55,31 @@ public class SAsset : ClassHandler
             this.Priority = priority;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
             string assetId = PathUtilities.NormalizeAssetName($"Mods/{mod.ModManifest.UniqueID}/{name}");
 
 
-            Action<object, object> assetNameSetter = instance.GetType().GetMemberOfName(name + "AssetName")?.GetSetter();
-            if (assetNameSetter is not null)
+            Action<object, object>? assetNameSetter = instance?.GetType().GetMemberOfName(name + "AssetName")?.GetSetter();
+            if (assetNameSetter is not null && instance is not null)
             {
                 assetNameSetter(instance, assetId);
             }
 
-            mod.Helper.Events.Content.AssetRequested += (object sender, AssetRequestedEventArgs e) =>
+            mod.Helper.Events.Content.AssetRequested += (object? sender, AssetRequestedEventArgs e) =>
             {
                 if (!e.Name.IsEquivalentTo(assetId))
                 {
                     return;
                 }
 
-                object value = e.GetType().GetMethod("LoadFromModFile")
-                    .MakeGenericMethod(fieldType)
+                object? value = e?.GetType().GetMethod("LoadFromModFile")
+                    ?.MakeGenericMethod(fieldType)
                     .Invoke(e, new object[] { PathUtilities.NormalizePath(this.Path), this.Priority });
                 setter(instance, value);
             };
 
-            mod.Helper.Events.Content.AssetReady += (object sender, AssetReadyEventArgs e) =>
+            mod.Helper.Events.Content.AssetReady += (object? sender, AssetReadyEventArgs e) =>
             {
                 if (!e.Name.IsEquivalentTo(assetId))
                 {
@@ -88,7 +89,7 @@ public class SAsset : ClassHandler
                 setter(instance, LoadValue(fieldType, assetId));
             };
 
-            mod.Helper.Events.Content.AssetsInvalidated += (object sender, AssetsInvalidatedEventArgs e) =>
+            mod.Helper.Events.Content.AssetsInvalidated += (object? sender, AssetsInvalidatedEventArgs e) =>
             {
                 foreach (IAssetName asset in e.Names)
                 {
@@ -99,16 +100,16 @@ public class SAsset : ClassHandler
                 }
             };
 
-            mod.Helper.Events.GameLoop.GameLaunched += (object sender, GameLaunchedEventArgs e) =>
+            mod.Helper.Events.GameLoop.GameLaunched += (object? sender, GameLaunchedEventArgs e) =>
             {
                 setter(instance, LoadValue(fieldType, assetId));
             };
         }
 
-        private static object LoadValue(Type fieldType, string modId)
+        private static object? LoadValue(Type fieldType, string modId)
         {
             return Game1.content.GetType().GetMethod("Load", new[] { typeof(string) })
-                .MakeGenericMethod(fieldType)
+                ?.MakeGenericMethod(fieldType)
                 .Invoke(Game1.content, new string[] { modId });
         }
 

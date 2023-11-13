@@ -4,7 +4,7 @@ namespace BirbCore
 {
     public class Log
     {
-        public static IMonitor Monitor;
+        private static IMonitor Monitor;
 
         public static void Init(IMonitor monitor)
         {

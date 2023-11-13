@@ -317,13 +317,10 @@ class Farmer_ResetFriendshipForNewDay
                 {
                     bool single = false;
                     NPC i = Game1.getCharacterFromName(name);
-                    if (i == null)
-                    {
-                        i = Game1.getCharacterFromName<Child>(name, mustBeVillager: false);
-                    }
+                    i ??= Game1.getCharacterFromName<Child>(name, mustBeVillager: false);
                     if (i != null)
                     {
-                        if (i != null && (bool)i.datable && !__instance.friendshipData[name].IsDating() && !i.isMarried())
+                        if (i != null && i.datable.Value && !__instance.friendshipData[name].IsDating() && !i.isMarried())
                         {
                             single = true;
                         }
@@ -414,10 +411,7 @@ class NPC_CheckAction
             {
                 return;
             }
-            if (ModEntry.BelovedCheckedToday.Value == null)
-            {
-                ModEntry.BelovedCheckedToday.Value = new List<string>();
-            }
+            ModEntry.BelovedCheckedToday.Value ??= new List<string>();
             if (ModEntry.BelovedCheckedToday.Value.Contains(__instance.Name))
             {
                 return;

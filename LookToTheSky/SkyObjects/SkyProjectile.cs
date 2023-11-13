@@ -8,7 +8,7 @@ namespace LookToTheSky;
 
 public class SkyProjectile : BasicProjectile
 {
-    public static Color[] Colors = new Color[]
+    public readonly static Color[] Colors = new Color[]
     {
         Color.White,
         Color.Red,
@@ -38,7 +38,7 @@ public class SkyProjectile : BasicProjectile
 
     public override void draw(SpriteBatch b)
     {
-        b.Draw(Game1.objectSpriteSheet, new Rectangle(this.X - 32, this.Y - 32, 64, 64), Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, this.currentTileSheetIndex, 16, 16), Color.White); //, this.rotation, Game1.GlobalToLocal(Game1.viewport, Game1.player.position), 4, SpriteEffects.None, 0);
+        b.Draw(Game1.objectSpriteSheet, new Rectangle(this.X - 32, this.Y - 32, 64, 64), Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, this.currentTileSheetIndex.Value, 16, 16), Color.White); //, this.rotation, Game1.GlobalToLocal(Game1.viewport, Game1.player.position), 4, SpriteEffects.None, 0);
     }
 
     public bool UpdatePosition(GameTime time)
@@ -46,14 +46,14 @@ public class SkyProjectile : BasicProjectile
         this.updatePosition(time);
         if (this.Y <= this.ClickY)
         {
-            if (this.currentTileSheetIndex == 441)
+            if (this.currentTileSheetIndex.Value == 441)
             {
                 // Add firework
                 ModEntry.Instance.SkyObjects.Add(new Firework(this.X - 64, this.ClickY - 64, Colors[Game1.random.Next(Colors.Length)]));
                 Game1.playSound("explosion");
                 return true;
             }
-            else if (this.currentTileSheetIndex == 387)
+            else if (this.currentTileSheetIndex.Value == 387)
             {
                 // Add a star
                 ModEntry.Instance.SkyObjects.Add(new Star(this.X - 10, this.ClickY - 10));

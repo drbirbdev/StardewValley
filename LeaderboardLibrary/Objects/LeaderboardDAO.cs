@@ -148,7 +148,7 @@ class LeaderboardDAO
         catch (ConditionalCheckFailedException e)
         {
             // If the condition expression failed, refresh the cache!
-            Log.Error($"DDB condition check failed...Refreshing cache!");
+            Log.Error($"DDB condition check failed {e}...Refreshing cache!");
             api.RefreshCache(stat);
         }
         catch (Exception e)

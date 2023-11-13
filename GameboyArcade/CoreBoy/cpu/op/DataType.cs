@@ -4,7 +4,7 @@ namespace CoreBoy.cpu.op
     {
         D8,
         D16,
-        R8, 
+        R8,
         Unset
     }
 }

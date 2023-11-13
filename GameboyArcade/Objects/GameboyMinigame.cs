@@ -27,69 +27,53 @@ namespace GameboyArcade
 
         public Emulator Emulator;
         public Content Content;
-        private CancellationTokenSource Cancellation;
+        private readonly CancellationTokenSource Cancellation;
 
         private static readonly PerScreen<ushort[]> NextFrame = new PerScreen<ushort[]>(() => new ushort[GBWidth * GBHeight]);
         private static readonly PerScreen<Texture2D> ScreenBuffer = new PerScreen<Texture2D>(() => new Texture2D(Game1.graphics.GraphicsDevice, GBWidth, GBHeight, false, SurfaceFormat.Bgra5551));
         private Rectangle ScreenArea = new Rectangle(0, 0, GBWidth, GBHeight);
 
-        private Stopwatch FrameSw = new Stopwatch();
+        private readonly Stopwatch FrameSw = new Stopwatch();
         private bool IsTurbo = false;
 
-        private bool IsEvent = false;
+        private readonly bool IsEvent = false;
 
         public GameboyMinigame(string romFile, Content content, bool isEvent = false)
         {
             this.SetScreenArea();
             this.Content = content;
             this.IsEvent = isEvent;
-            GameboyOptions options = new GameboyOptions();
-            options.Rom = romFile;
-            switch (content.SaveStyle?.ToUpper())
+            GameboyOptions options = new GameboyOptions
             {
-                case "LOCAL":
-                    options.Battery = new GameboyLocalBattery(content.UniqueID);
-                    break;
-                case "GLOBAL":
-                    options.Battery = new GameboyGlobalBattery(content.UniqueID);
-                    break;
-                case "SHARED":
-                    options.Battery = new GameboySharedBattery(content.UniqueID);
-                    break;
-                default:
-                    options.Battery = new NullBattery();
-                    break;
-            }
-
-            this.Emulator = new Emulator(options);
-            this.Emulator.Controller = new GameboyController(this);
-            this.Emulator.Display = new BitmapDisplay();
-            // TODO: Sound output is functioning but is incredibly choppy.
-            // I assume this is because it's not synced with the CPU, and is instead relying on
-            // Stardew threads to output sound async.  I have no idea how to fix this right
-            // now, so I'm going to just disable by default.
-            switch (content.SoundStyle?.ToUpper())
+                Rom = romFile,
+                Battery = (content.SaveStyle?.ToUpper()) switch
+                {
+                    "LOCAL" => new GameboyLocalBattery(content.UniqueID),
+                    "GLOBAL" => new GameboyGlobalBattery(content.UniqueID),
+                    "SHARED" => new GameboySharedBattery(content.UniqueID),
+                    _ => new NullBattery(),
+                }
+            };
+            this.Emulator = new Emulator(options)
             {
-                case "BROKEN":
-                    this.Emulator.SoundOutput = new GameboySoundOutput();
-                    break;
-                default:
-                    this.Emulator.SoundOutput = new NullSoundOutput();
-                    break;
-            }
-            switch (content.LinkStyle?.ToUpper())
-            {
-                case "LOCAL":
-                    this.Emulator.SerialEndpoint = new LocalSerialEndpoint();
-                    break;
-                case "REMOTE":
-                    this.Emulator.SerialEndpoint = new RemoteSerialEndpoint(content.UniqueID);
-                    break;
-                default:
-                    this.Emulator.SerialEndpoint = new NullSerialEndpoint();
-                    break;
-            }
-
+                Controller = new GameboyController(this),
+                Display = new BitmapDisplay(),
+                // TODO: Sound output is functioning but is incredibly choppy.
+                // I assume this is because it's not synced with the CPU, and is instead relying on
+                // Stardew threads to output sound async.  I have no idea how to fix this right
+                // now, so I'm going to just disable by default.
+                SoundOutput = (content.SoundStyle?.ToUpper()) switch
+                {
+                    "BROKEN" => new GameboySoundOutput(),
+                    _ => new NullSoundOutput(),
+                },
+                SerialEndpoint = (content.LinkStyle?.ToUpper()) switch
+                {
+                    "LOCAL" => new LocalSerialEndpoint(),
+                    "REMOTE" => new RemoteSerialEndpoint(content.UniqueID),
+                    _ => new NullSerialEndpoint(),
+                }
+            };
             this.Emulator.Display.OnFrameProduced += this.BitmapDisplay_OnFrameProduced;
             if (this.Emulator.SoundOutput is GameboySoundOutput soundOutput)
 

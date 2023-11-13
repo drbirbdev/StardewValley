@@ -9,7 +9,7 @@ class ThrottledLeaderboardAPI : ChainableLeaderboardAPI
     public DateTime RefreshNextCall = DateTime.MinValue;
     public DateTime UploadNextCall = DateTime.MinValue;
 
-    private ILeaderboardAPI DelegateApi;
+    private readonly ILeaderboardAPI DelegateApi;
     public override ILeaderboardAPI Delegate => this.DelegateApi;
 
     public ThrottledLeaderboardAPI(string modId)
@@ -38,7 +38,7 @@ class ThrottledLeaderboardAPI : ChainableLeaderboardAPI
         Dictionary<string, string> oldRecord = this.Delegate.GetLocalTopN(stat, 10).Find((match) => match["UserUUID"] == ModEntry.GlobalModData.Value.UserUUID);
         if (oldRecord is not null)
         {
-            int.TryParse(oldRecord["Score"], out oldScore);
+            _ = int.TryParse(oldRecord["Score"], out oldScore);
         }
 
         if (score > oldScore)

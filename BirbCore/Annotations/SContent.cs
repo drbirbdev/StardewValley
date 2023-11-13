@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -20,7 +21,7 @@ public class SContent : ClassHandler
         this.IsDictionary = isDictionary;
     }
 
-    public override object Handle(Type type, IMod mod = null)
+    public override void Handle(Type type, object? instance, IMod mod)
     {
         Type innerType = type;
         if (this.IsList)
@@ -38,16 +39,27 @@ public class SContent : ClassHandler
         if (modContent is null)
         {
             Log.Error("Mod must define a Content dictionary property");
-            return null;
+            return;
         }
 
         object contentDictionary = AccessTools.CreateInstance(dictionaryType);
+        if (contentDictionary is null)
+        {
+            Log.Error("contentDictionary was null.  Underlying type might be static? Cannot initialize.");
+            return;
+        }
 
         foreach (IContentPack contentPack in mod.Helper.ContentPacks.GetOwned())
         {
-            object content = contentPack.GetType().GetMethod("ReadJsonFile")
-                .MakeGenericMethod(type)
+            object? content = contentPack.GetType().GetMethod("ReadJsonFile")
+                ?.MakeGenericMethod(type)
                 .Invoke(contentPack, new object[] { this.FileName });
+
+            if (content is null)
+            {
+                Log.Error($"{this.FileName} in content pack {contentPack.Manifest.UniqueID} was null");
+                continue;
+            }
 
             Dictionary<string, object> modContents = new();
             if (this.IsList)
@@ -96,19 +108,24 @@ public class SContent : ClassHandler
             string modId = contentPack.Manifest.UniqueID;
 
             contentDictionary.GetType().GetMethod("Add")
-                .MakeGenericMethod(typeof(string), type)
+                ?.MakeGenericMethod(typeof(string), type)
                 .Invoke(contentDictionary, new object[] { modId, content });
         }
 
         modContent.GetSetter()(mod, contentDictionary);
 
-        return contentDictionary;
+        return;
     }
 
     public class ModId : FieldHandler
     {
-        public override void Handle(string name, Type fieldType, Func<object, object> getter, Action<object, object> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object, object?> getter, Action<object, object> setter, object? instance, IMod mod, object[]? args = null)
         {
+            if (instance is null)
+            {
+                Log.Error("Content instance might be static? Failing to add all content packs");
+                return;
+            }
             if (args?[0] == null)
             {
                 Log.Error("Something went wrong in BirbCore Content Pack parsing");
@@ -120,8 +137,13 @@ public class SContent : ClassHandler
 
     public class UniqueId : FieldHandler
     {
-        public override void Handle(string name, Type fieldType, Func<object, object> getter, Action<object, object> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object, object?> getter, Action<object, object> setter, object? instance, IMod mod, object[]? args = null)
         {
+            if (instance is null)
+            {
+                Log.Error("Content instance might be static? Failing to add all content packs");
+                return;
+            }
             if (args?[0] == null || args?[1] == null)
             {
                 Log.Error("Something went wrong in BirbCore Content Pack parsing");
@@ -133,8 +155,13 @@ public class SContent : ClassHandler
 
     public class ContentId : FieldHandler
     {
-        public override void Handle(string name, Type fieldType, Func<object, object> getter, Action<object, object> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object, object?> getter, Action<object, object> setter, object? instance, IMod mod, object[]? args = null)
         {
+            if (instance is null)
+            {
+                Log.Error("Content instance might be static? Failing to add all content packs");
+                return;
+            }
             if (args?[1] == null)
             {
                 Log.Error("Something went wrong in BirbCore Content Pack parsing");
@@ -146,8 +173,13 @@ public class SContent : ClassHandler
 
     public class ContentPack : FieldHandler
     {
-        public override void Handle(string name, Type fieldType, Func<object, object> getter, Action<object, object> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object, object?> getter, Action<object, object> setter, object? instance, IMod mod, object[]? args = null)
         {
+            if (instance is null)
+            {
+                Log.Error("Content instance might be static? Failing to add all content packs");
+                return;
+            }
             if (args?[0] == null)
             {
                 Log.Error("Something went wrong in BirbCore Content Pack parsing");

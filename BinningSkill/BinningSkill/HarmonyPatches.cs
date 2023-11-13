@@ -181,7 +181,7 @@ class GameLocation_TryGetGarbageIItem
             {
                 noiseLevel -= ModEntry.Config.NoiseReduction;
             }
-            if (noiseLevel > 0 && Utility.isThereAFarmerOrCharacterWithinDistance(Game1.player.Tile, noiseLevel, __instance) is NPC npc && !(npc is Horse))
+            if (noiseLevel > 0 && Utility.isThereAFarmerOrCharacterWithinDistance(Game1.player.Tile, noiseLevel, __instance) is NPC npc && npc is not Horse)
             {
                 if (DoCaughtReactions(npc))
                 {

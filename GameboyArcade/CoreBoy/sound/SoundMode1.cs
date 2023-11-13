@@ -13,97 +13,97 @@ namespace CoreBoy.sound
 
         public SoundMode1(bool gbc) : base(0xff10, 64, gbc)
         {
-            _frequencySweep = new FrequencySweep();
-            _volumeEnvelope = new VolumeEnvelope();
+            this._frequencySweep = new FrequencySweep();
+            this._volumeEnvelope = new VolumeEnvelope();
         }
 
         public override void Start()
         {
-            _i = 0;
-            if (Gbc)
+            this._i = 0;
+            if (this.Gbc)
             {
-                Length.Reset();
+                this.Length.Reset();
             }
 
-            Length.Start();
-            _frequencySweep.Start();
-            _volumeEnvelope.Start();
+            this.Length.Start();
+            this._frequencySweep.Start();
+            this._volumeEnvelope.Start();
         }
 
         protected override void Trigger()
         {
-            _i = 0;
-            _freqDivider = 1;
-            _volumeEnvelope.Trigger();
+            this._i = 0;
+            this._freqDivider = 1;
+            this._volumeEnvelope.Trigger();
         }
 
         public override int Tick()
         {
-            _volumeEnvelope.Tick();
+            this._volumeEnvelope.Tick();
 
-            var e = UpdateLength();
-            e = UpdateSweep() && e;
-            e = DacEnabled && e;
+            var e = this.UpdateLength();
+            e = this.UpdateSweep() && e;
+            e = this.DacEnabled && e;
             if (!e)
             {
                 return 0;
             }
 
-            if (--_freqDivider == 0)
+            if (--this._freqDivider == 0)
             {
-                ResetFreqDivider();
-                _lastOutput = ((GetDuty() & (1 << _i)) >> _i);
-                _i = (_i + 1) % 8;
+                this.ResetFreqDivider();
+                this._lastOutput = (this.GetDuty() & (1 << this._i)) >> this._i;
+                this._i = (this._i + 1) % 8;
             }
 
-            return _lastOutput * _volumeEnvelope.GetVolume();
+            return this._lastOutput * this._volumeEnvelope.GetVolume();
         }
 
         protected override void SetNr0(int value)
         {
             base.SetNr0(value);
-            _frequencySweep.SetNr10(value);
+            this._frequencySweep.SetNr10(value);
         }
 
         protected override void SetNr1(int value)
         {
             base.SetNr1(value);
-            Length.SetLength(64 - (value & 0b00111111));
+            this.Length.SetLength(64 - (value & 0b00111111));
         }
 
         protected override void SetNr2(int value)
         {
             base.SetNr2(value);
-            _volumeEnvelope.SetNr2(value);
-            DacEnabled = (value & 0b11111000) != 0;
-            ChannelEnabled &= DacEnabled;
+            this._volumeEnvelope.SetNr2(value);
+            this.DacEnabled = (value & 0b11111000) != 0;
+            this.ChannelEnabled &= this.DacEnabled;
         }
 
         protected override void SetNr3(int value)
         {
             base.SetNr3(value);
-            _frequencySweep.SetNr13(value);
+            this._frequencySweep.SetNr13(value);
         }
 
         protected override void SetNr4(int value)
         {
             base.SetNr4(value);
-            _frequencySweep.SetNr14(value);
+            this._frequencySweep.SetNr14(value);
         }
 
         protected override int GetNr3()
         {
-            return _frequencySweep.GetNr13();
+            return this._frequencySweep.GetNr13();
         }
 
         protected override int GetNr4()
         {
-            return (base.GetNr4() & 0b11111000) | (_frequencySweep.GetNr14() & 0b00000111);
+            return (base.GetNr4() & 0b11111000) | (this._frequencySweep.GetNr14() & 0b00000111);
         }
 
         private int GetDuty()
         {
-            switch (GetNr1() >> 6)
+            switch (this.GetNr1() >> 6)
             {
                 case 0:
                     return 0b00000001;
@@ -120,18 +120,18 @@ namespace CoreBoy.sound
 
         private void ResetFreqDivider()
         {
-            _freqDivider = GetFrequency() * 4;
+            this._freqDivider = this.GetFrequency() * 4;
         }
 
         protected bool UpdateSweep()
         {
-            _frequencySweep.Tick();
-            if (ChannelEnabled && !_frequencySweep.IsEnabled())
+            this._frequencySweep.Tick();
+            if (this.ChannelEnabled && !this._frequencySweep.IsEnabled())
             {
-                ChannelEnabled = false;
+                this.ChannelEnabled = false;
             }
 
-            return ChannelEnabled;
+            return this.ChannelEnabled;
         }
     }
 

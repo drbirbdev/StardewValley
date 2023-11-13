@@ -33,7 +33,7 @@ internal class Events
     {
         if (e.FromModID == ModEntry.Instance.ModManifest.UniqueID && e.Type.StartsWith("SaveRequest "))
         {
-            string minigameId = e.Type.Substring(12);
+            string minigameId = e.Type[12..];
             if (!ModEntry.Content.ContainsKey(minigameId))
             {
                 Log.Error($"{e.FromPlayerID} sent save request for {minigameId}, but no such minigame exists for host computer!");

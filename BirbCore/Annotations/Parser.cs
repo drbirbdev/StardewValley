@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Reflection;
 using BirbCore.Extensions;
@@ -14,7 +15,7 @@ public class Parser
     /// </summary>
     /// <param name="mod">The mod being parsed.</param>
     /// <param name="assembly">The assembly to scan for attributes. Defaults to the assembly calling ParseAll.</param>
-    public static void ParseAll(IMod mod, Assembly assembly = null)
+    public static void ParseAll(IMod mod, Assembly? assembly = null)
     {
         assembly ??= Assembly.GetCallingAssembly();
 
@@ -26,7 +27,7 @@ public class Parser
             {
                 if (attribute is ClassHandler handler)
                 {
-                    handler.Handle(type, mod);
+                    handler.Handle(type, null, mod);
                 }
             }
         }
@@ -71,10 +72,8 @@ public class Parser
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public abstract class ClassHandler : Attribute
 {
-    public virtual object Handle(Type type, IMod mod = null)
+    public virtual void Handle(Type type, object? instance, IMod mod)
     {
-        object instance = Activator.CreateInstance(type);
-
         foreach (FieldInfo fieldInfo in type.GetFields(ReflectionExtensions.AllDeclared))
         {
             foreach (Attribute attribute in fieldInfo.GetCustomAttributes())
@@ -105,29 +104,27 @@ public abstract class ClassHandler : Attribute
                 }
             }
         }
-
-        return instance;
     }
 }
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public abstract class MethodHandler : Attribute
 {
-    public abstract void Handle(MethodInfo method, object instance, IMod mod = null);
+    public abstract void Handle(MethodInfo method, object? instance, IMod mod);
 }
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 public abstract class FieldHandler : Attribute
 {
-    public void Handle(FieldInfo fieldInfo, object instance, IMod mod = null, object[] args = null)
+    public void Handle(FieldInfo fieldInfo, object? instance, IMod mod, object[]? args = null)
     {
         this.Handle(fieldInfo.Name, fieldInfo.FieldType, fieldInfo.GetValue, fieldInfo.SetValue, instance, mod, args);
     }
 
-    public void Handle(PropertyInfo propertyInfo, object instance, IMod mod = null, object[] args = null)
+    public void Handle(PropertyInfo propertyInfo, object? instance, IMod mod, object[]? args = null)
     {
         this.Handle(propertyInfo.Name, propertyInfo.PropertyType, propertyInfo.GetValue, propertyInfo.SetValue, instance, mod, args);
     }
 
-    public abstract void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null);
+    public abstract void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null);
 }

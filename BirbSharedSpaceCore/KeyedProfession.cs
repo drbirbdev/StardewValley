@@ -13,7 +13,7 @@ namespace BirbShared
         readonly object Tokens;
         readonly ITranslationHelper I18n;
 
-        bool PrestigeEnabled { get => this.PrestigeIcon != null; }
+        bool PrestigeEnabled => this.PrestigeIcon != null;
         readonly Texture2D PrestigeIcon;
         readonly Texture2D NormalIcon;
         private bool IsPrestiged = false;

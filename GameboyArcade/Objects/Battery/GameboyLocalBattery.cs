@@ -6,7 +6,7 @@ namespace GameboyArcade
 {
     class GameboyLocalBattery : IBattery
     {
-        private string MinigameId;
+        private readonly string MinigameId;
 
         public GameboyLocalBattery(string minigameId)
         {

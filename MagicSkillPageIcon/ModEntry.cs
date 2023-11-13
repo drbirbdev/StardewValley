@@ -32,10 +32,7 @@ class Skill_Constructor
     {
         try
         {
-            if (__instance.SkillsPageIcon is null)
-            {
-                __instance.SkillsPageIcon = ModEntry.Assets.SkillPageIcon;
-            }
+            __instance.SkillsPageIcon ??= ModEntry.Assets.SkillPageIcon;
         }
         catch (Exception e)
         {

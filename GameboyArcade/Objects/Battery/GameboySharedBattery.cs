@@ -7,8 +7,8 @@ namespace GameboyArcade
 {
     class GameboySharedBattery : IBattery
     {
-        private string MinigameId;
-        private bool RemotePlayer = false;
+        private readonly string MinigameId;
+        private readonly bool RemotePlayer = false;
 
         private bool AwaitingMessage = false;
         private SaveState Save;

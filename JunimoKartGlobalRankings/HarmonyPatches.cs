@@ -59,7 +59,7 @@ class NetLeaderboards_GetScores
             __result = new List<KeyValuePair<string, int>>();
             foreach (Dictionary<string, string> record in ModEntry.LeaderboardAPI.GetTopN("JunimoKartScore", 5))
             {
-                int.TryParse(record["Score"], out int score);
+                _ = int.TryParse(record["Score"], out int score);
                 __result.Add(new KeyValuePair<string, int>(record["Name"], score));
             }
 

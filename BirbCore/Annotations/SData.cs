@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Reflection;
 using BirbCore.Extensions;
@@ -8,18 +9,19 @@ namespace BirbCore.Annotations;
 
 public class SData : ClassHandler
 {
-    public override object Handle(Type type, IMod mod = null)
+    public override void Handle(Type type, object? instance, IMod mod)
     {
         MemberInfo modData = mod.GetType().GetMemberOfType(type);
         if (modData == null)
         {
             Log.Error("Mod must define a data property");
-            return null;
+            return;
         }
 
-        object instance = base.Handle(type, mod);
+        instance = Activator.CreateInstance(type);
         modData.GetSetter()(mod, instance);
-        return instance;
+        base.Handle(type, instance, mod);
+        return;
     }
 
     public class SaveData : FieldHandler
@@ -31,27 +33,27 @@ public class SData : ClassHandler
             this.Key = key;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            mod.Helper.Events.GameLoop.SaveLoaded += (object sender, StardewModdingAPI.Events.SaveLoadedEventArgs e) =>
+            mod.Helper.Events.GameLoop.SaveLoaded += (object? sender, StardewModdingAPI.Events.SaveLoadedEventArgs e) =>
             {
-                object saveData = mod.Helper.Data.GetType().GetMethod("ReadSaveData")
-                    .MakeGenericMethod(fieldType)
+                object? saveData = mod.Helper.Data.GetType().GetMethod("ReadSaveData")
+                    ?.MakeGenericMethod(fieldType)
                     .Invoke(mod.Helper.Data, new object[] { this.Key });
 
                 setter(instance, saveData);
             };
 
-            mod.Helper.Events.GameLoop.SaveCreated += (object sender, StardewModdingAPI.Events.SaveCreatedEventArgs e) =>
+            mod.Helper.Events.GameLoop.SaveCreated += (object? sender, StardewModdingAPI.Events.SaveCreatedEventArgs e) =>
             {
-                object saveData = AccessTools.CreateInstance(fieldType);
+                object? saveData = AccessTools.CreateInstance(fieldType);
 
                 setter(instance, saveData);
             };
 
-            mod.Helper.Events.GameLoop.DayEnding += (object sender, StardewModdingAPI.Events.DayEndingEventArgs e) =>
+            mod.Helper.Events.GameLoop.DayEnding += (object? sender, StardewModdingAPI.Events.DayEndingEventArgs e) =>
             {
-                object saveData = getter(instance);
+                object? saveData = getter(instance);
 
                 mod.Helper.Data.WriteSaveData(this.Key, saveData);
             };
@@ -67,25 +69,22 @@ public class SData : ClassHandler
             this.JsonFile = jsonFile;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            mod.Helper.Events.GameLoop.GameLaunched += (object sender, StardewModdingAPI.Events.GameLaunchedEventArgs e) =>
+            mod.Helper.Events.GameLoop.GameLaunched += (object? sender, StardewModdingAPI.Events.GameLaunchedEventArgs e) =>
             {
-                object localData = mod.Helper.Data.GetType().GetMethod("ReadJsonFile")
-                    .MakeGenericMethod(fieldType)
+                object? localData = mod.Helper.Data.GetType().GetMethod("ReadJsonFile")
+                    ?.MakeGenericMethod(fieldType)
                     .Invoke(mod.Helper.Data, new object[] { this.JsonFile });
 
-                if (localData is null)
-                {
-                    localData = AccessTools.CreateInstance(fieldType);
-                }
+                localData ??= AccessTools.CreateInstance(fieldType);
 
                 setter(instance, localData);
             };
 
-            mod.Helper.Events.GameLoop.DayEnding += (object sender, StardewModdingAPI.Events.DayEndingEventArgs e) =>
+            mod.Helper.Events.GameLoop.DayEnding += (object? sender, StardewModdingAPI.Events.DayEndingEventArgs e) =>
             {
-                object localData = getter(instance);
+                object? localData = getter(instance);
 
                 mod.Helper.Data.WriteJsonFile(this.JsonFile, localData);
             };
@@ -101,25 +100,22 @@ public class SData : ClassHandler
             this.Key = key;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            mod.Helper.Events.GameLoop.GameLaunched += (object sender, StardewModdingAPI.Events.GameLaunchedEventArgs e) =>
+            mod.Helper.Events.GameLoop.GameLaunched += (object? sender, StardewModdingAPI.Events.GameLaunchedEventArgs e) =>
             {
-                object globalData = mod.Helper.Data.GetType().GetMethod("ReadGlobalData")
-                    .MakeGenericMethod(fieldType)
+                object? globalData = mod.Helper.Data.GetType().GetMethod("ReadGlobalData")
+                    ?.MakeGenericMethod(fieldType)
                     .Invoke(mod.Helper.Data, new object[] { this.Key });
 
-                if (globalData is null)
-                {
-                    globalData = AccessTools.CreateInstance(fieldType);
-                }
+                globalData ??= AccessTools.CreateInstance(fieldType);
 
                 setter(instance, globalData);
             };
 
-            mod.Helper.Events.GameLoop.DayEnding += (object sender, StardewModdingAPI.Events.DayEndingEventArgs e) =>
+            mod.Helper.Events.GameLoop.DayEnding += (object? sender, StardewModdingAPI.Events.DayEndingEventArgs e) =>
             {
-                object globalData = getter(instance);
+                object? globalData = getter(instance);
 
                 mod.Helper.Data.WriteGlobalData(this.Key, globalData);
             };

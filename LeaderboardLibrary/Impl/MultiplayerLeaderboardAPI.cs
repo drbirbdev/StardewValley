@@ -4,8 +4,8 @@ namespace LeaderboardLibrary;
 
 class MultiplayerLeaderboardAPI : ChainableLeaderboardAPI
 {
-    private string ModId;
-    private ILeaderboardAPI DelegateApi;
+    private readonly string ModId;
+    private readonly ILeaderboardAPI DelegateApi;
     public override ILeaderboardAPI Delegate => this.DelegateApi;
 
     public MultiplayerLeaderboardAPI(string modId)

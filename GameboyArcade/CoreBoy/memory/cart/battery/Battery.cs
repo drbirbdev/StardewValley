@@ -1,6 +1,6 @@
 namespace CoreBoy.memory.cart.battery
 {
-	public interface IBattery
+    public interface IBattery
     {
         void LoadRam(int[] ram);
 

@@ -10,7 +10,7 @@ internal class Delegates
 {
 
     [SDelegate.TileAction]
-    public bool Play(GameLocation gameLocation, string[] args, Farmer farmer, Point point)
+    public static bool Play(GameLocation gameLocation, string[] args, Farmer farmer, Point point)
     {
         Content content = ModEntry.GetGame(args?[0], args?[1]);
         Utilities.ShowArcadeMenu(content.UniqueID, content.Name);
@@ -18,7 +18,7 @@ internal class Delegates
     }
 
     [SDelegate.EventCommand]
-    public void StartGame(Event @event, string[] args, EventContext context)
+    public static void StartGame(Event @event, string[] args, EventContext context)
     {
         if (Game1.currentMinigame != null)
         {

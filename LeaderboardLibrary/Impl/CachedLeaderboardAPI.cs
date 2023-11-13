@@ -12,7 +12,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
 
     private Dictionary<string, List<LeaderboardStat>> LocalLeaderboards => ModEntry.LocalModData.LocalLeaderboards[this.ModId];
     private Dictionary<string, List<LeaderboardStat>> TopLeaderboards => ModEntry.LocalModData.TopLeaderboards[this.ModId];
-    private LeaderboardDAO LeaderboardDAO = new LeaderboardDAO();
+    private readonly LeaderboardDAO LeaderboardDAO = new LeaderboardDAO();
     private readonly string ModId;
 
     public CachedLeaderboardAPI(string modId)
@@ -41,9 +41,9 @@ class CachedLeaderboardAPI : ILeaderboardAPI
     public List<Dictionary<string, string>> GetLocalTopN(string stat, int count)
     {
         this.LazyInitStat(stat);
-        if (count > this.LocalLeaderboards[stat].Count())
+        if (count > this.LocalLeaderboards[stat].Count)
         {
-            count = this.LocalLeaderboards[stat].Count();
+            count = this.LocalLeaderboards[stat].Count;
         }
         return LeaderboardStat.ToApiList(this.LocalLeaderboards[stat].GetRange(0, count));
     }
@@ -62,9 +62,9 @@ class CachedLeaderboardAPI : ILeaderboardAPI
     public List<Dictionary<string, string>> GetTopN(string stat, int count)
     {
         this.LazyInitStat(stat);
-        if (count > this.TopLeaderboards[stat].Count())
+        if (count > this.TopLeaderboards[stat].Count)
         {
-            count = this.TopLeaderboards[stat].Count();
+            count = this.TopLeaderboards[stat].Count;
         }
         return LeaderboardStat.ToApiList(this.TopLeaderboards[stat].GetRange(0, count));
     }
@@ -84,7 +84,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
             {
                 ModEntry.Instance.Helper.Data.WriteJsonFile($"data/cached_leaderboards.json", ModEntry.LocalModData);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // swallow exception.
             }
@@ -101,7 +101,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
             {
                 ModEntry.Instance.Helper.Data.WriteJsonFile($"data/cached_leaderboards.json", ModEntry.LocalModData);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // swallow exception
             }
@@ -117,7 +117,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
         LeaderboardStat current = this.GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUUID);
         if (current is null || current.Score < score)
         {
-            this.LeaderboardDAO.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name, Game1.player.farmName, ModEntry.GlobalModData.Value.Secret, this);
+            this.LeaderboardDAO.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name, Game1.player.farmName.Value, ModEntry.GlobalModData.Value.Secret, this);
             return this.UpdateCache(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name);
         }
         return true;
@@ -139,13 +139,13 @@ class CachedLeaderboardAPI : ILeaderboardAPI
                 this.LocalLeaderboards[stat].Add(current);
             }
             current.Name = userName;
-            current.Farm = Game1.player.farmName;
+            current.Farm = Game1.player.farmName.Value;
             current.Score = score;
             current.DateTime = DateTimeOffset.Now.ToUnixTimeSeconds();
 
             this.LocalLeaderboards[stat].Sort();
 
-            if (this.TopLeaderboards[stat].Count() < 10 || this.TopLeaderboards[stat].Last<LeaderboardStat>().Score < score)
+            if (this.TopLeaderboards[stat].Count < 10 || this.TopLeaderboards[stat].Last<LeaderboardStat>().Score < score)
             {
                 LeaderboardStat existing = this.TopLeaderboards[stat].Find((match) => match.UserUUID == userUuid);
                 if (existing is not null)
@@ -155,7 +155,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
 
                 this.TopLeaderboards[stat].Add(current);
                 this.TopLeaderboards[stat].Sort();
-                if (this.TopLeaderboards[stat].Count() > 10)
+                if (this.TopLeaderboards[stat].Count > 10)
                 {
                     this.TopLeaderboards[stat].RemoveAt(10);
                 }

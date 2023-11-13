@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Reflection;
 using BirbCore.APIs;
@@ -17,26 +18,28 @@ public class SConfig : ClassHandler
 {
     public bool TitleScreenOnly = false;
 
-    protected static IGenericModConfigMenuApi Api;
+    private static IGenericModConfigMenuApi? Api;
 
-    public override object Handle(Type type, IMod mod = null)
+    public override void Handle(Type type, object? instance, IMod mod)
     {
+        MemberInfo configField = mod.GetType().GetMemberOfType(type);
+        if (configField == null)
+        {
+            Log.Error("Mod must define a Config property");
+            return;
+        }
+
+        var getter = configField.GetGetter();
+        var setter = configField.GetSetter();
+        instance = Activator.CreateInstance(type);
+        setter(mod, instance);
+
         mod.Helper.Events.GameLoop.GameLaunched += (sender, e) =>
         {
             Api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-            if (Api == null)
+            if (Api is null)
             {
                 Log.Error("Generic Mod Config Menu is not enabled, so will skip parsing");
-                return;
-            }
-
-            MemberInfo configField = mod.GetType().GetMemberOfType(type);
-            var getter = configField.GetGetter();
-            var setter = configField.GetSetter();
-
-            if (configField == null)
-            {
-                Log.Error("Mod must define a Config property");
                 return;
             }
 
@@ -47,11 +50,10 @@ public class SConfig : ClassHandler
                 titleScreenOnly: this.TitleScreenOnly
             );
 
-            object instance = base.Handle(type, mod);
-            setter(mod, instance);
+            base.Handle(type, instance, mod);
         };
 
-        return null;
+        return;
     }
 
 
@@ -60,26 +62,18 @@ public class SConfig : ClassHandler
     /// </summary>
     public class Option : FieldHandler
     {
-        public string FieldId;
+        public string? FieldId;
         public float Min = float.MaxValue;
         public float Max = float.MinValue;
         public float Interval = float.MinValue;
-        public string[] AllowedValues;
+        public string[]? AllowedValues;
 
-        public Option(string fieldId = null)
+        public Option(string? fieldId = null)
         {
             this.FieldId = fieldId;
         }
 
-        public Option(int min, int max, int interval = 1, string fieldId = null)
-        {
-            this.FieldId = fieldId;
-            this.Min = min;
-            this.Max = max;
-            this.Interval = interval;
-        }
-
-        public Option(float min, float max, float interval = 1.0f, string fieldId = null)
+        public Option(int min, int max, int interval = 1, string? fieldId = null)
         {
             this.FieldId = fieldId;
             this.Min = min;
@@ -87,7 +81,15 @@ public class SConfig : ClassHandler
             this.Interval = interval;
         }
 
-        public Option(string[] allowedValues, string fieldId = null)
+        public Option(float min, float max, float interval = 1.0f, string? fieldId = null)
+        {
+            this.FieldId = fieldId;
+            this.Min = min;
+            this.Max = max;
+            this.Interval = interval;
+        }
+
+        public Option(string[] allowedValues, string? fieldId = null)
         {
             this.FieldId = fieldId;
             this.AllowedValues = allowedValues;
@@ -95,13 +97,18 @@ public class SConfig : ClassHandler
 
 
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
+            if (Api is null)
+            {
+                Log.Error("Attempting to use GMCM API before it is initialized");
+                return;
+            }
             if (fieldType == typeof(bool))
             {
-                SConfig.Api.AddBoolOption(
+                Api.AddBoolOption(
                     mod: mod.ModManifest,
-                    getValue: () => (bool)getter(instance),
+                    getValue: () => (bool)(getter(instance) ?? false),
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
@@ -110,9 +117,9 @@ public class SConfig : ClassHandler
             }
             else if (fieldType == typeof(int))
             {
-                SConfig.Api.AddNumberOption(
+                Api.AddNumberOption(
                     mod: mod.ModManifest,
-                    getValue: () => (int)getter(instance),
+                    getValue: () => (int)(getter(instance) ?? 0),
                     setValue: value => setter(instance, (int)value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
@@ -125,9 +132,9 @@ public class SConfig : ClassHandler
             }
             else if (fieldType == typeof(float))
             {
-                SConfig.Api.AddNumberOption(
+                Api.AddNumberOption(
                     mod: mod.ModManifest,
-                    getValue: () => (float)getter(instance),
+                    getValue: () => (float)(getter(instance) ?? 0f),
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
@@ -140,9 +147,9 @@ public class SConfig : ClassHandler
             }
             else if (fieldType == typeof(string))
             {
-                SConfig.Api.AddTextOption(
+                Api.AddTextOption(
                     mod: mod.ModManifest,
-                    getValue: () => (string)getter(instance),
+                    getValue: () => (string)(getter(instance) ?? ""),
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
@@ -153,9 +160,9 @@ public class SConfig : ClassHandler
             }
             else if (fieldType == typeof(SButton))
             {
-                SConfig.Api.AddKeybind(
+                Api.AddKeybind(
                     mod: mod.ModManifest,
-                    getValue: () => (SButton)getter(instance),
+                    getValue: () => (SButton)(getter(instance) ?? SButton.None),
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
@@ -164,9 +171,9 @@ public class SConfig : ClassHandler
             }
             else if (fieldType == typeof(KeybindList))
             {
-                SConfig.Api.AddKeybindList(
+                Api.AddKeybindList(
                     mod: mod.ModManifest,
-                    getValue: () => (KeybindList)getter(instance),
+                    getValue: () => (KeybindList)(getter(instance) ?? new KeybindList()),
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
@@ -193,9 +200,14 @@ public class SConfig : ClassHandler
             this.Key = key;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            SConfig.Api.AddSectionTitle(
+            if (Api is null)
+            {
+                Log.Error("Attempting to use GMCM API before it is initialized");
+                return;
+            }
+            Api.AddSectionTitle(
                 mod: mod.ModManifest,
                 text: () => mod.Helper.Translation.Get($"config.{this.Key}") ?? this.Key,
                 tooltip: () => mod.Helper.Translation.Get($"config.{this.Key}.tooltip")
@@ -216,9 +228,14 @@ public class SConfig : ClassHandler
             this.Key = key;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            SConfig.Api.AddParagraph(
+            if (Api is null)
+            {
+                Log.Error("Attempting to use GMCM API before it is initialized");
+                return;
+            }
+            Api.AddParagraph(
                 mod: mod.ModManifest,
                 text: () => mod.Helper.Translation.Get($"config.{this.Key}") ?? this.Key
             );
@@ -238,9 +255,14 @@ public class SConfig : ClassHandler
             this.PageId = pageId;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            SConfig.Api.AddPage(
+            if (Api is null)
+            {
+                Log.Error("Attempting to use GMCM API before it is initialized");
+                return;
+            }
+            Api.AddPage(
                 mod: mod.ModManifest,
                 pageId: this.PageId,
                 pageTitle: () => mod.Helper.Translation.Get($"config.{this.PageId}")
@@ -261,9 +283,14 @@ public class SConfig : ClassHandler
             this.PageId = pageId;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            SConfig.Api.AddPageLink(
+            if (Api is null)
+            {
+                Log.Error("Attempting to use GMCM API before it is initialized");
+                return;
+            }
+            Api.AddPageLink(
                 mod: mod.ModManifest,
                 pageId: this.PageId,
                 text: () => mod.Helper.Translation.Get($"config.{this.PageId}"),
@@ -298,9 +325,14 @@ public class SConfig : ClassHandler
             this.Height = height;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            SConfig.Api.AddImage(
+            if (Api is null)
+            {
+                Log.Error("Attempting to use GMCM API before it is initialized");
+                return;
+            }
+            Api.AddImage(
                 mod: mod.ModManifest,
                 texture: () => mod.Helper.GameContent.Load<Texture2D>(this.Texture),
                 texturePixelArea: this.Width != 0 ? new Rectangle(this.X, this.Y, this.Width, this.Height) : null
@@ -314,9 +346,14 @@ public class SConfig : ClassHandler
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class StartTitleOnlyBlock : FieldHandler
     {
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            SConfig.Api.SetTitleScreenOnlyForNextOptions(
+            if (Api is null)
+            {
+                Log.Error("Attempting to use GMCM API before it is initialized");
+                return;
+            }
+            Api.SetTitleScreenOnlyForNextOptions(
                 mod: mod.ModManifest,
                 titleScreenOnly: true
             );
@@ -329,9 +366,14 @@ public class SConfig : ClassHandler
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class EndTitleOnlyBlock : FieldHandler
     {
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            SConfig.Api.SetTitleScreenOnlyForNextOptions(
+            if (Api is null)
+            {
+                Log.Error("Attempting to use GMCM API before it is initialized");
+                return;
+            }
+            Api.SetTitleScreenOnlyForNextOptions(
                 mod: mod.ModManifest,
                 titleScreenOnly: false
             );

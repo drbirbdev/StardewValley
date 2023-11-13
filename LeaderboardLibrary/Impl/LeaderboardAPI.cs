@@ -7,9 +7,9 @@ namespace LeaderboardLibrary;
 
 public class LeaderboardAPI : ChainableLeaderboardAPI
 {
-    private string ModId;
+    private readonly string ModId;
 
-    private ILeaderboardAPI DelegateAPI;
+    private readonly ILeaderboardAPI DelegateAPI;
     public override ILeaderboardAPI Delegate => this.DelegateAPI;
 
     public LeaderboardAPI(string modId)

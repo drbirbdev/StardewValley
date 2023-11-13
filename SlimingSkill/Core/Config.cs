@@ -1,58 +1,52 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BirbShared.Config;
+using BirbCore.Annotations;
 
-namespace SlimingSkill
+namespace SlimingSkill;
+
+[SConfig]
+internal class Config
 {
-    [ConfigClass(I18NNameSuffix = "", I18NTextSuffix = "")]
-    internal class Config
-    {
-        [ConfigPageLink("Experience", "ExperienceModifiers")]
-        [ConfigPageLink("Perks", "SkillPerkModifiers")]
-        [ConfigPageLink("Professions", "ProfessionModifiers")]
+    [SConfig.PageLink("Experience")]
+    [SConfig.PageLink("Perk")]
+    [SConfig.PageLink("Professions")]
 
-        [ConfigPage("Experience")]
-        [ConfigSectionTitle("ExperienceModifiers")]
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromSlimeKill { get; set; } = 5;
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromToughSlimeKill { get; set; } = 20;
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromRareSlimeKill { get; set; } = 50;
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromSlimeEgg { get; set; } = 30;
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromSlimeEggPress { get; set; } = 15;
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int ExperienceFromSlimeBall { get; set; } = 50;
+    [SConfig.PageBlock("Experience")]
+    [SConfig.SectionTitle("ExperienceModifiers")]
+    [SConfig.Option(Min = 0, Max = 100, Interval = 1)]
+    public int ExperienceFromSlimeKill { get; set; } = 5;
+    [SConfig.Option(Min = 0, Max = 100, Interval = 1)]
+    public int ExperienceFromToughSlimeKill { get; set; } = 20;
+    [SConfig.Option(Min = 0, Max = 100, Interval = 1)]
+    public int ExperienceFromRareSlimeKill { get; set; } = 50;
+    [SConfig.Option(Min = 0, Max = 100, Interval = 1)]
+    public int ExperienceFromSlimeEgg { get; set; } = 30;
+    [SConfig.Option(Min = 0, Max = 100, Interval = 1)]
+    public int ExperienceFromSlimeEggPress { get; set; } = 15;
+    [SConfig.Option(Min = 0, Max = 100, Interval = 1)]
+    public int ExperienceFromSlimeBall { get; set; } = 50;
 
-        [ConfigPage("Perks")]
-        [ConfigSectionTitle("SkillPerkModifiers")]
-        [ConfigOption(Min = 0, Max = 10, Interval = 1)]
-        public int ExtraSlimeValuePerLevel { get; set; } = 1;
+    [SConfig.PageBlock("Perks")]
+    [SConfig.SectionTitle("SkillPerkModifiers")]
+    [SConfig.Option(Min = 0, Max = 10, Interval = 1)]
+    public int ExtraSlimeValuePerLevel { get; set; } = 1;
 
-        [ConfigPage("Professions")]
-        [ConfigSectionTitle("ProfessionModifiers")]
+    [SConfig.PageBlock("Professions")]
+    [SConfig.SectionTitle("ProfessionModifiers")]
 
-        [ConfigSectionTitle("RancherProfessionModifiers")]
+    [SConfig.SectionTitle("RancherProfessionModifiers")]
 
 
-        [ConfigSectionTitle("BreederProfessionModifiers")]
+    [SConfig.SectionTitle("BreederProfessionModifiers")]
 
 
-        [ConfigSectionTitle("HatcherProfessionModifiers")]
+    [SConfig.SectionTitle("HatcherProfessionModifiers")]
 
 
-        [ConfigSectionTitle("HunterProfessionModifiers")]
+    [SConfig.SectionTitle("HunterProfessionModifiers")]
 
 
-        [ConfigSectionTitle("PoacherProfessionModifiers")]
+    [SConfig.SectionTitle("PoacherProfessionModifiers")]
 
 
-        [ConfigSectionTitle("TamerProfessionModifier")]
-        public int Dummy { get; set; }
-    }
+    [SConfig.SectionTitle("TamerProfessionModifier")]
+    public int Dummy { get; set; }
 }

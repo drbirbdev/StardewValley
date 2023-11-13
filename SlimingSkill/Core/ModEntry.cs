@@ -1,60 +1,35 @@
 using StardewModdingAPI;
-using BirbShared.APIs;
-using BirbShared.Mod;
 using SpaceCore;
+using BirbCore.Annotations;
+using BirbCore.APIs;
 
-namespace SlimingSkill
+namespace SlimingSkill;
+
+public class ModEntry : Mod
 {
-    public class ModEntry : Mod
+    internal static ModEntry Instance;
+    internal static Config Config;
+    internal static Command Command;
+    internal static Assets Assets;
+    [SMod.Api("DaLion.Overhaul", false)]
+    internal static IMargo MargoAPI;
+    internal static bool MargoLoaded
     {
-        [SmapiInstance]
-        internal static ModEntry Instance;
-        [SmapiConfig]
-        internal static Config Config;
-        [SmapiCommand]
-        internal static Command Command;
-        [SmapiAsset]
-        internal static Assets Assets;
-        [SmapiApi(UniqueID = "DaLion.Overhaul", IsRequired = false)]
-        internal static IMargo MargoAPI;
-        internal static bool MargoLoaded
+        get
         {
-            get
+            if (MargoAPI is null)
             {
-                if (MargoAPI is null)
-                {
-                    return false;
-                }
-                IMargo.IModConfig config = MargoAPI.GetConfig();
-                return config.EnableProfessions;
+                return false;
             }
+            IMargo.IModConfig config = MargoAPI.GetConfig();
+            return config.EnableProfessions;
         }
+    }
 
-        internal ITranslationHelper I18n => this.Helper.Translation;
+    internal ITranslationHelper I18n => this.Helper.Translation;
 
-        public override void Entry(IModHelper helper)
-        {
-            ModClass mod = new ModClass();
-            mod.Parse(this, true);
-            mod.ApisLoaded += this.ModClassParser_ApisLoaded;
-
-            this.Helper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded;
-        }
-
-
-
-        private void ModClassParser_ApisLoaded(object sender, StardewModdingAPI.Events.OneSecondUpdateTickedEventArgs e)
-        {
-            Skills.RegisterSkill(new SlimingSkill());
-        }
-
-        private void GameLoop_SaveLoaded(object sender, StardewModdingAPI.Events.SaveLoadedEventArgs e)
-        {
-            if (MargoLoaded)
-            {
-                string id = Skills.GetSkill(SlimingSkill.ID).Id;
-                MargoAPI.RegisterCustomSkillForPrestige(id);
-            }
-        }
+    public override void Entry(IModHelper helper)
+    {
+        Parser.ParseAll(this);
     }
 }

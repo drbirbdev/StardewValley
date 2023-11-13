@@ -1,55 +1,54 @@
-using BirbShared.Config;
+using BirbCore.Annotations;
 
-namespace RanchingToolUpgrades
+namespace RanchingToolUpgrades;
+
+[SConfig]
+internal class Config
 {
-    [ConfigClass]
-    internal class Config
-    {
-        [ConfigOption(Min = 0, Max = 100000, Interval = 500)]
-        public int PailBuyCost { get; set; } = 1000;
+    [SConfig.Option(Min = 0, Max = 100000, Interval = 500)]
+    public int PailBuyCost { get; set; } = 1000;
 
-        [ConfigOption(Min = 0, Max = 3, Interval = 0.1f)]
-        public float PailUpgradeCostMultiplier { get; set; } = 1.0f;
+    [SConfig.Option(Min = 0, Max = 3, Interval = 0.1f)]
+    public float PailUpgradeCostMultiplier { get; set; } = 1.0f;
 
-        [ConfigOption(Min = 1, Max = 20, Interval = 1)]
-        public int PailUpgradeCostBars { get; set; } = 5;
+    [SConfig.Option(Min = 1, Max = 20, Interval = 1)]
+    public int PailUpgradeCostBars { get; set; } = 5;
 
-        [ConfigOption(Min = 1, Max = 5, Interval = 1)]
-        public int PailUpgradeDays { get; set; } = 2;
+    [SConfig.Option(Min = 1, Max = 5, Interval = 1)]
+    public int PailUpgradeDays { get; set; } = 2;
 
-        [ConfigOption(Min = 0, Max = 100000, Interval = 500)]
-        public int ShearsBuyCost { get; set; } = 1000;
+    [SConfig.Option(Min = 0, Max = 100000, Interval = 500)]
+    public int ShearsBuyCost { get; set; } = 1000;
 
-        [ConfigOption(Min = 0, Max = 3, Interval = 0.1f)]
-        public float ShearsUpgradeCostMultiplier { get; set; } = 1.0f;
+    [SConfig.Option(Min = 0, Max = 3, Interval = 0.1f)]
+    public float ShearsUpgradeCostMultiplier { get; set; } = 1.0f;
 
-        [ConfigOption(Min = 1, Max = 20, Interval = 1)]
-        public int ShearsUpgradeCostBars { get; set; } = 5;
+    [SConfig.Option(Min = 1, Max = 20, Interval = 1)]
+    public int ShearsUpgradeCostBars { get; set; } = 5;
 
-        [ConfigOption(Min = 1, Max = 5, Interval = 1)]
-        public int ShearsUpgradeDays { get; set; } = 2;
+    [SConfig.Option(Min = 1, Max = 5, Interval = 1)]
+    public int ShearsUpgradeDays { get; set; } = 2;
 
-        /*  
-        public bool BuyableAutograbber { get; set; } = true;
+    /*  
+    public bool BuyableAutograbber { get; set; } = true;
 
-        public int AutograbberBuyCost { get; set; } = 25000;
+    public int AutograbberBuyCost { get; set; } = 25000;
 
-        public float AutograbberUpgradeCostMultiplier { get; set; } = 5.0f;
+    public float AutograbberUpgradeCostMultiplier { get; set; } = 5.0f;
 
-        public int AutograbberUpgradeCostBars { get; set; } = 10;
+    public int AutograbberUpgradeCostBars { get; set; } = 10;
 
-        public int AutograbberUpgradeDays { get; set; } = 2;*/
+    public int AutograbberUpgradeDays { get; set; } = 2;*/
 
-        // N extra friendship per upgrade level.
-        [ConfigOption(Min = 0, Max = 10, Interval = 1)]
-        public int ExtraFriendshipBase { get; set; } = 2;
+    // N extra friendship per upgrade level.
+    [SConfig.Option(Min = 0, Max = 10, Interval = 1)]
+    public int ExtraFriendshipBase { get; set; } = 2;
 
-        // N% chance of higher quality goods.
-        [ConfigOption(Min = 0, Max = 1, Interval = 0.01f)]
-        public float QualityBumpChanceBase { get; set; } = 0.05f;
+    // N% chance of higher quality goods.
+    [SConfig.Option(Min = 0, Max = 1, Interval = 0.01f)]
+    public float QualityBumpChanceBase { get; set; } = 0.05f;
 
-        // N% chance of double produce.
-        [ConfigOption(Min = 0, Max = 1, Interval = 0.01f)]
-        public float ExtraProduceChance { get; set; } = 0.1f;
-    }
+    // N% chance of double produce.
+    [SConfig.Option(Min = 0, Max = 1, Interval = 0.01f)]
+    public float ExtraProduceChance { get; set; } = 0.1f;
 }

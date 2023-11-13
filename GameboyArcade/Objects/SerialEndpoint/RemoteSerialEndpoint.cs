@@ -1,6 +1,6 @@
 using System;
 using System.Threading;
-using BirbShared;
+using BirbCore;
 using CoreBoy.serial;
 
 namespace GameboyArcade

@@ -5,6 +5,7 @@ using StardewModdingAPI.Utilities;
 using StardewModdingAPI;
 using StardewValley;
 using System.Linq;
+using BirbCore.Extensions;
 
 namespace BirbCore.Annotations;
 
@@ -13,11 +14,11 @@ namespace BirbCore.Annotations;
 /// </summary>
 public class SAsset : ClassHandler
 {
-    protected PropertyInfo ModAssets;
+    protected MemberInfo ModAssets;
 
     public override object Handle(Type type, IMod mod = null)
     {
-        this.ModAssets = mod.GetType().GetProperties().Where(p => p.PropertyType == type).First();
+        this.ModAssets = mod.GetType().GetMemberOfType(type);
         if (this.ModAssets == null)
         {
             Log.Error("Mod must define an asset property");
@@ -25,7 +26,7 @@ public class SAsset : ClassHandler
         }
 
         object instance = base.Handle(type, mod);
-        this.ModAssets.SetValue(mod, instance);
+        this.ModAssets.GetSetter()(mod, instance);
         return instance;
     }
 
@@ -43,7 +44,7 @@ public class SAsset : ClassHandler
     /// An optional string property sharing the same name, but ending with "AssetName" can also be included.
     /// This property will be set to the "Mods/<ModUniqueID>/<Property>" value, which is required for some methods.
     /// </summary>
-    public class Asset : PropertyHandler
+    public class Asset : FieldHandler
     {
         public string Path;
         public AssetLoadPriority Priority;
@@ -54,18 +55,15 @@ public class SAsset : ClassHandler
             this.Priority = priority;
         }
 
-        public override void Handle(PropertyInfo property, object type, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod, object[] args = null)
         {
-            string assetId = PathUtilities.NormalizeAssetName($"Mods/{mod.ModManifest.UniqueID}/{property.Name}");
+            string assetId = PathUtilities.NormalizeAssetName($"Mods/{mod.ModManifest.UniqueID}/{name}");
 
-            PropertyInfo assetNameProperty = type.GetType().GetProperty(property.Name + "AssetName");
-            if (assetNameProperty is not null && assetNameProperty.PropertyType != typeof(string))
+
+            Action<object, object> assetNameSetter = instance.GetType().GetMemberOfName(name + "AssetName")?.GetSetter();
+            if (assetNameSetter is not null)
             {
-                Log.Error($"[{assetNameProperty.Name}] should be string type");
-            }
-            if (assetNameProperty is not null)
-            {
-                assetNameProperty.SetValue(type, assetId);
+                assetNameSetter(instance, assetId);
             }
 
             mod.Helper.Events.Content.AssetRequested += (object sender, AssetRequestedEventArgs e) =>
@@ -76,9 +74,9 @@ public class SAsset : ClassHandler
                 }
 
                 object value = e.GetType().GetMethod("LoadFromModFile")
-                    .MakeGenericMethod(property.PropertyType)
+                    .MakeGenericMethod(fieldType)
                     .Invoke(e, new object[] { PathUtilities.NormalizePath(this.Path), this.Priority });
-                property.SetValue(type, value);
+                setter(instance, value);
             };
 
             mod.Helper.Events.Content.AssetReady += (object sender, AssetReadyEventArgs e) =>
@@ -88,7 +86,7 @@ public class SAsset : ClassHandler
                     return;
                 }
 
-                property.SetValue(type, LoadValue(property, assetId));
+                setter(instance, LoadValue(fieldType, assetId));
             };
 
             mod.Helper.Events.Content.AssetsInvalidated += (object sender, AssetsInvalidatedEventArgs e) =>
@@ -97,21 +95,21 @@ public class SAsset : ClassHandler
                 {
                     if (asset.IsEquivalentTo(assetId))
                     {
-                        property.SetValue(type, LoadValue(property, assetId));
+                        setter(instance, LoadValue(fieldType, assetId));
                     }
                 }
             };
 
             mod.Helper.Events.GameLoop.GameLaunched += (object sender, GameLaunchedEventArgs e) =>
             {
-                property.SetValue(type, LoadValue(property, assetId));
+                setter(instance, LoadValue(fieldType, assetId));
             };
         }
 
-        private static object LoadValue(PropertyInfo property, string modId)
+        private static object LoadValue(Type fieldType, string modId)
         {
             return Game1.content.GetType().GetMethod("Load", new[] { typeof(string) })
-                .MakeGenericMethod(property.PropertyType)
+                .MakeGenericMethod(fieldType)
                 .Invoke(Game1.content, new string[] { modId });
         }
 

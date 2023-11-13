@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using BirbShared;
+using BirbCore;
 using HarmonyLib;
 using StardewValley;
 
@@ -32,8 +32,19 @@ namespace GameboyArcade
                         Log.Error("drbirbdev.ArcadeGame_Play dialogueKey requires minigame id parameter");
                         return;
                     }
-                    if (!ModEntry.LoadedContentPacks.TryGetValue(questionParams[1], out Content content)) {
-                        Log.Error($"drbirbdev.ArcadeGame_Play dialogueKey had unknown minigame id parameter {questionParams[0]}");
+
+                    Content content = null;
+
+                    if (questionParams.Length < 3)
+                    {
+                        content = ModEntry.SearchGames(questionParams[1]);
+                    } else
+                    {
+                        content = ModEntry.GetGame(questionParams[1], questionParams[2]);
+                    }
+
+                    if (content is null) {
+                        Log.Error($"drbirbdev.ArcadeGame_Play dialogueKey had unknown minigame id parameter {questionParams.Join(delimiter: ",")}");
                         return;
                     }
 

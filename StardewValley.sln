@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PanningUpgrades", "PanningU
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanchingToolUpgrades", "RanchingToolUpgrades\RanchingToolUpgrades.csproj", "{D77594C7-ED2D-48B1-9F39-373F20F1B7E9}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "BirbShared", "BirbShared\BirbShared.shproj", "{8F13906D-7E88-45B4-ABBC-617437970163}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_root", "_root", "{7BB5EFE4-05AA-48E1-BA1C-5F7F0599381E}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -46,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealtimeFramework", "Realti
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HalloweenSeason", "HalloweenSeason\HalloweenSeason.shproj", "{100172ED-9F1B-4D78-8B4F-BB5C4F72537B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirbCore", "BirbCore\BirbCore.csproj", "{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BirbCore", "BirbCore\BirbCore.csproj", "{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,6 +118,5 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		HalloweenSeason\HalloweenSeason.projitems*{100172ed-9f1b-4d78-8b4f-bb5c4f72537b}*SharedItemsImports = 13
 		BirbSharedSpaceCore\BirbSharedSpaceCore.projitems*{19cedb88-a912-48da-b35d-fce2509e70e6}*SharedItemsImports = 13
-		BirbShared\BirbShared.projitems*{8f13906d-7e88-45b4-abbc-617437970163}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

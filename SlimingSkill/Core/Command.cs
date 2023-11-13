@@ -1,9 +1,8 @@
-using BirbShared.Command;
+using BirbCore.Annotations;
 
-namespace SlimingSkill
+namespace SlimingSkill;
+
+[SCommand("sliming")]
+class Command
 {
-    [CommandClass]
-    class Command
-    {
-    }
 }

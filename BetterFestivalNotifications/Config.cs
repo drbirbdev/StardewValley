@@ -1,36 +1,35 @@
 using BirbCore.Annotations;
 
-namespace BetterFestivalNotifications
+namespace BetterFestivalNotifications;
+
+[SConfig]
+internal class Config
 {
-    [SConfig]
-    internal class Config
-    {
-        [SConfig.Option]
-        public bool PlayStartSound { get; set; } = true;
-        [SConfig.Option]
-        public string StartSound { get; set; } = "crystal";
+    [SConfig.Option]
+    public bool PlayStartSound = true;
+    [SConfig.Option]
+    public string StartSound = "crystal";
 
 
-        [SConfig.Option]
-        public int WarnHoursAheadOfTime { get; set; } = 2;
+    [SConfig.Option]
+    public int WarnHoursAheadOfTime = 2;
 
-        [SConfig.Option]
-        public bool PlayWarnSound { get; set; } = true;
+    [SConfig.Option]
+    public bool PlayWarnSound = true;
 
-        [SConfig.Option]
-        public bool ShowWarnNotification { get; set; } = true;
+    [SConfig.Option]
+    public bool ShowWarnNotification = true;
 
-        [SConfig.Option]
-        public string WarnSound { get; set; } = "phone";
+    [SConfig.Option]
+    public string WarnSound = "phone";
 
 
-        [SConfig.Option]
-        public bool PlayOverSound { get; set; } = false;
+    [SConfig.Option]
+    public bool PlayOverSound = false;
 
-        [SConfig.Option]
-        public bool ShowOverNotification { get; set; } = false;
+    [SConfig.Option]
+    public bool ShowOverNotification = false;
 
-        [SConfig.Option]
-        public string OverSound { get; set; } = "ghost";
-    }
+    [SConfig.Option]
+    public string OverSound = "ghost";
 }

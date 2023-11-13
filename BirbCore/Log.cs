@@ -12,8 +12,7 @@ namespace BirbCore
         }
 		public static void Debug(string str, bool isDebug = true)
 		{
-			Monitor.Log(str,
-				isDebug ? LogLevel.Debug : LogLevel.Trace);
+			Monitor.Log(str, isDebug ? LogLevel.Debug : LogLevel.Trace);
 		}
 		public static void Alert(string str)
 		{

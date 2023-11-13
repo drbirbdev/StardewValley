@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using BirbShared;
+using BirbCore;
 using CoreBoy.serial;
 using StardewModdingAPI.Utilities;
 

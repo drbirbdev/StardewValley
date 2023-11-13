@@ -11,7 +11,7 @@ public class ModEntry : Mod
     internal static Assets Assets;
 
     [SMod.Api("DaLion.Overhaul", false)]
-    internal static IMargo MargoAPI { get; set; }
+    internal static IMargo MargoAPI;
     internal static bool MargoLoaded
     {
         get

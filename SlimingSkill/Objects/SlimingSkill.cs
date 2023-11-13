@@ -25,12 +25,12 @@ namespace SlimingSkill
                 this.ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 70000 };
 
                 this.AddProfessions(
-                    Rancher = new KeyedProfession(this, "Rancher", ModEntry.Assets.Rancher, ModEntry.Assets.RancherP, ModEntry.Instance.Helper),
-                    Hunter = new KeyedProfession(this, "Hunter", ModEntry.Assets.Hunter, ModEntry.Assets.HunterP, ModEntry.Instance.Helper),
-                    Breeder = new KeyedProfession(this, "Breeder", ModEntry.Assets.Breeder, ModEntry.Assets.BreederP, ModEntry.Instance.Helper),
-                    Hatcher = new KeyedProfession(this, "Hatcher", ModEntry.Assets.Hatcher, ModEntry.Assets.HatcherP, ModEntry.Instance.Helper),
-                    Poacher = new KeyedProfession(this, "Poacher", ModEntry.Assets.Poacher, ModEntry.Assets.PoacherP, ModEntry.Instance.Helper),
-                    Tamer = new KeyedProfession(this, "Tamer", ModEntry.Assets.Tamer, ModEntry.Assets.TamerP, ModEntry.Instance.Helper)
+                    Rancher = new KeyedProfession(this, "Rancher", ModEntry.Assets.Rancher, ModEntry.Instance.Helper, null, ModEntry.Assets.RancherP),
+                    Hunter = new KeyedProfession(this, "Hunter", ModEntry.Assets.Hunter, ModEntry.Instance.Helper, null, ModEntry.Assets.HunterP),
+                    Breeder = new KeyedProfession(this, "Breeder", ModEntry.Assets.Breeder, ModEntry.Instance.Helper, null, ModEntry.Assets.BreederP),
+                    Hatcher = new KeyedProfession(this, "Hatcher", ModEntry.Assets.Hatcher, ModEntry.Instance.Helper, null, ModEntry.Assets.HatcherP),
+                    Poacher = new KeyedProfession(this, "Poacher", ModEntry.Assets.Poacher, ModEntry.Instance.Helper, null, ModEntry.Assets.PoacherP),
+                    Tamer = new KeyedProfession(this, "Tamer", ModEntry.Assets.Tamer, ModEntry.Instance.Helper, null, ModEntry.Assets.TamerP)
                 );
             }
             else
@@ -38,12 +38,12 @@ namespace SlimingSkill
                 this.ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000 };
 
                 this.AddProfessions(
-                    Rancher = new KeyedProfession(this, "Rancher", ModEntry.Assets.Rancher, ModEntry.Instance.I18n),
-                    Hunter = new KeyedProfession(this, "Hunter", ModEntry.Assets.Hunter, ModEntry.Instance.I18n),
-                    Breeder = new KeyedProfession(this, "Breeder", ModEntry.Assets.Breeder, ModEntry.Instance.I18n),
-                    Hatcher = new KeyedProfession(this, "Hatcher", ModEntry.Assets.Hatcher, ModEntry.Instance.I18n),
-                    Poacher = new KeyedProfession(this, "Poacher", ModEntry.Assets.Poacher, ModEntry.Instance.I18n),
-                    Tamer = new KeyedProfession(this, "Tamer", ModEntry.Assets.Tamer, ModEntry.Instance.I18n)
+                    Rancher = new KeyedProfession(this, "Rancher", ModEntry.Assets.Rancher, ModEntry.Instance.Helper),
+                    Hunter = new KeyedProfession(this, "Hunter", ModEntry.Assets.Hunter, ModEntry.Instance.Helper),
+                    Breeder = new KeyedProfession(this, "Breeder", ModEntry.Assets.Breeder, ModEntry.Instance.Helper),
+                    Hatcher = new KeyedProfession(this, "Hatcher", ModEntry.Assets.Hatcher, ModEntry.Instance.Helper),
+                    Poacher = new KeyedProfession(this, "Poacher", ModEntry.Assets.Poacher, ModEntry.Instance.Helper),
+                    Tamer = new KeyedProfession(this, "Tamer", ModEntry.Assets.Tamer, ModEntry.Instance.Helper)
                 );
             }
         }

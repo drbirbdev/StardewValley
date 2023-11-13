@@ -11,8 +11,13 @@ namespace BirbCore.Annotations;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class SCommand : ClassHandler
 {
-    private static Dictionary<string, Dictionary<string, Action<string[]>>> BaseCommands;
+    private static Dictionary<string, Dictionary<string, Action<string[]>>> BaseCommands = new();
     public string Name;
+
+    public SCommand(string name)
+    {
+        this.Name = name;
+    }
 
     private static string GetHelp(string subcommand = null)
     {
@@ -44,7 +49,13 @@ public class SCommand : ClassHandler
     public class Command : MethodHandler
     {
         public string Subname;
-        public string Help = "";
+        public string Help;
+
+        public Command(string subname, string help = "")
+        {
+            this.Subname = subname;
+            this.Help = help;
+        }
 
         public override void Handle(MethodInfo method, object type, IMod mod = null)
         {

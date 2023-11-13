@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using BirbCore.Extensions;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
@@ -15,7 +16,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.GameLaunched += (EventHandler<GameLaunchedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<GameLaunchedEventArgs>), method);
+            mod.Helper.Events.GameLoop.GameLaunched += method.InitDelegate<EventHandler<GameLaunchedEventArgs>>(instance);
         }
     }
 
@@ -23,7 +24,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.UpdateTicking += (EventHandler<UpdateTickingEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<UpdateTickingEventArgs>), method);
+            mod.Helper.Events.GameLoop.UpdateTicking += method.InitDelegate<EventHandler<UpdateTickingEventArgs>>(instance);
         }
     }
 
@@ -31,7 +32,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.UpdateTicked += (EventHandler<UpdateTickedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<UpdateTickedEventArgs>), method);
+            mod.Helper.Events.GameLoop.UpdateTicked += method.InitDelegate<EventHandler<UpdateTickedEventArgs>>(instance);
         }
     }
 
@@ -39,7 +40,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.OneSecondUpdateTicking += (EventHandler<OneSecondUpdateTickingEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<OneSecondUpdateTickingEventArgs>), method);
+            mod.Helper.Events.GameLoop.OneSecondUpdateTicking += method.InitDelegate<EventHandler<OneSecondUpdateTickingEventArgs>>(instance);
         }
     }
 
@@ -47,7 +48,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.OneSecondUpdateTicked += (EventHandler<OneSecondUpdateTickedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<OneSecondUpdateTickedEventArgs>), method);
+            mod.Helper.Events.GameLoop.OneSecondUpdateTicked += method.InitDelegate<EventHandler<OneSecondUpdateTickedEventArgs>>(instance);
         }
     }
 
@@ -55,7 +56,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.SaveCreating += (EventHandler<SaveCreatingEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<SaveCreatingEventArgs>), method);
+            mod.Helper.Events.GameLoop.SaveCreating += method.InitDelegate<EventHandler<SaveCreatingEventArgs>>(instance);
         }
     }
 
@@ -63,7 +64,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.SaveCreated += (EventHandler<SaveCreatedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<SaveCreatedEventArgs>), method);
+            mod.Helper.Events.GameLoop.SaveCreated += method.InitDelegate<EventHandler<SaveCreatedEventArgs>>(instance);
         }
     }
 
@@ -71,7 +72,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.Saving += (EventHandler<SavingEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<SavingEventArgs>), method);
+            mod.Helper.Events.GameLoop.Saving += method.InitDelegate<EventHandler<SavingEventArgs>>(instance);
         }
     }
 
@@ -79,7 +80,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.Saved += (EventHandler<SavedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<SavedEventArgs>), method);
+            mod.Helper.Events.GameLoop.Saved += method.InitDelegate<EventHandler<SavedEventArgs>>(instance);
         }
     }
 
@@ -87,7 +88,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.SaveLoaded += (EventHandler<SaveLoadedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<SaveLoadedEventArgs>), method);
+            mod.Helper.Events.GameLoop.SaveLoaded += method.InitDelegate<EventHandler<SaveLoadedEventArgs>>(instance);
         }
     }
 
@@ -95,7 +96,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.DayStarted += (EventHandler<DayStartedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<DayStartedEventArgs>), method);
+            mod.Helper.Events.GameLoop.DayStarted += method.InitDelegate<EventHandler<DayStartedEventArgs>>(instance);
         }
     }
 
@@ -103,7 +104,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.DayEnding += (EventHandler<DayEndingEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<DayEndingEventArgs>), method);
+            mod.Helper.Events.GameLoop.DayEnding += method.InitDelegate<EventHandler<DayEndingEventArgs>>(instance);
         }
     }
 
@@ -111,7 +112,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.TimeChanged += (EventHandler<TimeChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<TimeChangedEventArgs>), method);
+            mod.Helper.Events.GameLoop.TimeChanged += method.InitDelegate<EventHandler<TimeChangedEventArgs>>(instance);
         }
     }
 
@@ -119,7 +120,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.GameLoop.ReturnedToTitle += (EventHandler<ReturnedToTitleEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<ReturnedToTitleEventArgs>), method);
+            mod.Helper.Events.GameLoop.ReturnedToTitle += method.InitDelegate<EventHandler<ReturnedToTitleEventArgs>>(instance);
         }
     }
 
@@ -127,7 +128,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Input.ButtonsChanged += (EventHandler<ButtonsChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<ButtonsChangedEventArgs>), method);
+            mod.Helper.Events.Input.ButtonsChanged += method.InitDelegate<EventHandler<ButtonsChangedEventArgs>>(instance);
         }
     }
 
@@ -135,7 +136,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Input.ButtonPressed += (EventHandler<ButtonPressedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<ButtonPressedEventArgs>), method);
+            mod.Helper.Events.Input.ButtonPressed += method.InitDelegate<EventHandler<ButtonPressedEventArgs>>(instance);
         }
     }
 
@@ -143,7 +144,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Input.ButtonReleased += (EventHandler<ButtonReleasedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<ButtonReleasedEventArgs>), method);
+            mod.Helper.Events.Input.ButtonReleased += method.InitDelegate<EventHandler<ButtonReleasedEventArgs>>(instance);
         }
     }
 
@@ -151,7 +152,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Input.CursorMoved += (EventHandler<CursorMovedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<CursorMovedEventArgs>), method);
+            mod.Helper.Events.Input.CursorMoved += method.InitDelegate<EventHandler<CursorMovedEventArgs>>(instance);
         }
     }
 
@@ -159,7 +160,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Input.MouseWheelScrolled += (EventHandler<MouseWheelScrolledEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<MouseWheelScrolledEventArgs>), method);
+            mod.Helper.Events.Input.MouseWheelScrolled += method.InitDelegate<EventHandler<MouseWheelScrolledEventArgs>>(instance);
         }
     }
 
@@ -167,7 +168,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Multiplayer.PeerContextReceived += (EventHandler<PeerContextReceivedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<PeerContextReceivedEventArgs>), method);
+            mod.Helper.Events.Multiplayer.PeerContextReceived += method.InitDelegate<EventHandler<PeerContextReceivedEventArgs>>(instance);
         }
     }
 
@@ -175,7 +176,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Multiplayer.PeerConnected += (EventHandler<PeerConnectedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<PeerConnectedEventArgs>), method);
+            mod.Helper.Events.Multiplayer.PeerConnected += method.InitDelegate<EventHandler<PeerConnectedEventArgs>>(instance);
         }
     }
 
@@ -183,7 +184,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Multiplayer.ModMessageReceived += (EventHandler<ModMessageReceivedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<ModMessageReceivedEventArgs>), method);
+            mod.Helper.Events.Multiplayer.ModMessageReceived += method.InitDelegate<EventHandler<ModMessageReceivedEventArgs>>(instance);
         }
     }
 
@@ -191,7 +192,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Multiplayer.PeerDisconnected += (EventHandler<PeerDisconnectedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<PeerDisconnectedEventArgs>), method);
+            mod.Helper.Events.Multiplayer.PeerDisconnected += method.InitDelegate<EventHandler<PeerDisconnectedEventArgs>>(instance);
         }
     }
 
@@ -199,7 +200,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Player.InventoryChanged += (EventHandler<InventoryChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<InventoryChangedEventArgs>), method);
+            mod.Helper.Events.Player.InventoryChanged += method.InitDelegate<EventHandler<InventoryChangedEventArgs>>(instance);
         }
     }
 
@@ -207,7 +208,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Player.LevelChanged += (EventHandler<LevelChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<LevelChangedEventArgs>), method);
+            mod.Helper.Events.Player.LevelChanged += method.InitDelegate<EventHandler<LevelChangedEventArgs>>(instance);
         }
     }
 
@@ -215,7 +216,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Player.Warped += (EventHandler<WarpedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<WarpedEventArgs>), method);
+            mod.Helper.Events.Player.Warped += method.InitDelegate<EventHandler<WarpedEventArgs>>(instance);
         }
     }
 
@@ -223,7 +224,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.LocationListChanged += (EventHandler<LocationListChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<LocationListChangedEventArgs>), method);
+            mod.Helper.Events.World.LocationListChanged += method.InitDelegate<EventHandler<LocationListChangedEventArgs>>(instance);
         }
     }
 
@@ -231,7 +232,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.BuildingListChanged += (EventHandler<BuildingListChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<BuildingListChangedEventArgs>), method);
+            mod.Helper.Events.World.BuildingListChanged += method.InitDelegate<EventHandler<BuildingListChangedEventArgs>>(instance);
         }
     }
 
@@ -239,7 +240,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.ChestInventoryChanged += (EventHandler<ChestInventoryChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<ChestInventoryChangedEventArgs>), method);
+            mod.Helper.Events.World.ChestInventoryChanged += method.InitDelegate<EventHandler<ChestInventoryChangedEventArgs>>(instance);
         }
     }
 
@@ -247,7 +248,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.DebrisListChanged += (EventHandler<DebrisListChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<DebrisListChangedEventArgs>), method);
+            mod.Helper.Events.World.DebrisListChanged += method.InitDelegate<EventHandler<DebrisListChangedEventArgs>>(instance);
         }
     }
 
@@ -255,7 +256,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.FurnitureListChanged += (EventHandler<FurnitureListChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<FurnitureListChangedEventArgs>), method);
+            mod.Helper.Events.World.FurnitureListChanged += method.InitDelegate<EventHandler<FurnitureListChangedEventArgs>>(instance);
         }
     }
 
@@ -263,7 +264,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.LargeTerrainFeatureListChanged += (EventHandler<LargeTerrainFeatureListChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<LargeTerrainFeatureListChangedEventArgs>), method);
+            mod.Helper.Events.World.LargeTerrainFeatureListChanged += method.InitDelegate<EventHandler<LargeTerrainFeatureListChangedEventArgs>>(instance);
         }
     }
 
@@ -271,7 +272,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.NpcListChanged += (EventHandler<NpcListChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<NpcListChangedEventArgs>), method);
+            mod.Helper.Events.World.NpcListChanged += method.InitDelegate<EventHandler<NpcListChangedEventArgs>>(instance);
         }
     }
 
@@ -279,7 +280,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.ObjectListChanged += (EventHandler<ObjectListChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<ObjectListChangedEventArgs>), method);
+            mod.Helper.Events.World.ObjectListChanged += method.InitDelegate<EventHandler<ObjectListChangedEventArgs>>(instance);
         }
     }
 
@@ -287,7 +288,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.World.TerrainFeatureListChanged += (EventHandler<TerrainFeatureListChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<TerrainFeatureListChangedEventArgs>), method);
+            mod.Helper.Events.World.TerrainFeatureListChanged += method.InitDelegate<EventHandler<TerrainFeatureListChangedEventArgs>>(instance);
         }
     }
 
@@ -295,7 +296,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.MenuChanged += (EventHandler<MenuChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<MenuChangedEventArgs>), method);
+            mod.Helper.Events.Display.MenuChanged += method.InitDelegate<EventHandler<MenuChangedEventArgs>>(instance);
         }
     }
 
@@ -303,7 +304,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.Rendering += (EventHandler<RenderingEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<RenderingEventArgs>), method);
+            mod.Helper.Events.Display.Rendering += method.InitDelegate<EventHandler<RenderingEventArgs>>(instance);
         }
     }
 
@@ -311,7 +312,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.Rendered += (EventHandler<RenderedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<RenderedEventArgs>), method);
+            mod.Helper.Events.Display.Rendered += method.InitDelegate<EventHandler<RenderedEventArgs>>(instance);
         }
     }
 
@@ -319,7 +320,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.RenderingWorld += (EventHandler<RenderingWorldEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<RenderingWorldEventArgs>), method);
+            mod.Helper.Events.Display.RenderingWorld += method.InitDelegate<EventHandler<RenderingWorldEventArgs>>(instance);
         }
     }
 
@@ -327,7 +328,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.RenderedWorld += (EventHandler<RenderedWorldEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<RenderedWorldEventArgs>), method);
+            mod.Helper.Events.Display.RenderedWorld += method.InitDelegate<EventHandler<RenderedWorldEventArgs>>(instance);
         }
     }
 
@@ -335,7 +336,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.RenderingActiveMenu += (EventHandler<RenderingActiveMenuEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<RenderingActiveMenuEventArgs>), method);
+            mod.Helper.Events.Display.RenderingActiveMenu += method.InitDelegate<EventHandler<RenderingActiveMenuEventArgs>>(instance);
         }
     }
 
@@ -343,7 +344,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.RenderedActiveMenu += (EventHandler<RenderedActiveMenuEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<RenderedActiveMenuEventArgs>), method);
+            mod.Helper.Events.Display.RenderedActiveMenu += method.InitDelegate<EventHandler<RenderedActiveMenuEventArgs>>(instance);
         }
     }
 
@@ -351,7 +352,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.RenderingHud += (EventHandler<RenderingHudEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<RenderingHudEventArgs>), method);
+            mod.Helper.Events.Display.RenderingHud += method.InitDelegate<EventHandler<RenderingHudEventArgs>>(instance);
         }
     }
 
@@ -359,7 +360,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.RenderedHud += (EventHandler<RenderedHudEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<RenderedHudEventArgs>), method);
+            mod.Helper.Events.Display.RenderedHud += method.InitDelegate<EventHandler<RenderedHudEventArgs>>(instance);
         }
     }
 
@@ -367,7 +368,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Display.WindowResized += (EventHandler<WindowResizedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<WindowResizedEventArgs>), method);
+            mod.Helper.Events.Display.WindowResized += method.InitDelegate<EventHandler<WindowResizedEventArgs>>(instance);
         }
     }
 
@@ -375,7 +376,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Content.AssetRequested += (EventHandler<AssetRequestedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<AssetRequestedEventArgs>), method);
+            mod.Helper.Events.Content.AssetRequested += method.InitDelegate<EventHandler<AssetRequestedEventArgs>>(instance);
         }
     }
 
@@ -383,7 +384,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Content.AssetsInvalidated += (EventHandler<AssetsInvalidatedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<AssetsInvalidatedEventArgs>), method);
+            mod.Helper.Events.Content.AssetsInvalidated += method.InitDelegate<EventHandler<AssetsInvalidatedEventArgs>>(instance);
         }
     }
 
@@ -391,7 +392,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Content.AssetReady += (EventHandler<AssetReadyEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<AssetReadyEventArgs>), method);
+            mod.Helper.Events.Content.AssetReady += method.InitDelegate<EventHandler<AssetReadyEventArgs>>(instance);
         }
     }
 
@@ -399,7 +400,7 @@ public class SEvent : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            mod.Helper.Events.Content.LocaleChanged += (EventHandler<LocaleChangedEventArgs>)Delegate.CreateDelegate(typeof(EventHandler<LocaleChangedEventArgs>), method);
+            mod.Helper.Events.Content.LocaleChanged += method.InitDelegate<EventHandler<LocaleChangedEventArgs>>(instance);
         }
     }
 

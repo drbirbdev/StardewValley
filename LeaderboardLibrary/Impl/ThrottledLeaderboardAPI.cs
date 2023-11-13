@@ -1,60 +1,59 @@
 using System;
 using System.Collections.Generic;
-using BirbShared;
+using BirbCore;
 
-namespace LeaderboardLibrary
+namespace LeaderboardLibrary;
+
+class ThrottledLeaderboardAPI : ChainableLeaderboardAPI
 {
-    class ThrottledLeaderboardAPI : ChainableLeaderboardAPI
+    public DateTime RefreshNextCall = DateTime.MinValue;
+    public DateTime UploadNextCall = DateTime.MinValue;
+
+    private ILeaderboardAPI DelegateApi;
+    public override ILeaderboardAPI Delegate => DelegateApi;
+
+    public ThrottledLeaderboardAPI(string modId)
     {
-        public DateTime RefreshNextCall = DateTime.MinValue;
-        public DateTime UploadNextCall = DateTime.MinValue;
+        this.DelegateApi = new MultiplayerLeaderboardAPI(modId);
+    }
 
-        private ILeaderboardAPI DelegateApi;
-        public override ILeaderboardAPI Delegate => DelegateApi;
-
-        public ThrottledLeaderboardAPI(string modId)
+    public override bool RefreshCache(string stat)
+    {
+        if (DateTime.UtcNow > RefreshNextCall)
         {
-            this.DelegateApi = new MultiplayerLeaderboardAPI(modId);
+            Delegate.RefreshCache(stat);
+            RefreshNextCall = DateTime.UtcNow.AddSeconds(5);
+        }
+        else
+        {
+            Log.Warn($"{stat} was throttled when calling RefreshCache");
+            return false;
+        }
+        return true;
+    }
+
+    public override bool UploadScore(string stat, int score)
+    {
+        int oldScore = 0;
+        Dictionary<string, string> oldRecord = Delegate.GetLocalTopN(stat, 10).Find((match) => match["UserUUID"] == (ModEntry.GlobalModData.Value.UserUUID));
+        if (oldRecord is not null)
+        {
+            int.TryParse(oldRecord["Score"], out oldScore);
         }
 
-        public override bool RefreshCache(string stat)
+        if (score > oldScore)
         {
-            if (DateTime.UtcNow > RefreshNextCall)
+            if (DateTime.UtcNow > UploadNextCall)
             {
-                Delegate.RefreshCache(stat);
-                RefreshNextCall = DateTime.UtcNow.AddSeconds(5);
+                Delegate.UploadScore(stat, score);
+                UploadNextCall = DateTime.UtcNow.AddSeconds(5);
             }
             else
             {
-                Log.Warn($"{stat} was throttled when calling RefreshCache");
+                Log.Warn($"{stat} was throttled when calling UploadScore");
                 return false;
             }
-            return true;
         }
-
-        public override bool UploadScore(string stat, int score)
-        {
-            int oldScore = 0;
-            Dictionary<string, string> oldRecord = Delegate.GetLocalTopN(stat, 10).Find((match) => match["UserUUID"] == (ModEntry.GlobalModData.Value.UserUUID));
-            if (oldRecord is not null)
-            {
-                int.TryParse(oldRecord["Score"], out oldScore);
-            }
-
-            if (score > oldScore)
-            {
-                if (DateTime.UtcNow > UploadNextCall)
-                {
-                    Delegate.UploadScore(stat, score);
-                    UploadNextCall = DateTime.UtcNow.AddSeconds(5);
-                }
-                else
-                {
-                    Log.Warn($"{stat} was throttled when calling UploadScore");
-                    return false;
-                }
-            }
-            return true;
-        }
+        return true;
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
@@ -7,7 +6,7 @@ namespace BirbCore.Annotations;
 public class SMod : ClassHandler
 {
 
-    public class Api : PropertyHandler
+    public class Api : FieldHandler
     {
         public string UniqueID;
         public bool IsRequired;
@@ -18,18 +17,18 @@ public class SMod : ClassHandler
             this.IsRequired = isRequired;
         }
 
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
             mod.Helper.Events.GameLoop.GameLaunched += (object sender, GameLaunchedEventArgs e) =>
             {
                 object api = mod.Helper.ModRegistry.GetType().GetMethod("GetApi", 1, new Type[] { typeof(string) })
-                    .MakeGenericMethod(property.PropertyType)
+                    .MakeGenericMethod(fieldType)
                     .Invoke(mod.Helper.ModRegistry, new object[] { UniqueID });
                 if (api is null && IsRequired)
                 {
-                    Log.Error($"[{property.Name}] Can't access required API");
+                    Log.Error($"[{name}] Can't access required API");
                 }
-                property.SetValue(instance, api);
+                setter(instance, api);
             };
         }
     }

@@ -5,6 +5,7 @@ using StardewModdingAPI;
 using StardewValley.Internal;
 using StardewValley.Delegates;
 using Microsoft.Xna.Framework;
+using BirbCore.Extensions;
 
 namespace BirbCore.Annotations;
 
@@ -15,7 +16,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            Event.RegisterCustomCommand($"{mod.ModManifest.UniqueID}_{method.Name}", (EventCommandDelegate)Delegate.CreateDelegate(typeof(EventCommandDelegate), method));
+            Event.RegisterCustomCommand($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<EventCommandDelegate>(instance));
         }
     }
 
@@ -23,7 +24,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            Event.RegisterCustomPrecondition($"{mod.ModManifest.UniqueID}_{method.Name}", (EventPreconditionDelegate)Delegate.CreateDelegate(typeof(EventPreconditionDelegate), method));
+            Event.RegisterCustomPrecondition($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<EventPreconditionDelegate>(instance));
         }
     }
 
@@ -31,7 +32,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            StardewValley.GameStateQuery.Register($"{mod.ModManifest.UniqueID}_{method.Name}", (GameStateQueryDelegate)Delegate.CreateDelegate(typeof(GameStateQueryDelegate), method));
+            StardewValley.GameStateQuery.Register($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<GameStateQueryDelegate>(instance));
         }
     }
 
@@ -39,7 +40,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            ItemQueryResolver.ItemResolvers.Add($"{mod.ModManifest.UniqueID}_{method.Name}", (ResolveItemQueryDelegate)Delegate.CreateDelegate(typeof(ResolveItemQueryDelegate), method));
+            ItemQueryResolver.ItemResolvers.Add($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<ResolveItemQueryDelegate>(instance));
         }
     }
 
@@ -47,7 +48,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            StardewValley.TokenParser.RegisterParser($"{mod.ModManifest.UniqueID}_{method.Name}", (TokenParserDelegate)Delegate.CreateDelegate(typeof(TokenParserDelegate), method));
+            StardewValley.TokenParser.RegisterParser($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<TokenParserDelegate>(instance));
         }
     }
 
@@ -55,7 +56,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            GameLocation.RegisterTouchAction($"{mod.ModManifest.UniqueID}_{method.Name}", (Action<GameLocation, string[], Farmer, Vector2>)Delegate.CreateDelegate(typeof(Action<GameLocation, string[], Farmer, Vector2>), method));
+            GameLocation.RegisterTouchAction($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<Action<GameLocation, string[], Farmer, Vector2>>(instance));
         }
     }
 
@@ -63,7 +64,9 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            GameLocation.RegisterTileAction($"{mod.ModManifest.UniqueID}_{method.Name}", (Func<GameLocation, string[], Farmer, Point, bool>)Delegate.CreateDelegate(typeof(Func<GameLocation, string[], Farmer, Point, bool>), method));
+            GameLocation.RegisterTileAction($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<Func<GameLocation, string[], Farmer, Point, bool>>(instance));
         }
     }
+
+
 }

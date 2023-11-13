@@ -1,15 +1,14 @@
-using BirbShared.Config;
+using BirbCore.Annotations;
 
-namespace WinterStarSpouse
+namespace WinterStarSpouse;
+
+[SConfig]
+internal class Config
 {
-    [ConfigClass]
-    internal class Config
-    {
 
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int SpouseIsRecipientChance { get; set; } = 50;
+    [SConfig.Option(Min = 0, Max = 100, Interval = 1)]
+    public int SpouseIsRecipientChance { get; set; } = 50;
 
-        [ConfigOption(Min = 0, Max = 100, Interval = 1)]
-        public int SpouseIsGiverChance { get; set; } = 50;
-    }
+    [SConfig.Option(Min = 0, Max = 100, Interval = 1)]
+    public int SpouseIsGiverChance { get; set; } = 50;
 }

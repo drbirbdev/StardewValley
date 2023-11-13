@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using BirbCore.APIs;
+using BirbCore.Extensions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -18,41 +18,47 @@ public class SConfig : ClassHandler
     public bool TitleScreenOnly = false;
 
     protected static IGenericModConfigMenuApi Api;
-    protected PropertyInfo ModConfig;
 
     public override object Handle(Type type, IMod mod = null)
     {
-        Api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-        if (Api == null)
+        mod.Helper.Events.GameLoop.GameLaunched += (sender, e) =>
         {
-            Log.Error("Generic Mod Config Menu is not enabled, so will skip parsing");
-            return null;
-        }
+            Api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (Api == null)
+            {
+                Log.Error("Generic Mod Config Menu is not enabled, so will skip parsing");
+                return;
+            }
 
-        this.ModConfig = mod.GetType().GetProperties().Where(p => p.PropertyType == type).First();
-        if (this.ModConfig == null)
-        {
-            Log.Error("Mod must define a Config property");
-            return null;
-        }
+            MemberInfo configField = mod.GetType().GetMemberOfType(type);
+            var getter = configField.GetGetter();
+            var setter = configField.GetSetter();
 
-        Api.Register(
-            mod: mod.ModManifest,
-            reset: () => ModConfig.SetValue(mod, Activator.CreateInstance(type)),
-            save: () => mod.Helper.WriteConfig(ModConfig.GetValue(mod)),
-            titleScreenOnly: this.TitleScreenOnly
-        );
+            if (configField == null)
+            {
+                Log.Error("Mod must define a Config property");
+                return;
+            }
 
-        object instance = base.Handle(type, mod);
-        this.ModConfig.SetValue(mod, instance);
-        return instance;
+            Api.Register(
+                mod: mod.ModManifest,
+                reset: () => setter(mod, Activator.CreateInstance(type)),
+                save: () => mod.Helper.WriteConfig(getter(mod)),
+                titleScreenOnly: this.TitleScreenOnly
+            );
+
+            object instance = base.Handle(type, mod);
+            setter(mod, instance);
+        };
+
+        return null;
     }
 
 
     /// <summary>
     /// Specifies a property as a config.
     /// </summary>
-    public class Option : PropertyHandler
+    public class Option : FieldHandler
     {
         public string FieldId;
         public float Min = float.MaxValue;
@@ -89,27 +95,27 @@ public class SConfig : ClassHandler
 
 
 
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
-            if (property.PropertyType == typeof(bool))
+            if (fieldType == typeof(bool))
             {
                 SConfig.Api.AddBoolOption(
                     mod: mod.ModManifest,
-                    getValue: () => (bool)property.GetValue(instance),
-                    setValue: value => property.SetValue(instance, value),
-                    name: () => mod.Helper.Translation.Get($"config.{property.Name}") ?? property.Name,
-                    tooltip: () => mod.Helper.Translation.Get($"config.{property.Name}.tooltip"),
+                    getValue: () => (bool)getter(instance),
+                    setValue: value => setter(instance, value),
+                    name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
+                    tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
                     fieldId: FieldId
                 );
             }
-            else if (property.PropertyType == typeof(int))
+            else if (fieldType == typeof(int))
             {
                 SConfig.Api.AddNumberOption(
                     mod: mod.ModManifest,
-                    getValue: () => (int)property.GetValue(instance),
-                    setValue: value => property.SetValue(instance, (int)value),
-                    name: () => mod.Helper.Translation.Get($"config.{property.Name}") ?? property.Name,
-                    tooltip: () => mod.Helper.Translation.Get($"config.{property.Name}.tooltip"),
+                    getValue: () => (int)getter(instance),
+                    setValue: value => setter(instance, (int)value),
+                    name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
+                    tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
                     fieldId: FieldId,
                     min: Min == float.MaxValue ? null : Min,
                     max: Max == float.MinValue ? null : Max,
@@ -117,14 +123,14 @@ public class SConfig : ClassHandler
                     formatValue: null
                 );
             }
-            else if (property.PropertyType == typeof(float))
+            else if (fieldType == typeof(float))
             {
                 SConfig.Api.AddNumberOption(
                     mod: mod.ModManifest,
-                    getValue: () => (float)property.GetValue(instance),
-                    setValue: value => property.SetValue(instance, value),
-                    name: () => mod.Helper.Translation.Get($"config.{property.Name}") ?? property.Name,
-                    tooltip: () => mod.Helper.Translation.Get($"config.{property.Name}.tooltip"),
+                    getValue: () => (float)getter(instance),
+                    setValue: value => setter(instance, value),
+                    name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
+                    tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
                     fieldId: FieldId,
                     min: Min == float.MaxValue ? null : Min,
                     max: Max == float.MinValue ? null : Max,
@@ -132,44 +138,44 @@ public class SConfig : ClassHandler
                     formatValue: null
                 );
             }
-            else if (property.PropertyType == typeof(string))
+            else if (fieldType == typeof(string))
             {
                 SConfig.Api.AddTextOption(
                     mod: mod.ModManifest,
-                    getValue: () => (string)property.GetValue(instance),
-                    setValue: value => property.SetValue(instance, value),
-                    name: () => mod.Helper.Translation.Get($"config.{property.Name}") ?? property.Name,
-                    tooltip: () => mod.Helper.Translation.Get($"config.{property.Name}.tooltip"),
+                    getValue: () => (string)getter(instance),
+                    setValue: value => setter(instance, value),
+                    name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
+                    tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
                     fieldId: FieldId,
                     allowedValues: AllowedValues,
                     formatAllowedValue: null
                 );
             }
-            else if (property.PropertyType == typeof(SButton))
+            else if (fieldType == typeof(SButton))
             {
                 SConfig.Api.AddKeybind(
                     mod: mod.ModManifest,
-                    getValue: () => (SButton)property.GetValue(instance),
-                    setValue: value => property.SetValue(instance, value),
-                    name: () => mod.Helper.Translation.Get($"config.{property.Name}") ?? property.Name,
-                    tooltip: () => mod.Helper.Translation.Get($"config.{property.Name}.tooltip"),
+                    getValue: () => (SButton)getter(instance),
+                    setValue: value => setter(instance, value),
+                    name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
+                    tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
                     fieldId: FieldId
                 );
             }
-            else if (property.PropertyType == typeof(KeybindList))
+            else if (fieldType == typeof(KeybindList))
             {
                 SConfig.Api.AddKeybindList(
                     mod: mod.ModManifest,
-                    getValue: () => (KeybindList)property.GetValue(instance),
-                    setValue: value => property.SetValue(instance, value),
-                    name: () => mod.Helper.Translation.Get($"config.{property.Name}") ?? property.Name,
-                    tooltip: () => mod.Helper.Translation.Get($"config.{property.Name}.tooltip"),
+                    getValue: () => (KeybindList)getter(instance),
+                    setValue: value => setter(instance, value),
+                    name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
+                    tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
                     fieldId: FieldId
                 );
             }
             else
             {
-                throw new Exception($"Config had invalid property type {property.Name}");
+                throw new Exception($"Config had invalid property type {name}");
             }
         }
     }
@@ -178,7 +184,7 @@ public class SConfig : ClassHandler
     /// Adds a section title to the config menu.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class SectionTitle : PropertyHandler
+    public class SectionTitle : FieldHandler
     {
         public string Key;
 
@@ -187,7 +193,7 @@ public class SConfig : ClassHandler
             this.Key = key;
         }
 
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
             SConfig.Api.AddSectionTitle(
                 mod: mod.ModManifest,
@@ -201,7 +207,7 @@ public class SConfig : ClassHandler
     /// Adds a paragraph to the config menu.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class Paragraph : PropertyHandler
+    public class Paragraph : FieldHandler
     {
         public string Key;
 
@@ -210,7 +216,7 @@ public class SConfig : ClassHandler
             this.Key = key;
         }
 
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
             SConfig.Api.AddParagraph(
                 mod: mod.ModManifest,
@@ -223,7 +229,7 @@ public class SConfig : ClassHandler
     /// Starts a page block.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class PageBlock : PropertyHandler
+    public class PageBlock : FieldHandler
     {
         public string PageId;
 
@@ -232,7 +238,7 @@ public class SConfig : ClassHandler
             this.PageId = pageId;
         }
 
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
             SConfig.Api.AddPage(
                 mod: mod.ModManifest,
@@ -246,7 +252,7 @@ public class SConfig : ClassHandler
     /// Adds a link to a config page to the config menu.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class PageLink : PropertyHandler
+    public class PageLink : FieldHandler
     {
         public string PageId;
 
@@ -255,7 +261,7 @@ public class SConfig : ClassHandler
             this.PageId = pageId;
         }
 
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
             SConfig.Api.AddPageLink(
                 mod: mod.ModManifest,
@@ -270,7 +276,7 @@ public class SConfig : ClassHandler
     /// Adds an image to the config menu.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class Image : PropertyHandler
+    public class Image : FieldHandler
     {
         public string Texture;
         public int X;
@@ -292,7 +298,7 @@ public class SConfig : ClassHandler
             this.Height = height;
         }
 
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
             SConfig.Api.AddImage(
                 mod: mod.ModManifest,
@@ -306,9 +312,9 @@ public class SConfig : ClassHandler
     /// Starts or ends a block of title-screen exclusive configs.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class StartTitleOnlyBlock : PropertyHandler
+    public class StartTitleOnlyBlock : FieldHandler
     {
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
             SConfig.Api.SetTitleScreenOnlyForNextOptions(
                 mod: mod.ModManifest,
@@ -321,9 +327,9 @@ public class SConfig : ClassHandler
     /// Starts or ends a block of title-screen exclusive configs.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class EndTitleOnlyBlock : PropertyHandler
+    public class EndTitleOnlyBlock : FieldHandler
     {
-        public override void Handle(PropertyInfo property, object instance, IMod mod = null)
+        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null)
         {
             SConfig.Api.SetTitleScreenOnlyForNextOptions(
                 mod: mod.ModManifest,

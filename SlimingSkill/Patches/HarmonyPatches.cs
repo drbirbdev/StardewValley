@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using BirbShared;
+using BirbCore;
 using HarmonyLib;
 using SpaceCore;
 using StardewValley;

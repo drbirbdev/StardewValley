@@ -1,46 +1,45 @@
 using System.Collections.Generic;
-using BirbShared.Asset;
+using BirbCore.Annotations;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SocializingSkill
+namespace SocializingSkill;
+
+[SAsset]
+internal class Assets
 {
-    [AssetClass]
-    internal class Assets
-    {
-        [AssetProperty("assets/socializingiconA.png")]
-        public Texture2D IconA { get; set; }
-        [AssetProperty("assets/socializingiconB.png")]
-        public Texture2D IconB { get; set; }
+    [SAsset.Asset("assets/socializingiconA.png")]
+    public Texture2D IconA { get; set; }
+    [SAsset.Asset("assets/socializingiconB.png")]
+    public Texture2D IconB { get; set; }
 
 
-        [AssetProperty("assets/friendly.png")]
-        public Texture2D Friendly { get; set; }
-        [AssetProperty("assets/smoothtalker.png")]
-        public Texture2D SmoothTalker { get; set; }
-        [AssetProperty("assets/gifter.png")]
-        public Texture2D Gifter { get; set; }
-        [AssetProperty("assets/helpful.png")]
-        public Texture2D Helpful { get; set; }
-        [AssetProperty("assets/haggler.png")]
-        public Texture2D Haggler { get; set; }
-        [AssetProperty("assets/beloved.png")]
-        public Texture2D Beloved { get; set; }
+    [SAsset.Asset("assets/friendly.png")]
+    public Texture2D Friendly { get; set; }
+    [SAsset.Asset("assets/smoothtalker.png")]
+    public Texture2D SmoothTalker { get; set; }
+    [SAsset.Asset("assets/gifter.png")]
+    public Texture2D Gifter { get; set; }
+    [SAsset.Asset("assets/helpful.png")]
+    public Texture2D Helpful { get; set; }
+    [SAsset.Asset("assets/haggler.png")]
+    public Texture2D Haggler { get; set; }
+    [SAsset.Asset("assets/beloved.png")]
+    public Texture2D Beloved { get; set; }
 
-        [AssetProperty("assets/friendlyP.png")]
-        public Texture2D FriendlyP { get; set; }
-        [AssetProperty("assets/smoothtalkerP.png")]
-        public Texture2D SmoothTalkerP { get; set; }
-        [AssetProperty("assets/gifterP.png")]
-        public Texture2D GifterP { get; set; }
-        [AssetProperty("assets/helpfulP.png")]
-        public Texture2D HelpfulP { get; set; }
-        [AssetProperty("assets/hagglerP.png")]
-        public Texture2D HagglerP { get; set; }
-        [AssetProperty("assets/belovedP.png")]
-        public Texture2D BelovedP { get; set; }
+    [SAsset.Asset("assets/friendlyP.png")]
+    public Texture2D FriendlyP { get; set; }
+    [SAsset.Asset("assets/smoothtalkerP.png")]
+    public Texture2D SmoothTalkerP { get; set; }
+    [SAsset.Asset("assets/gifterP.png")]
+    public Texture2D GifterP { get; set; }
+    [SAsset.Asset("assets/helpfulP.png")]
+    public Texture2D HelpfulP { get; set; }
+    [SAsset.Asset("assets/hagglerP.png")]
+    public Texture2D HagglerP { get; set; }
+    [SAsset.Asset("assets/belovedP.png")]
+    public Texture2D BelovedP { get; set; }
 
 
-        [AssetProperty("assets/belovedtable.json")]
-        public Dictionary<string, List<string>> BelovedTable { get; set; }
-    }
+    [SAsset.Asset("assets/belovedtable.json")]
+    public Dictionary<string, List<string>> BelovedTable { get; set; }
 }

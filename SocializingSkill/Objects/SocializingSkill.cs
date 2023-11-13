@@ -23,12 +23,12 @@ namespace SocializingSkill
                 this.ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 70000 };
 
                 this.AddProfessions(
-                    Friendly = new KeyedProfession(this, "Friendly", ModEntry.Assets.Friendly, ModEntry.Assets.FriendlyP, ModEntry.Instance.Helper),
-                    Helpful = new KeyedProfession(this, "Helpful", ModEntry.Assets.Helpful, ModEntry.Assets.HelpfulP, ModEntry.Instance.Helper),
-                    SmoothTalker = new KeyedProfession(this, "SmoothTalker", ModEntry.Assets.SmoothTalker, ModEntry.Assets.SmoothTalkerP, ModEntry.Instance.Helper),
-                    Gifter = new KeyedProfession(this, "Gifter", ModEntry.Assets.Gifter, ModEntry.Assets.GifterP, ModEntry.Instance.Helper),
-                    Haggler = new KeyedProfession(this, "Haggler", ModEntry.Assets.Haggler, ModEntry.Assets.HelpfulP, ModEntry.Instance.Helper),
-                    Beloved = new KeyedProfession(this, "Beloved", ModEntry.Assets.Beloved, ModEntry.Assets.BelovedP, ModEntry.Instance.Helper)
+                    Friendly = new KeyedProfession(this, "Friendly", ModEntry.Assets.Friendly, ModEntry.Instance.Helper, null, ModEntry.Assets.FriendlyP),
+                    Helpful = new KeyedProfession(this, "Helpful", ModEntry.Assets.Helpful, ModEntry.Instance.Helper, null, ModEntry.Assets.HelpfulP),
+                    SmoothTalker = new KeyedProfession(this, "SmoothTalker", ModEntry.Assets.SmoothTalker, ModEntry.Instance.Helper, null, ModEntry.Assets.SmoothTalkerP),
+                    Gifter = new KeyedProfession(this, "Gifter", ModEntry.Assets.Gifter, ModEntry.Instance.Helper, null, ModEntry.Assets.GifterP),
+                    Haggler = new KeyedProfession(this, "Haggler", ModEntry.Assets.Haggler, ModEntry.Instance.Helper, null, ModEntry.Assets.HelpfulP),
+                    Beloved = new KeyedProfession(this, "Beloved", ModEntry.Assets.Beloved, ModEntry.Instance.Helper, null, ModEntry.Assets.BelovedP)
                 );
             }
             else
@@ -36,12 +36,12 @@ namespace SocializingSkill
                 this.ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000 };
 
                 this.AddProfessions(
-                    Friendly = new KeyedProfession(this, "Friendly", ModEntry.Assets.Friendly, ModEntry.Instance.I18n),
-                    Helpful = new KeyedProfession(this, "Helpful", ModEntry.Assets.Helpful, ModEntry.Instance.I18n),
-                    SmoothTalker = new KeyedProfession(this, "SmoothTalker", ModEntry.Assets.SmoothTalker, ModEntry.Instance.I18n),
-                    Gifter = new KeyedProfession(this, "Gifter", ModEntry.Assets.Gifter, ModEntry.Instance.I18n),
-                    Haggler = new KeyedProfession(this, "Haggler", ModEntry.Assets.Haggler, ModEntry.Instance.I18n),
-                    Beloved = new KeyedProfession(this, "Beloved", ModEntry.Assets.Beloved, ModEntry.Instance.I18n)
+                    Friendly = new KeyedProfession(this, "Friendly", ModEntry.Assets.Friendly, ModEntry.Instance.Helper),
+                    Helpful = new KeyedProfession(this, "Helpful", ModEntry.Assets.Helpful, ModEntry.Instance.Helper),
+                    SmoothTalker = new KeyedProfession(this, "SmoothTalker", ModEntry.Assets.SmoothTalker, ModEntry.Instance.Helper),
+                    Gifter = new KeyedProfession(this, "Gifter", ModEntry.Assets.Gifter, ModEntry.Instance.Helper),
+                    Haggler = new KeyedProfession(this, "Haggler", ModEntry.Assets.Haggler, ModEntry.Instance.Helper),
+                    Beloved = new KeyedProfession(this, "Beloved", ModEntry.Assets.Beloved, ModEntry.Instance.Helper)
                 );
             }
 

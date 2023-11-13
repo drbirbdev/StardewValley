@@ -14,21 +14,25 @@ public class SToken : ClassHandler
     protected static IContentPatcherApi Api;
     public override object Handle(Type type, IMod mod = null)
     {
-        Api = mod.Helper.ModRegistry.GetApi<IContentPatcherApi>("Pathoschild.ContentPatcher");
-        if (Api == null)
+        mod.Helper.Events.GameLoop.GameLaunched += (sender, e) =>
         {
-            Log.Error("Content Patcher is not enabled, so will skip parsing");
-            return null;
-        }
+            Api = mod.Helper.ModRegistry.GetApi<IContentPatcherApi>("Pathoschild.ContentPatcher");
+            if (Api == null)
+            {
+                Log.Error("Content Patcher is not enabled, so will skip parsing");
+                return;
+            }
+            base.Handle(type, mod);
+        };
 
-        return base.Handle(type, mod);
+        return null;
     }
 
     public class Token : MethodHandler
     {
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
-            Api.RegisterToken(mod.ModManifest, method.Name, (Func<IEnumerable<string>>)Delegate.CreateDelegate(typeof(Func<IEnumerable<string>>), method));
+            Api.RegisterToken(mod.ModManifest, method.Name, method.CreateDelegate<Func<IEnumerable<string>>>(instance));
         }
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 using StardewModdingAPI;
+using BirbCore.Extensions;
 
 namespace BirbCore.Annotations;
 public class Parser
@@ -17,9 +18,11 @@ public class Parser
     {
         assembly ??= Assembly.GetCallingAssembly();
 
+        Log.Init(mod.Monitor);
+
         foreach (Type type in assembly.GetTypes())
         {
-            foreach (Attribute attribute in type.GetCustomAttributes(true))
+            foreach (Attribute attribute in type.GetCustomAttributes())
             {
                 if (attribute is ClassHandler handler)
                 {
@@ -28,18 +31,29 @@ public class Parser
             }
         }
 
-        foreach (PropertyInfo property in mod.GetType().GetProperties())
+        foreach (FieldInfo field in mod.GetType().GetFields(ReflectionExtensions.AllDeclared))
+        {
+            foreach (Attribute attribute in field.GetCustomAttributes())
+            {
+                if (attribute is FieldHandler handler)
+                {
+                    handler.Handle(field, mod, mod);
+                }
+            }
+        }
+
+        foreach (PropertyInfo property in mod.GetType().GetProperties(ReflectionExtensions.AllDeclared))
         {
             foreach (Attribute attribute in property.GetCustomAttributes())
             {
-                if (attribute is PropertyHandler handler)
+                if (attribute is FieldHandler handler)
                 {
                     handler.Handle(property, mod, mod);
                 }
             }
         }
 
-        foreach (MethodInfo method in mod.GetType().GetMethods())
+        foreach (MethodInfo method in mod.GetType().GetMethods(ReflectionExtensions.AllDeclared))
         {
             foreach (Attribute attribute in method.GetCustomAttributes())
             {
@@ -61,17 +75,27 @@ public abstract class ClassHandler : Attribute
     {
         object instance = Activator.CreateInstance(type);
 
-        foreach (PropertyInfo property in type.GetProperties())
+        foreach (FieldInfo fieldInfo in type.GetFields(ReflectionExtensions.AllDeclared))
         {
-            foreach (Attribute attribute in property.GetCustomAttributes())
+            foreach (Attribute attribute in fieldInfo.GetCustomAttributes())
             {
-                if (attribute is PropertyHandler handler)
+                if (attribute is FieldHandler handler)
                 {
-                    handler.Handle(property, instance, mod);
+                    handler.Handle(fieldInfo, instance, mod);
                 }
             }
         }
-        foreach (MethodInfo method in type.GetMethods())
+        foreach (PropertyInfo propertyInfo in type.GetProperties(ReflectionExtensions.AllDeclared))
+        {
+            foreach (Attribute attribute in propertyInfo.GetCustomAttributes())
+            {
+                if (attribute is FieldHandler handler)
+                {
+                    handler.Handle(propertyInfo, instance, mod);
+                }
+            }
+        }
+        foreach (MethodInfo method in type.GetMethods(ReflectionExtensions.AllDeclared))
         {
             foreach (Attribute attribute in method.GetCustomAttributes())
             {
@@ -92,8 +116,18 @@ public abstract class MethodHandler : Attribute
     public abstract void Handle(MethodInfo method, object instance, IMod mod = null);
 }
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-public abstract class PropertyHandler : Attribute
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+public abstract class FieldHandler : Attribute
 {
-    public abstract void Handle(PropertyInfo property, object instance, IMod mod = null);
+    public void Handle(FieldInfo fieldInfo, object instance, IMod mod = null, object[] args = null)
+    {
+        Handle(fieldInfo.Name, fieldInfo.FieldType, fieldInfo.GetValue, fieldInfo.SetValue, instance, mod, args);
+    }
+
+    public void Handle(PropertyInfo propertyInfo, object instance, IMod mod = null, object[] args = null)
+    {
+        Handle(propertyInfo.Name, propertyInfo.PropertyType, propertyInfo.GetValue, propertyInfo.SetValue, instance, mod, args);
+    }
+
+    public abstract void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object instance, IMod mod = null, object[] args = null);
 }

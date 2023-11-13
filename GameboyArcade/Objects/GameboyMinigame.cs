@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using BirbShared;
 using CoreBoy;
 using CoreBoy.gui;
 using CoreBoy.memory.cart.battery;

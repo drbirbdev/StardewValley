@@ -6,18 +6,8 @@ namespace GameboyArcade
     {
         public string FindGame(string idOrName)
         {
-            if (ModEntry.LoadedContentPacks.ContainsKey(idOrName))
-            {
-                return idOrName;
-            }
-            foreach (string id in ModEntry.LoadedContentPacks.Keys)
-            {
-                if (idOrName == ModEntry.LoadedContentPacks[id].Name)
-                {
-                    return id;
-                }
-            }
-            return null;
+            Content content = ModEntry.SearchGames(idOrName);
+            return content?.UniqueID;
         }
 
         public string GameLoaded()
@@ -26,7 +16,7 @@ namespace GameboyArcade
             {
                 return null;
             }
-            return minigame.Content.UniqueID;
+            return minigame.Content.Name;
         }
 
         public byte? GetMemoryByte(ushort address)
@@ -40,12 +30,8 @@ namespace GameboyArcade
 
         public bool LoadGame(string idOrName)
         {
-            string id = this.FindGame(idOrName);
-            if (id is null)
-            {
-                return false;
-            }
-            return GameboyMinigame.LoadGame(ModEntry.LoadedContentPacks[id]);
+            Content content = ModEntry.SearchGames(idOrName);
+            return GameboyMinigame.LoadGame(content);
         }
 
         public void SetMemoryByte(ushort address, byte value)

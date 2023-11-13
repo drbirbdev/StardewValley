@@ -32,4 +32,12 @@ public class SMod : ClassHandler
             };
         }
     }
+
+    public class Instance : FieldHandler
+    {
+        public override void Handle(string name, Type fieldType, Func<object, object> getter, Action<object, object> setter, object instance, IMod mod = null, object[] args = null)
+        {
+            setter(instance, mod);
+        }
+    }
 }

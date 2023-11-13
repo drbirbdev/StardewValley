@@ -10,14 +10,14 @@ namespace SocializingSkill;
 internal class Events
 {
     [SEvent.ApisLoaded]
-    private void ModClassParser_ApisLoaded(object sender, StardewModdingAPI.Events.OneSecondUpdateTickedEventArgs e)
+    private void ApisLoaded(object sender, StardewModdingAPI.Events.OneSecondUpdateTickedEventArgs e)
     {
         Skills.RegisterSkill(new SocializingSkill());
         SpaceCore.Events.SpaceEvents.AfterGiftGiven += this.SpaceEvents_AfterGiftGiven;
     }
 
     [SEvent.SaveLoaded]
-    private void GameLoop_SaveLoaded(object sender, StardewModdingAPI.Events.SaveLoadedEventArgs e)
+    private void SaveLoaded(object sender, StardewModdingAPI.Events.SaveLoadedEventArgs e)
     {
         if (ModEntry.MargoLoaded)
         {
@@ -29,7 +29,7 @@ internal class Events
     // Beloved Profession
     //  - reset which villagers have been checked for bonus gifts today for each player.
     [SEvent.DayStarted]
-    private void GameLoop_DayStarted(object sender, StardewModdingAPI.Events.DayStartedEventArgs e)
+    private void DayStarted(object sender, StardewModdingAPI.Events.DayStartedEventArgs e)
     {
         ModEntry.BelovedCheckedToday.Value = new List<string>();
     }

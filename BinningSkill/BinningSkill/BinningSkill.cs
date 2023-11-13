@@ -33,13 +33,21 @@ internal class BinningSkill : SpaceCore.Skills.Skill
         else
         {
             this.ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000 };
+
+            Recycler = new KeyedProfession(this, "Recycler", ModEntry.Assets.Recycler, ModEntry.Instance.Helper);
+            Sneak = new KeyedProfession(this, "Sneak", ModEntry.Assets.Sneak, ModEntry.Instance.Helper);
+            Environmentalist = new KeyedProfession(this, "Environmentalist", ModEntry.Assets.Environmentalist, ModEntry.Instance.Helper);
+            Salvager = new KeyedProfession(this, "Salvager", ModEntry.Assets.Salvager, ModEntry.Instance.Helper);
+            Upseller = new KeyedProfession(this, "Upseller", ModEntry.Assets.Upseller, ModEntry.Instance.Helper);
+            Reclaimer = new KeyedProfession(this, "Reclaimer", ModEntry.Assets.Reclaimer, ModEntry.Instance.Helper, ModEntry.Config);
+
             this.AddProfessions(
-                Recycler = new KeyedProfession(this, "Recycler", ModEntry.Assets.Recycler, ModEntry.Instance.Helper),
-                Sneak = new KeyedProfession(this, "Sneak", ModEntry.Assets.Sneak, ModEntry.Instance.Helper),
-                Environmentalist = new KeyedProfession(this, "Environmentalist", ModEntry.Assets.Environmentalist, ModEntry.Instance.Helper),
-                Salvager = new KeyedProfession(this, "Salvager", ModEntry.Assets.Salvager, ModEntry.Instance.Helper),
-                Upseller = new KeyedProfession(this, "Upseller", ModEntry.Assets.Upseller, ModEntry.Instance.Helper),
-                Reclaimer = new KeyedProfession(this, "Reclaimer", ModEntry.Assets.Reclaimer, ModEntry.Instance.Helper, ModEntry.Config)
+                Recycler,
+                Sneak,
+                Environmentalist,
+                Salvager,
+                Upseller,
+                Reclaimer
             );
         }
     }

@@ -408,10 +408,12 @@ public class SEvent : ClassHandler
     {
         private MethodInfo Method;
         private IMod Mod;
+        private object Instance;
         public override void Handle(MethodInfo method, object instance, IMod mod = null)
         {
             this.Method = method;
             this.Mod = mod;
+            this.Instance = instance;
 
             mod.Helper.Events.GameLoop.GameLaunched += (object sender, GameLaunchedEventArgs e) =>
             {
@@ -422,7 +424,7 @@ public class SEvent : ClassHandler
         private void OneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
         {
             this.Mod.Helper.Events.GameLoop.OneSecondUpdateTicked -= OneSecondUpdateTicked;
-            this.Method.Invoke(this.Mod, new object[] { e });
+            this.Method.Invoke(this.Instance, new object[] { sender, e });
         }
     }
 

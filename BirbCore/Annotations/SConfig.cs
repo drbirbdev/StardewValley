@@ -105,7 +105,7 @@ public class SConfig : ClassHandler
                     setValue: value => setter(instance, value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
-                    fieldId: FieldId
+                    fieldId: this.FieldId
                 );
             }
             else if (fieldType == typeof(int))
@@ -116,10 +116,10 @@ public class SConfig : ClassHandler
                     setValue: value => setter(instance, (int)value),
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
-                    fieldId: FieldId,
-                    min: Min == float.MaxValue ? null : Min,
-                    max: Max == float.MinValue ? null : Max,
-                    interval: Interval == float.MinValue ? null : Interval,
+                    fieldId: this.FieldId,
+                    min: this.Min == float.MaxValue ? null : this.Min,
+                    max: this.Max == float.MinValue ? null : this.Max,
+                    interval: this.Interval == float.MinValue ? null : this.Interval,
                     formatValue: null
                 );
             }
@@ -132,9 +132,9 @@ public class SConfig : ClassHandler
                     name: () => mod.Helper.Translation.Get($"config.{name}") ?? name,
                     tooltip: () => mod.Helper.Translation.Get($"config.{name}.tooltip"),
                     fieldId: FieldId,
-                    min: Min == float.MaxValue ? null : Min,
-                    max: Max == float.MinValue ? null : Max,
-                    interval: Interval == float.MinValue ? null : Interval,
+                    min: this.Min == float.MaxValue ? null : this.Min,
+                    max: this.Max == float.MinValue ? null : Max,
+                    interval: this.Interval == float.MinValue ? null : this.Interval,
                     formatValue: null
                 );
             }

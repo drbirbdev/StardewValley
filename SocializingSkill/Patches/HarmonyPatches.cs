@@ -61,7 +61,7 @@ class Dialogue_ChooseResponse
 
 // Smooth Talker Profession
 //  - adjust friendship change during dialogue
-[HarmonyPatch(typeof(NPCDialogueResponse), MethodType.Constructor, new Type[] {typeof(int), typeof(int), typeof(string), typeof(string)})]
+[HarmonyPatch(typeof(NPCDialogueResponse), MethodType.Constructor, new Type[] {typeof(string), typeof(int), typeof(string), typeof(string)})]
 class NPCDialogueResponse_Constructor
 {
 

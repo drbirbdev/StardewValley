@@ -18,7 +18,7 @@ internal class Events
     [SEvent.DayEnding]
     private void GameLoop_DayEnding(object sender, StardewModdingAPI.Events.DayEndingEventArgs e)
     {
-        ModEntry.Instance.Helper.Events.GameLoop.TimeChanged -= GameLoop_TimeChanged;
+        ModEntry.Instance.Helper.Events.GameLoop.TimeChanged -= this.GameLoop_TimeChanged;
     }
 
     [SEvent.DayStarted]
@@ -33,9 +33,9 @@ internal class Events
         {
             Dictionary<string, string> festivalData = Game1.temporaryContent.Load<Dictionary<string, string>>("Data\\Festivals\\" + Game1.currentSeason + Game1.dayOfMonth);
 
-            FestivalName = festivalData["name"];
+            this.FestivalName = festivalData["name"];
             string startAndEnd = festivalData["conditions"].Split('/')[1];
-            StartTime = Convert.ToInt32(ArgUtility.SplitBySpaceAndGet(startAndEnd, 0, "-1"));
+            this.StartTime = Convert.ToInt32(ArgUtility.SplitBySpaceAndGet(startAndEnd, 0, "-1"));
             EndTime = Convert.ToInt32(ArgUtility.SplitBySpaceAndGet(startAndEnd, 1, "-1"));
 
             if (StartTime < 600 || StartTime >= 2600 || EndTime < 600 || EndTime > 2600)
@@ -70,7 +70,7 @@ internal class Events
                 Game1.playSound(ModEntry.Config.StartSound);
             }
         }
-        else if (e.NewTime == EndTime - (100 * ModEntry.Config.WarnHoursAheadOfTime))
+        else if (e.NewTime == this.EndTime - (100 * ModEntry.Config.WarnHoursAheadOfTime))
         {
             if (ModEntry.Config.PlayWarnSound)
             {
@@ -78,10 +78,10 @@ internal class Events
             }
             if (ModEntry.Config.ShowWarnNotification)
             {
-                Game1.showGlobalMessage(ModEntry.Instance.I18n.Get("festivalWarn", new { festival = FestivalName }));
+                Game1.showGlobalMessage(ModEntry.Instance.I18n.Get("festivalWarn", new { festival = this.FestivalName }));
             }
         }
-        else if (e.NewTime == EndTime)
+        else if (e.NewTime == this.EndTime)
         {
             if (ModEntry.Config.PlayOverSound)
             {
@@ -89,7 +89,7 @@ internal class Events
             }
             if (ModEntry.Config.ShowOverNotification)
             {
-                Game1.showGlobalMessage(ModEntry.Instance.I18n.Get("festivalOver", new { festival = FestivalName }));
+                Game1.showGlobalMessage(ModEntry.Instance.I18n.Get("festivalOver", new { festival = this.FestivalName }));
             }
         }
     }

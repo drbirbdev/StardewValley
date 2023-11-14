@@ -3,6 +3,7 @@ using StardewModdingAPI;
 
 namespace RealtimeFramework;
 
+[SMod]
 public class ModEntry : Mod
 {
     [SMod.Instance]

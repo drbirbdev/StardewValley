@@ -3,6 +3,7 @@ using StardewModdingAPI;
 
 namespace WinterStarSpouse;
 
+[SMod]
 public class ModEntry : Mod
 {
     [SMod.Instance]

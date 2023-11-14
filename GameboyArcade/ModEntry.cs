@@ -5,6 +5,7 @@ using StardewModdingAPI;
 
 namespace GameboyArcade;
 
+[SMod]
 public class ModEntry : Mod
 {
     internal static ModEntry Instance;

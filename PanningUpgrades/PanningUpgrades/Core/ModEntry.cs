@@ -3,8 +3,10 @@ using StardewModdingAPI;
 
 namespace PanningUpgrades;
 
+[SMod]
 internal class ModEntry : Mod
 {
+    [SMod.Instance]
     public static ModEntry Instance;
     public static Config Config;
     public static Command Command;

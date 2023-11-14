@@ -4,11 +4,12 @@ using StardewModdingAPI;
 
 namespace SlimingSkill;
 
+[SMod]
 public class ModEntry : Mod
 {
+    [SMod.Instance]
     internal static ModEntry Instance;
     internal static Config Config;
-    internal static Command Command;
     internal static Assets Assets;
     [SMod.Api("DaLion.Overhaul", false)]
     internal static IMargo MargoAPI;

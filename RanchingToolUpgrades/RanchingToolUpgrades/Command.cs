@@ -6,7 +6,7 @@ namespace RanchingToolUpgrades;
 [SCommand("ranch_tool")]
 public class Command
 {
-    [SCommand.Command("give_pail", "Add a pail to the player inventory")]
+    [SCommand.Command("Add a pail to the player inventory")]
     public static void GivePail(int level = 0)
     {
         Game1.player.addItemToInventory(level switch
@@ -19,7 +19,7 @@ public class Command
         });
     }
 
-    [SCommand.Command("give_shears", "Add shears to the player inventory")]
+    [SCommand.Command("Add shears to the player inventory")]
     public static void GiveShears(int level = 0)
     {
         Game1.player.addItemToInventory(level switch
@@ -32,7 +32,7 @@ public class Command
         });
     }
 
-    [SCommand.Command("remove_pail", "Remove a pail from the player inventory")]
+    [SCommand.Command("Remove a pail from the player inventory")]
     public static void RemovePail()
     {
         Item pail = Game1.player.getToolFromName("Pail");
@@ -42,7 +42,7 @@ public class Command
         }
     }
 
-    [SCommand.Command("remove_shears", "Remove shears from the player inventory")]
+    [SCommand.Command("Remove shears from the player inventory")]
     public static void RemoveShears()
     {
         Item shears = Game1.player.getToolFromName("Shears");

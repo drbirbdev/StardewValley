@@ -12,7 +12,7 @@ namespace BirbCore.Annotations;
 
 public class SDelegate : ClassHandler
 {
-    public SDelegate() : base(0)
+    public SDelegate() : base(2)
     {
 
     }

@@ -8,9 +8,10 @@ using StardewModdingAPI;
 
 namespace MagicSkillPageIcon;
 
-
+[SMod]
 class ModEntry : Mod
 {
+    [SMod.Instance]
     internal static ModEntry Instance;
     internal static Assets Assets;
 

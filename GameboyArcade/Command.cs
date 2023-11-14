@@ -6,7 +6,7 @@ namespace GameboyArcade;
 [SCommand("gameboy")]
 class Command
 {
-    [SCommand.Command("play", "Play a loaded rom")]
+    [SCommand.Command("Play a loaded rom")]
     public static void Play(string game)
     {
         Content gameToPlay = ModEntry.SearchGames(game);
@@ -19,7 +19,7 @@ class Command
         GameboyMinigame.LoadGame(gameToPlay);
     }
 
-    [SCommand.Command("list", "List all loaded roms")]
+    [SCommand.Command("List all loaded roms")]
     public static void List()
     {
         foreach (Content content in ModEntry.AllGames())

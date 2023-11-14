@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\common.targets" />
-    <Import Project="..\common-contentpatcher.targets"/>
-    <Import Project="..\common-spacecore.targets"/>
+    <Import Project="..\common-contentpatcher.targets" />
+    <Import Project="..\common-spacecore.targets" />
 
     <PropertyGroup>
         <Description>Adds a skill related to raising and fighting slimes.</Description>

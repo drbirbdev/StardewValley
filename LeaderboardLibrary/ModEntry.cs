@@ -10,6 +10,7 @@ using StardewValley;
 
 namespace LeaderboardLibrary;
 
+[SMod]
 public class ModEntry : Mod
 {
     private static readonly string IDENTITY_POOL = "us-west-2:2e234341-a166-4d68-94f8-f2e1ffb14e73";

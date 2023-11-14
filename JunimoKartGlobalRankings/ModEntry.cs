@@ -4,6 +4,7 @@ using StardewModdingAPI;
 
 namespace JunimoKartGlobalRankings;
 
+[SMod]
 public class ModEntry : Mod
 {
     [SMod.Instance]

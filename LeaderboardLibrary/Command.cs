@@ -26,7 +26,7 @@ class Command
         }
     }
 
-    [SCommand.Command("get_local_rank", "Get local rank for the player")]
+    [SCommand.Command("Get local rank for the player")]
     public static void GetLocalRank(string modId, string stat)
     {
         LazyInitAPI(modId);
@@ -34,7 +34,7 @@ class Command
         Log.Info($"Local Rank is {localRank}");
     }
 
-    [SCommand.Command("get_local_top", "Get local top score records")]
+    [SCommand.Command("Get local top score records")]
     public static void GetLocalTopN(string modId, string stat, int count = 10)
     {
         LazyInitAPI(modId);
@@ -42,7 +42,7 @@ class Command
         PrintRecords(localTop.ToArray());
     }
 
-    [SCommand.Command("get_pb", "Get personal best record")]
+    [SCommand.Command("Get personal best record")]
     public static void GetPersonalBest(string modId, string stat)
     {
         LazyInitAPI(modId);
@@ -50,7 +50,7 @@ class Command
         PrintRecords(personalBest);
     }
 
-    [SCommand.Command("get_rank", "Get global rank for the player")]
+    [SCommand.Command("Get global rank for the player")]
     public static void GetRank(string modId, string stat)
     {
         LazyInitAPI(modId);
@@ -58,7 +58,7 @@ class Command
         Log.Info($"Global Rank is {globalRank}");
     }
 
-    [SCommand.Command("get_top", "Get global top score records")]
+    [SCommand.Command("Get global top score records")]
     public static void GetTopN(string modId, string stat, int count = 10)
     {
         LazyInitAPI(modId);
@@ -66,14 +66,14 @@ class Command
         PrintRecords(globalTop.ToArray());
     }
 
-    [SCommand.Command("refresh", "Refresh leaderboard cache")]
+    [SCommand.Command("Refresh leaderboard cache")]
     public static void RefreshCache(string modId, string stat)
     {
         LazyInitAPI(modId);
         Apis[modId].RefreshCache(stat);
     }
 
-    [SCommand.Command("delete_cache", "Delete leaderboard cache")]
+    [SCommand.Command("Delete leaderboard cache")]
     public static void DeleteCache()
     {
         foreach (string key in ModEntry.LocalModData.LocalLeaderboards.Keys)
@@ -86,7 +86,7 @@ class Command
         }
     }
 
-    [SCommand.Command("upload_score", "Upload new score to leaderboard")]
+    [SCommand.Command("Upload new score to leaderboard")]
     public static void UploadScore(string modId, string stat, int score)
     {
 #if DEBUG
@@ -97,13 +97,13 @@ class Command
 #endif
     }
 
-    [SCommand.Command("print_user", "Print leaderboard tracking data for the current user")]
+    [SCommand.Command("Print leaderboard tracking data for the current user")]
     public static void PrintUserInfo()
     {
         Log.Info($"User UUID = {ModEntry.GlobalModData.GetValueForScreen(0).UserUUID} and Secret starts with {ModEntry.GlobalModData.GetValueForScreen(0).Secret[..3]}");
     }
 
-    [SCommand.Command("dump_cache", "Dumps the contents of the local cache")]
+    [SCommand.Command("Dumps the contents of the local cache")]
     public static void DumpCache()
     {
         if (!Context.IsWorldReady)

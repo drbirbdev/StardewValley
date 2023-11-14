@@ -5,75 +5,75 @@ namespace CoreBoy.timer
 {
     public class Timer : IAddressSpace
     {
-        private readonly SpeedMode _speedMode;
-        private readonly InterruptManager _interruptManager;
+        private readonly SpeedMode SpeedMode;
+        private readonly InterruptManager InterruptManager;
         private static readonly int[] FreqToBit = { 9, 3, 5, 7 };
 
-        private int _div;
-        private int _tac;
-        private int _tma;
-        private int _tima;
-        private bool _previousBit;
-        private bool _overflow;
-        private int _ticksSinceOverflow;
+        private int Div;
+        private int Tac;
+        private int Tma;
+        private int Tima;
+        private bool PreviousBit;
+        private bool Overflow;
+        private int TicksSinceOverflow;
 
         public Timer(InterruptManager interruptManager, SpeedMode speedMode)
         {
-            this._speedMode = speedMode;
-            this._interruptManager = interruptManager;
+            this.SpeedMode = speedMode;
+            this.InterruptManager = interruptManager;
         }
 
         public void Tick()
         {
-            this.UpdateDiv((this._div + 1) & 0xffff);
-            if (!this._overflow)
+            this.UpdateDiv((this.Div + 1) & 0xffff);
+            if (!this.Overflow)
             {
                 return;
             }
 
-            this._ticksSinceOverflow++;
-            if (this._ticksSinceOverflow == 4)
+            this.TicksSinceOverflow++;
+            if (this.TicksSinceOverflow == 4)
             {
-                this._interruptManager.RequestInterrupt(InterruptManager.InterruptType.Timer);
+                this.InterruptManager.RequestInterrupt(InterruptManager.InterruptType.Timer);
             }
 
-            if (this._ticksSinceOverflow == 5)
+            if (this.TicksSinceOverflow == 5)
             {
-                this._tima = this._tma;
+                this.Tima = this.Tma;
             }
 
-            if (this._ticksSinceOverflow == 6)
+            if (this.TicksSinceOverflow == 6)
             {
-                this._tima = this._tma;
-                this._overflow = false;
-                this._ticksSinceOverflow = 0;
+                this.Tima = this.Tma;
+                this.Overflow = false;
+                this.TicksSinceOverflow = 0;
             }
         }
 
         private void IncTima()
         {
-            this._tima++;
-            this._tima %= 0x100;
-            if (this._tima == 0)
+            this.Tima++;
+            this.Tima %= 0x100;
+            if (this.Tima == 0)
             {
-                this._overflow = true;
-                this._ticksSinceOverflow = 0;
+                this.Overflow = true;
+                this.TicksSinceOverflow = 0;
             }
         }
 
         private void UpdateDiv(int newDiv)
         {
-            this._div = newDiv;
-            int bitPos = FreqToBit[this._tac & 0b11];
-            bitPos <<= this._speedMode.GetSpeedMode() - 1;
-            bool bit = (this._div & (1 << bitPos)) != 0;
-            bit &= (this._tac & (1 << 2)) != 0;
-            if (!bit && this._previousBit)
+            this.Div = newDiv;
+            int bitPos = FreqToBit[this.Tac & 0b11];
+            bitPos <<= this.SpeedMode.GetSpeedMode() - 1;
+            bool bit = (this.Div & (1 << bitPos)) != 0;
+            bit &= (this.Tac & (1 << 2)) != 0;
+            if (!bit && this.PreviousBit)
             {
                 this.IncTima();
             }
 
-            this._previousBit = bit;
+            this.PreviousBit = bit;
         }
 
         public bool Accepts(int address) => address >= 0xff04 && address <= 0xff07;
@@ -87,21 +87,21 @@ namespace CoreBoy.timer
                     break;
 
                 case 0xff05:
-                    if (this._ticksSinceOverflow < 5)
+                    if (this.TicksSinceOverflow < 5)
                     {
-                        this._tima = value;
-                        this._overflow = false;
-                        this._ticksSinceOverflow = 0;
+                        this.Tima = value;
+                        this.Overflow = false;
+                        this.TicksSinceOverflow = 0;
                     }
 
                     break;
 
                 case 0xff06:
-                    this._tma = value;
+                    this.Tma = value;
                     break;
 
                 case 0xff07:
-                    this._tac = value;
+                    this.Tac = value;
                     break;
             }
         }
@@ -110,11 +110,11 @@ namespace CoreBoy.timer
         {
             return address switch
             {
-                0xff04 => this._div >> 8,
-                0xff05 => this._tima,
-                0xff06 => this._tma,
-                0xff07 => this._tac | 0b11111000,
-                _ => throw new ArgumentException()
+                0xff04 => this.Div >> 8,
+                0xff05 => this.Tima,
+                0xff06 => this.Tma,
+                0xff07 => this.Tac | 0b11111000,
+                _ => throw new ArgumentException("Invalid byte", nameof(GetByte))
             };
         }
     }

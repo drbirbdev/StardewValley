@@ -9,7 +9,7 @@ namespace PanningUpgrades;
 [SCommand("pan_upgrades")]
 public class Command
 {
-    [SCommand.Command("give_pan", "Add a pan to the player inventory")]
+    [SCommand.Command("Add a pan to the player inventory")]
     public static void GivePan(int level = 0)
     {
         Game1.player.addItemToInventory(level switch
@@ -22,7 +22,7 @@ public class Command
         });
     }
 
-    [SCommand.Command("remove_pan", "Remove a pan from the player inventory")]
+    [SCommand.Command("Remove a pan from the player inventory")]
     public static void RemovePan()
     {
         Item pan = Game1.player.getToolFromName("Pan");
@@ -37,7 +37,7 @@ public class Command
         }
     }
 
-    [SCommand.Command("spawn_pan_spot", "Spawn panning spot on the current map if possible")]
+    [SCommand.Command("Spawn panning spot on the current map if possible")]
     public static void SpawnPanSpot()
     {
         Game1.MasterPlayer.mailReceived.Add("ccFishTank");

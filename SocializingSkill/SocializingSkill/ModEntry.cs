@@ -6,6 +6,7 @@ using StardewModdingAPI.Utilities;
 
 namespace SocializingSkill;
 
+[SMod]
 public class ModEntry : Mod
 {
     [SMod.Instance]

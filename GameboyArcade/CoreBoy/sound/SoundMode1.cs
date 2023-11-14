@@ -5,43 +5,43 @@ namespace CoreBoy.sound
 
     public class SoundMode1 : SoundModeBase
     {
-        private int _freqDivider;
-        private int _lastOutput;
-        private int _i;
-        private readonly FrequencySweep _frequencySweep;
-        private readonly VolumeEnvelope _volumeEnvelope;
+        private int FreqDivider;
+        private int LastOutput;
+        private int I;
+        private readonly FrequencySweep FrequencySweep;
+        private readonly VolumeEnvelope VolumeEnvelope;
 
         public SoundMode1(bool gbc) : base(0xff10, 64, gbc)
         {
-            this._frequencySweep = new FrequencySweep();
-            this._volumeEnvelope = new VolumeEnvelope();
+            this.FrequencySweep = new FrequencySweep();
+            this.VolumeEnvelope = new VolumeEnvelope();
         }
 
         public override void Start()
         {
-            this._i = 0;
+            this.I = 0;
             if (this.Gbc)
             {
                 this.Length.Reset();
             }
 
             this.Length.Start();
-            this._frequencySweep.Start();
-            this._volumeEnvelope.Start();
+            this.FrequencySweep.Start();
+            this.VolumeEnvelope.Start();
         }
 
         protected override void Trigger()
         {
-            this._i = 0;
-            this._freqDivider = 1;
-            this._volumeEnvelope.Trigger();
+            this.I = 0;
+            this.FreqDivider = 1;
+            this.VolumeEnvelope.Trigger();
         }
 
         public override int Tick()
         {
-            this._volumeEnvelope.Tick();
+            this.VolumeEnvelope.Tick();
 
-            var e = this.UpdateLength();
+            bool e = this.UpdateLength();
             e = this.UpdateSweep() && e;
             e = this.DacEnabled && e;
             if (!e)
@@ -49,20 +49,20 @@ namespace CoreBoy.sound
                 return 0;
             }
 
-            if (--this._freqDivider == 0)
+            if (--this.FreqDivider == 0)
             {
                 this.ResetFreqDivider();
-                this._lastOutput = (this.GetDuty() & (1 << this._i)) >> this._i;
-                this._i = (this._i + 1) % 8;
+                this.LastOutput = (this.GetDuty() & (1 << this.I)) >> this.I;
+                this.I = (this.I + 1) % 8;
             }
 
-            return this._lastOutput * this._volumeEnvelope.GetVolume();
+            return this.LastOutput * this.VolumeEnvelope.GetVolume();
         }
 
         protected override void SetNr0(int value)
         {
             base.SetNr0(value);
-            this._frequencySweep.SetNr10(value);
+            this.FrequencySweep.SetNr10(value);
         }
 
         protected override void SetNr1(int value)
@@ -74,7 +74,7 @@ namespace CoreBoy.sound
         protected override void SetNr2(int value)
         {
             base.SetNr2(value);
-            this._volumeEnvelope.SetNr2(value);
+            this.VolumeEnvelope.SetNr2(value);
             this.DacEnabled = (value & 0b11111000) != 0;
             this.ChannelEnabled &= this.DacEnabled;
         }
@@ -82,51 +82,46 @@ namespace CoreBoy.sound
         protected override void SetNr3(int value)
         {
             base.SetNr3(value);
-            this._frequencySweep.SetNr13(value);
+            this.FrequencySweep.SetNr13(value);
         }
 
         protected override void SetNr4(int value)
         {
             base.SetNr4(value);
-            this._frequencySweep.SetNr14(value);
+            this.FrequencySweep.SetNr14(value);
         }
 
         protected override int GetNr3()
         {
-            return this._frequencySweep.GetNr13();
+            return this.FrequencySweep.GetNr13();
         }
 
         protected override int GetNr4()
         {
-            return (base.GetNr4() & 0b11111000) | (this._frequencySweep.GetNr14() & 0b00000111);
+            return (base.GetNr4() & 0b11111000) | (this.FrequencySweep.GetNr14() & 0b00000111);
         }
 
         private int GetDuty()
         {
-            switch (this.GetNr1() >> 6)
+            return (this.GetNr1() >> 6) switch
             {
-                case 0:
-                    return 0b00000001;
-                case 1:
-                    return 0b10000001;
-                case 2:
-                    return 0b10000111;
-                case 3:
-                    return 0b01111110;
-                default:
-                    throw new InvalidOperationException("Illegal state exception");
-            }
+                0 => 0b00000001,
+                1 => 0b10000001,
+                2 => 0b10000111,
+                3 => 0b01111110,
+                _ => throw new InvalidOperationException("Illegal state exception"),
+            };
         }
 
         private void ResetFreqDivider()
         {
-            this._freqDivider = this.GetFrequency() * 4;
+            this.FreqDivider = this.GetFrequency() * 4;
         }
 
         protected bool UpdateSweep()
         {
-            this._frequencySweep.Tick();
-            if (this.ChannelEnabled && !this._frequencySweep.IsEnabled())
+            this.FrequencySweep.Tick();
+            if (this.ChannelEnabled && !this.FrequencySweep.IsEnabled())
             {
                 this.ChannelEnabled = false;
             }

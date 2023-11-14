@@ -13,6 +13,7 @@ namespace LookToTheSky
     // Loot tables in JSON
     // Slingshot charge sound/cooldown???
     // Content pack functionality
+    [SMod]
     public class ModEntry : Mod
     {
         [SMod.Instance]

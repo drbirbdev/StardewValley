@@ -14,7 +14,7 @@ public class SToken : ClassHandler
 {
     private static IContentPatcherApi? Api;
 
-    public SToken() : base(1)
+    public SToken() : base(2)
     {
 
     }

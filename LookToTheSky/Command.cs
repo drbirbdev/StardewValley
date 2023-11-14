@@ -6,7 +6,7 @@ namespace LookToTheSky;
 class Command
 {
 
-    [SCommand.Command("add_bird", "Add a bird to the sky")]
+    [SCommand.Command("Add a bird to the sky")]
     public static void AddBird(int yPos = 100, bool moveRight = true)
     {
         ModEntry.Instance.SkyObjects.Add(new Bird(yPos, moveRight));

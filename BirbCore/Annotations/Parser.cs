@@ -112,7 +112,7 @@ public abstract class ClassHandler : Attribute
             {
                 if (attribute is FieldHandler handler)
                 {
-                    handler.Handle(fieldInfo, instance, mod);
+                    handler.Handle(fieldInfo, instance, mod, args);
                 }
             }
         }
@@ -122,7 +122,7 @@ public abstract class ClassHandler : Attribute
             {
                 if (attribute is FieldHandler handler)
                 {
-                    handler.Handle(propertyInfo, instance, mod);
+                    handler.Handle(propertyInfo, instance, mod, args);
                 }
             }
         }
@@ -132,7 +132,7 @@ public abstract class ClassHandler : Attribute
             {
                 if (attribute is MethodHandler handler)
                 {
-                    handler.Handle(method, instance, mod);
+                    handler.Handle(method, instance, mod, args);
                 }
             }
         }

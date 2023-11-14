@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BirbCore.Annotations;
 using BirbShared;
 using SpaceCore;
@@ -11,10 +12,46 @@ namespace BinningSkill;
 internal class Events
 {
 
-    [SEvent.ApisLoaded]
-    private void ApiLoaded(object sender, OneSecondUpdateTickedEventArgs e)
+    [SEvent.GameLaunchedLate]
+    private void GameLaunched(object sender, GameLaunchedEventArgs e)
     {
-        Skills.RegisterSkill(new BinningSkill());
+        Skills.RegisterSkill(new BirbSkill("drbirbdev.Binning", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, ModEntry.MargoLoaded, new Dictionary<string, object>()
+        {
+            {"Recycler", null },
+            {"Sneak", null },
+            {"Environmentalist", null },
+            {"Salvager", null },
+            {"Upseller", null },
+            {"Reclaimer", new {
+                extra = ModEntry.Config.ReclaimerExtraValuePercent * 100,
+                pExtra = (ModEntry.Config.ReclaimerPrestigeExtraValuePercent + ModEntry.Config.ReclaimerExtraValuePercent) * 100
+            } }
+        })
+        {
+            
+            ExtraInfo = (level) =>
+            {
+                List<string> result = new()
+                    {
+                        ModEntry.Instance.I18n.Get("skill.perk.base", new { bonusPercent = ModEntry.Config.PerLevelBaseDropChanceBonus * 100 }),
+                        ModEntry.Instance.I18n.Get("skill.perk.rare", new { bonusPercent = ModEntry.Config.PerLevelRareDropChanceBonus * 100 })
+                    };
+                if (level == ModEntry.Config.MegaMinLevel)
+                {
+                    result.Add(ModEntry.Instance.I18n.Get("skill.perk.mega_drops"));
+                }
+                if (level == ModEntry.Config.DoubleMegaMinLevel)
+                {
+                    result.Add(ModEntry.Instance.I18n.Get("skill.perk.double_mega_drops"));
+                }
+
+                return result;
+            },
+            HoverText = (level) =>
+            {
+                return ModEntry.Instance.I18n.Get("skill.perk.base", new { bonusPercent = level * ModEntry.Config.PerLevelBaseDropChanceBonus * 100 });
+            }
+        });
 
         if (ModEntry.MargoLoaded)
         {
@@ -39,12 +76,12 @@ internal class Events
         }
 
         this.PiecesOfTrashUntilFriendshipIncrease -= recycled;
-        if (Game1.player.HasCustomProfession(BinningSkill.Environmentalist) && this.PiecesOfTrashUntilFriendshipIncrease < 0)
+        if (Game1.player.HasProfession("Environmentalist") && this.PiecesOfTrashUntilFriendshipIncrease < 0)
         {
             this.PiecesOfTrashUntilFriendshipIncrease += ModEntry.Config.RecyclingCountToGainFriendship;
 
             int friendship = ModEntry.Config.RecyclingFriendshipGain;
-            if (Game1.player.HasCustomPrestigeProfession(BinningSkill.Environmentalist))
+            if (Game1.player.HasProfession("Environmentalist", true))
             {
                 friendship += ModEntry.Config.RecyclingPrestigeFriendshipGain;
             }

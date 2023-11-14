@@ -1,0 +1,16 @@
+﻿{
+    "Name": "[CP] Socializing Skill",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Socializing Skill Content Patcher",
+    "UniqueID": "drbirbdev.SocializingSkill.CP",
+    "ContentPackFor": {
+        "UniqueID": "Pathoschild.ContentPatcher"
+    },
+    "UpdateKeys": [],
+    "Dependencies": [
+        {
+            "UniqueID": "drbirbdev.SocializingSkill"
+        }
+    ]
+}

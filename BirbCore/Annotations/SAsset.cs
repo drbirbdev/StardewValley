@@ -5,7 +5,6 @@ using BirbCore.Extensions;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
-using StardewValley;
 
 namespace BirbCore.Annotations;
 
@@ -15,6 +14,10 @@ namespace BirbCore.Annotations;
 public class SAsset : ClassHandler
 {
     private MemberInfo? ModAssets;
+
+    public SAsset() : base(0)
+    {
+    }
 
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
@@ -27,6 +30,7 @@ public class SAsset : ClassHandler
 
         instance = Activator.CreateInstance(type);
         this.ModAssets.GetSetter()(mod, instance);
+        base.Handle(type, instance, mod, args);
         return;
     }
 
@@ -51,66 +55,63 @@ public class SAsset : ClassHandler
 
         public Asset(string path, AssetLoadPriority priority = AssetLoadPriority.Medium)
         {
-            this.Path = path;
+            this.Path = PathUtilities.NormalizePath(path);
             this.Priority = priority;
         }
 
         public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            string assetId = PathUtilities.NormalizeAssetName($"Mods/{mod.ModManifest.UniqueID}/{name}");
 
+            IAssetName assetName = mod.Helper.ModContent.GetInternalAssetName(this.Path);
 
             Action<object, object>? assetNameSetter = instance?.GetType().GetMemberOfName(name + "AssetName")?.GetSetter();
             if (assetNameSetter is not null && instance is not null)
             {
-                assetNameSetter(instance, assetId);
+                assetNameSetter(instance, assetName);
             }
 
             mod.Helper.Events.Content.AssetRequested += (object? sender, AssetRequestedEventArgs e) =>
             {
-                if (!e.Name.IsEquivalentTo(assetId))
+                if (!e.Name.IsEquivalentTo(assetName))
                 {
                     return;
                 }
 
                 object? value = e?.GetType().GetMethod("LoadFromModFile")
                     ?.MakeGenericMethod(fieldType)
-                    .Invoke(e, new object[] { PathUtilities.NormalizePath(this.Path), this.Priority });
+                    .Invoke(e, new object[] { this.Path, this.Priority });
                 setter(instance, value);
             };
 
             mod.Helper.Events.Content.AssetReady += (object? sender, AssetReadyEventArgs e) =>
             {
-                if (!e.Name.IsEquivalentTo(assetId))
+                if (!e.Name.IsEquivalentTo(assetName))
                 {
                     return;
                 }
 
-                setter(instance, LoadValue(fieldType, assetId));
+                setter(instance, LoadValue(fieldType, this.Path, mod));
             };
 
             mod.Helper.Events.Content.AssetsInvalidated += (object? sender, AssetsInvalidatedEventArgs e) =>
             {
                 foreach (IAssetName asset in e.Names)
                 {
-                    if (asset.IsEquivalentTo(assetId))
+                    if (asset.IsEquivalentTo(assetName))
                     {
-                        setter(instance, LoadValue(fieldType, assetId));
+                        setter(instance, LoadValue(fieldType, this.Path, mod));
                     }
                 }
             };
 
-            mod.Helper.Events.GameLoop.GameLaunched += (object? sender, GameLaunchedEventArgs e) =>
-            {
-                setter(instance, LoadValue(fieldType, assetId));
-            };
+            setter(instance, LoadValue(fieldType, this.Path, mod));
         }
 
-        private static object? LoadValue(Type fieldType, string modId)
+        private static object? LoadValue(Type fieldType, string assetPath, IMod mod)
         {
-            return Game1.content.GetType().GetMethod("Load", new[] { typeof(string) })
+            return mod.Helper.ModContent.GetType().GetMethod("Load", new[] { typeof(string) })
                 ?.MakeGenericMethod(fieldType)
-                .Invoke(Game1.content, new string[] { modId });
+                .Invoke(mod.Helper.ModContent, new string[] { assetPath });
         }
 
     }

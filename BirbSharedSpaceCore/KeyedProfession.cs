@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
 using SpaceCore.Interface;
@@ -19,7 +18,7 @@ namespace BirbShared
         private bool IsPrestiged = false;
         readonly IModHelper ModHelper;
 
-        public KeyedProfession(Skills.Skill skill, string id, Texture2D icon, IModHelper modHelper, object tokens = null, Texture2D prestigeIcon = null) : base(skill, id)
+        public KeyedProfession(Skills.Skill skill, string id, Texture2D icon, Texture2D prestigeIcon, IModHelper modHelper, object tokens = null) : base(skill, id)
         {
             this.Icon = icon;
             this.I18n = modHelper.Translation;
@@ -34,62 +33,11 @@ namespace BirbShared
                 modHelper.Events.Display.MenuChanged += this.DisplayEvents_MenuChanged_MARGO;
                 modHelper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded_MARGO;
             }
-
-            modHelper.Events.Display.MenuChanged += this.DisplayEvents_MenuChanged;
-        }
-
-        private void DisplayEvents_MenuChanged(object sender, MenuChangedEventArgs e)
-        {
-            if (e.NewMenu is not SkillLevelUpMenu levelUpMenu)
-            {
-                return;
-            }
-
-            string skill = this.ModHelper.Reflection.GetField<string>(levelUpMenu, "currentSkill").GetValue();
-            if (skill != "drbirbdev.Binning")
-            {
-                return;
-            }
-
-            int level = this.ModHelper.Reflection.GetField<int>(levelUpMenu, "currentLevel").GetValue();
-
-            List<CraftingRecipe> newRecipes = new List<CraftingRecipe>();
-
-            int menuHeight = 0;
-            foreach (KeyValuePair<string, string> recipePair in CraftingRecipe.craftingRecipes)
-            {
-                string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 4, "");
-                if (conditions.Contains(skill) && conditions.Contains(level.ToString() ?? ""))
-                {
-                    CraftingRecipe recipe = new CraftingRecipe(recipePair.Key, isCookingRecipe: false);
-                    newRecipes.Add(recipe);
-                    Game1.player.craftingRecipes.TryAdd(recipePair.Key, 0);
-                    menuHeight += recipe.bigCraftable ? 128 : 64;
-                }
-            }
-            foreach (KeyValuePair<string, string> recipePair in CraftingRecipe.cookingRecipes)
-            {
-                string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 3, "");
-                if (conditions.Contains(skill) && conditions.Contains(level.ToString() ?? ""))
-                {
-                    CraftingRecipe recipe = new CraftingRecipe(recipePair.Key, isCookingRecipe: true);
-                    newRecipes.Add(recipe);
-                    if (Game1.player.cookingRecipes.TryAdd(recipePair.Key, 0) && !Game1.player.hasOrWillReceiveMail("robinKitchenLetter"))
-                    {
-                        Game1.mailbox.Add("robinKitchenLetter");
-                    }
-                    menuHeight += recipe.bigCraftable ? 128 : 64;
-                }
-            }
-
-            this.ModHelper.Reflection.GetField<List<CraftingRecipe>>(levelUpMenu, "newCraftingRecipes").SetValue(newRecipes);
-
-            levelUpMenu.height = menuHeight + 256 + (levelUpMenu.getExtraInfoForLevel(skill, level).Count * 64 * 3 / 4);
         }
 
         private void GameLoop_SaveLoaded_MARGO(object sender, SaveLoadedEventArgs e)
         {
-            if (Game1.player.HasCustomPrestigeProfession(this))
+            if (Game1.player.HasProfession(this.Id, true))
             {
                 this.Icon = this.PrestigeIcon;
                 this.IsPrestiged = true;
@@ -101,7 +49,7 @@ namespace BirbShared
             // After the upgrade selection menu, unset the prestige description and icon of the profession that wasn't chosen.
             if (e.OldMenu is SkillLevelUpMenu oldMenu && oldMenu.isProfessionChooser)
             {
-                if (Game1.player.HasCustomPrestigeProfession(this))
+                if (Game1.player.HasProfession(this.Id, true))
                 {
                     return;
                 }
@@ -114,11 +62,11 @@ namespace BirbShared
         {
             if (this.CheckPrestigeMenu())
             {
-                return this.I18n.Get($"{this.Id}.pdesc", this.Tokens);
+                return this.I18n.Get($"profession.{this.Id}.pdesc", this.Tokens);
             }
             else
             {
-                return this.I18n.Get($"{this.Id}.desc", this.Tokens);
+                return this.I18n.Get($"profession.{this.Id}.desc", this.Tokens);
             }
         }
 
@@ -162,7 +110,7 @@ namespace BirbShared
 
         public override string GetName()
         {
-            return this.I18n.Get($"{this.Id}.name", this.Tokens);
+            return this.I18n.Get($"profession.{this.Id}.name", this.Tokens);
         }
     }
 }

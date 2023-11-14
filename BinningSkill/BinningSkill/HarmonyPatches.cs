@@ -30,13 +30,13 @@ class Utility_GetTrashReclmantionPrice
                 return;
             }
 
-            if (!f.HasCustomProfession(BinningSkill.Reclaimer))
+            if (!f.HasProfession("Reclaimer"))
             {
                 return;
             }
 
             float extraPercentage = ModEntry.Config.ReclaimerExtraValuePercent;
-            if (f.HasCustomPrestigeProfession(BinningSkill.Reclaimer))
+            if (f.HasProfession("Reclaimer"))
             {
                 extraPercentage += ModEntry.Config.ReclaimerPrestigeExtraValuePercent;
             }
@@ -62,7 +62,7 @@ class NPC_GetGiftTasteForThisItem
     {
         try
         {
-            if (!Game1.player.HasCustomProfession(BinningSkill.Upseller))
+            if (!Game1.player.HasProfession("Upseller"))
             {
                 return;
             }
@@ -75,7 +75,7 @@ class NPC_GetGiftTasteForThisItem
 
             if (__result == 6)
             {
-                if (Game1.player.HasCustomPrestigeProfession(BinningSkill.Upseller))
+                if (Game1.player.HasProfession("Upseller", true))
                 {
                     __result = 8;
                 }
@@ -173,11 +173,11 @@ class GameLocation_TryGetGarbageIItem
 
             // Sneak Profession, custom sound range
             int noiseLevel = int.TryParse(data?.CustomFields?.GetValueOrDefault("drbirbdev.BinningSkill_NoiseLevel"), out noiseLevel) ? noiseLevel : 7;
-            if (Game1.player.HasCustomPrestigeProfession(BinningSkill.Sneak))
+            if (Game1.player.HasProfession("Sneak", true))
             {
                 noiseLevel += ModEntry.Config.PrestigeNoiseIncrease;
             }
-            else if (Game1.player.HasCustomProfession(BinningSkill.Sneak))
+            else if (Game1.player.HasProfession("Sneak"))
             {
                 noiseLevel -= ModEntry.Config.NoiseReduction;
             }
@@ -239,7 +239,7 @@ class GameLocation_TryGetGarbageIItem
             Game1.Multiplayer.globalChatInfoMessage("LinusTrashCan");
             isNegativeReaction = false;
         }
-        else if (Game1.player.HasCustomPrestigeProfession(BinningSkill.Sneak))
+        else if (Game1.player.HasProfession("Sneak", true))
         {
             npc.doEmote(32);
             Game1.player.changeFriendship(25, npc);

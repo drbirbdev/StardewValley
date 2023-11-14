@@ -12,18 +12,26 @@ namespace BirbCore.Annotations;
 /// </summary>
 public class SEvent : ClassHandler
 {
+    public SEvent() : base(9)
+    {
+
+    }
 
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
+        if (this.Priority < 2)
+        {
+            Log.Warn("Parsing events before parsing all other annotations might have unexpected results");
+        }
         instance = Activator.CreateInstance(type);
         base.Handle(type, instance, mod);
     }
 
-    public class GameLaunched : MethodHandler
+    public class GameLaunchedLate : MethodHandler
     {
         public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
-            mod.Helper.Events.GameLoop.GameLaunched += method.InitDelegate<EventHandler<GameLaunchedEventArgs>>(instance);
+            method.Invoke(instance, new object[] { this, new GameLaunchedEventArgs() });
         }
     }
 
@@ -440,5 +448,4 @@ public class SEvent : ClassHandler
             this.Method.Invoke(this.Instance, new object?[] { sender, e });
         }
     }
-
 }

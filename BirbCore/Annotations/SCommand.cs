@@ -15,7 +15,7 @@ public class SCommand : ClassHandler
     private static readonly Dictionary<string, Dictionary<string, Action<string[]>>> BaseCommands = new();
     public string Name;
 
-    public SCommand(string name)
+    public SCommand(string name) : base(0)
     {
         this.Name = name;
     }

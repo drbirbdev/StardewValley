@@ -3,6 +3,7 @@ using StardewModdingAPI;
 
 namespace BetterFestivalNotifications;
 
+[SMod]
 public class ModEntry : Mod
 {
     [SMod.Instance]

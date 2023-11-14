@@ -15,7 +15,7 @@ public class SContent : ClassHandler
     public bool IsList;
     public bool IsDictionary;
 
-    public SContent(string fileName = "content.json", bool isList = false, bool isDictionary = false)
+    public SContent(string fileName = "content.json", bool isList = false, bool isDictionary = false) : base(0)
     {
         this.FileName = fileName;
         this.IsList = isList;

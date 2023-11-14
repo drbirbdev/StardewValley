@@ -1,11 +1,24 @@
 #nullable enable
 using System;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 
 namespace BirbCore.Annotations;
 public class SMod : ClassHandler
 {
+    public SMod() : base(1)
+    {
+
+    }
+
+    public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
+    {
+        if (this.Priority < 1)
+        {
+            Log.Error("ModEntry cannot be loaded with priority < 1");
+            return;
+        }
+        base.Handle(type, mod, mod, args);
+    }
 
     public class Api : FieldHandler
     {
@@ -20,17 +33,14 @@ public class SMod : ClassHandler
 
         public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
-            mod.Helper.Events.GameLoop.GameLaunched += (object? sender, GameLaunchedEventArgs e) =>
+            object? api = mod.Helper.ModRegistry.GetType().GetMethod("GetApi", 1, new Type[] { typeof(string) })
+                ?.MakeGenericMethod(fieldType)
+                .Invoke(mod.Helper.ModRegistry, new object[] { this.UniqueID });
+            if (api is null && this.IsRequired)
             {
-                object? api = mod.Helper.ModRegistry.GetType().GetMethod("GetApi", 1, new Type[] { typeof(string) })
-                    ?.MakeGenericMethod(fieldType)
-                    .Invoke(mod.Helper.ModRegistry, new object[] { this.UniqueID });
-                if (api is null && this.IsRequired)
-                {
-                    Log.Error($"[{name}] Can't access required API");
-                }
-                setter(instance, api);
-            };
+                Log.Error($"[{name}] Can't access required API");
+            }
+            setter(instance, api);
         }
     }
 

@@ -20,8 +20,18 @@ public class SConfig : ClassHandler
 
     private static IGenericModConfigMenuApi? Api;
 
+    public SConfig(bool titleScreenOnly = false) : base(1)
+    {
+        this.TitleScreenOnly = titleScreenOnly;
+    }
+
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
+        if (this.Priority < 1)
+        {
+            Log.Error("Config cannot be loaded with priority < 1");
+            return;
+        }
         MemberInfo configField = mod.GetType().GetMemberOfType(type);
         if (configField == null)
         {
@@ -34,35 +44,32 @@ public class SConfig : ClassHandler
         instance = Activator.CreateInstance(type);
         setter(mod, instance);
 
-        mod.Helper.Events.GameLoop.GameLaunched += (sender, e) =>
+        Api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+        if (Api is null)
         {
-            Api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-            if (Api is null)
-            {
-                Log.Error("Generic Mod Config Menu is not enabled, so will skip parsing");
-                return;
-            }
+            Log.Error("Generic Mod Config Menu is not enabled, so will skip parsing");
+            return;
+        }
 
-            Api.Register(
-                mod: mod.ModManifest,
-                reset: () => {
-                    object? copyFrom = Activator.CreateInstance(type);
-                    object? copyTo = getter(mod);
-                    foreach (PropertyInfo property in type.GetProperties(ReflectionExtensions.AllDeclared))
-                    {
-                        property.SetValue(copyTo, property.GetValue(copyFrom));
-                    }
-                    foreach (FieldInfo field in type.GetFields(ReflectionExtensions.AllDeclared))
-                    {
-                        field.SetValue(copyTo, field.GetValue(copyFrom));
-                    }
-                },
-                save: () => mod.Helper.WriteConfig(getter(mod)),
-                titleScreenOnly: this.TitleScreenOnly
-            );
+        Api.Register(
+            mod: mod.ModManifest,
+            reset: () => {
+                object? copyFrom = Activator.CreateInstance(type);
+                object? copyTo = getter(mod);
+                foreach (PropertyInfo property in type.GetProperties(ReflectionExtensions.AllDeclared))
+                {
+                    property.SetValue(copyTo, property.GetValue(copyFrom));
+                }
+                foreach (FieldInfo field in type.GetFields(ReflectionExtensions.AllDeclared))
+                {
+                    field.SetValue(copyTo, field.GetValue(copyFrom));
+                }
+            },
+            save: () => mod.Helper.WriteConfig(getter(mod)),
+            titleScreenOnly: this.TitleScreenOnly
+        );
 
-            base.Handle(type, instance, mod);
-        };
+        base.Handle(type, instance, mod);
 
         return;
     }

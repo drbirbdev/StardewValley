@@ -4,6 +4,7 @@ using StardewModdingAPI;
 
 namespace BinningSkill;
 
+[SMod]
 public class ModEntry : Mod
 {
     [SMod.Instance]

@@ -12,6 +12,16 @@ namespace BirbCore.Annotations;
 
 public class SDelegate : ClassHandler
 {
+    public SDelegate() : base(0)
+    {
+
+    }
+
+    public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
+    {
+        instance = Activator.CreateInstance(type);
+        base.Handle(type, instance, mod);
+    }
 
     public class EventCommand : MethodHandler
     {

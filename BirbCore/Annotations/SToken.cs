@@ -13,18 +13,27 @@ namespace BirbCore.Annotations;
 public class SToken : ClassHandler
 {
     private static IContentPatcherApi? Api;
+
+    public SToken() : base(1)
+    {
+
+    }
+
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
-        mod.Helper.Events.GameLoop.GameLaunched += (sender, e) =>
+        if (this.Priority < 1)
         {
-            Api = mod.Helper.ModRegistry.GetApi<IContentPatcherApi>("Pathoschild.ContentPatcher");
-            if (Api == null)
-            {
-                Log.Error("Content Patcher is not enabled, so will skip parsing");
-                return;
-            }
-            base.Handle(type, null, mod);
-        };
+            Log.Error("Tokens cannot be loaded with priority < 1");
+            return;
+        }
+
+        Api = mod.Helper.ModRegistry.GetApi<IContentPatcherApi>("Pathoschild.ContentPatcher");
+        if (Api == null)
+        {
+            Log.Error("Content Patcher is not enabled, so will skip parsing");
+            return;
+        }
+        base.Handle(type, null, mod);
 
         return;
     }

@@ -12,7 +12,30 @@ internal class Events
     [SEvent.ApisLoaded]
     private void ApisLoaded(object sender, StardewModdingAPI.Events.OneSecondUpdateTickedEventArgs e)
     {
-        Skills.RegisterSkill(new SocializingSkill());
+        Skills.RegisterSkill(new BirbSkill("drbirbdev.Socializing", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, ModEntry.MargoLoaded, new Dictionary<string, object>()
+        {
+            {"Friendly", null},
+            {"Helpful", null },
+            {"SmoothTalker", null },
+            {"Gifter", null },
+            {"Haggler", null },
+            {"Beloved", null }
+        })
+        {
+            ExtraInfo = (level) =>
+            {
+                List<string> result = new()
+                {
+                    ModEntry.Instance.I18n.Get("skill.perk", new { bonus = ModEntry.Config.ChanceNoFriendshipDecayPerLevel })
+                };
+
+                return result;
+            },
+            HoverText = (level) =>
+            {
+                return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel });
+            }
+        });
         SpaceCore.Events.SpaceEvents.AfterGiftGiven += this.SpaceEvents_AfterGiftGiven;
     }
 
@@ -40,10 +63,10 @@ internal class Events
     private void SpaceEvents_AfterGiftGiven(object sender, SpaceCore.Events.EventArgsGiftGiven e)
     {
         int taste = e.Npc.getGiftTasteForThisItem(e.Gift);
-        if (Game1.player.HasCustomProfession(SocializingSkill.Gifter))
+        if (Game1.player.HasProfession("Gifter"))
         {
             int extraFriendship = 0;
-            if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.Gifter))
+            if (Game1.player.HasProfession("Gifter", true))
             {
                 extraFriendship += 20;
             }

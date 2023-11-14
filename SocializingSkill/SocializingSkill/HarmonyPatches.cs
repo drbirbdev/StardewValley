@@ -7,8 +7,6 @@ using HarmonyLib;
 using SpaceCore;
 using StardewValley;
 using StardewValley.Characters;
-using StardewValley.GameData.Shops;
-using StardewValley.Menus;
 using StardewValley.Quests;
 using StardewValley.SpecialOrders.Rewards;
 
@@ -71,9 +69,9 @@ class NPCDialogueResponse_Constructor
     {
         try
         {
-            if (Game1.player.HasCustomProfession(SocializingSkill.SmoothTalker))
+            if (Game1.player.HasProfession("SmoothTalker"))
             {
-                if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.SmoothTalker))
+                if (Game1.player.HasProfession("SmoothTalker", true))
                 {
                     if (friendshipChange < 0)
                     {
@@ -115,7 +113,7 @@ class Event_CommandFriendship
     {
         try
         {
-            if (Game1.player.HasCustomProfession(SocializingSkill.SmoothTalker))
+            if (Game1.player.HasProfession("SmoothTalker"))
             {
                 NPC character = Game1.getCharacterFromName(args[1]);
                 if (character == null)
@@ -133,7 +131,7 @@ class Event_CommandFriendship
                     Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromEvents);
                 }
 
-                if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.SmoothTalker))
+                if (Game1.player.HasProfession("SmoothTalker", true))
                 {
                     if (friendship < 0)
                     {
@@ -216,9 +214,9 @@ class Quest_GetMoneyReward
     {
         try
         {
-            if (Game1.player.HasCustomProfession(SocializingSkill.Helpful))
+            if (Game1.player.HasProfession("Helpful"))
             {
-                if (Game1.player.HasCustomPrestigeProfession(SocializingSkill.Helpful))
+                if (Game1.player.HasProfession("Helpful", true))
                 {
                     __result = (int)(__result * ModEntry.Config.HelpfulRewardMultiplier * 2);
                 }
@@ -308,7 +306,7 @@ class Farmer_ResetFriendshipForNewDay
         try
         {
             Random random = new();
-            int level = SpaceCore.Skills.GetSkillLevel(__instance, "drbirbdev.Socializing");
+            int level = Skills.GetSkillLevel(__instance, "drbirbdev.Socializing");
             if (random.Next(100) < level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel)
             {
                 // Undo vanilla friendship decay
@@ -332,7 +330,7 @@ class Farmer_ResetFriendshipForNewDay
                         {
                             __instance.changeFriendship(10, i);
                         }
-                        else if ((!single && __instance.friendshipData[name].Points < 2500) || (single && __instance.friendshipData[name].Points < 2000))
+                        else if (!single && __instance.friendshipData[name].Points < 2500 || single && __instance.friendshipData[name].Points < 2000)
                         {
                             __instance.changeFriendship(2, i);
                         }
@@ -366,10 +364,10 @@ class NPC_GrantConversationFriendship
         && !__instance.isDivorcedFrom(who)
         && amount > 0)
             {
-                SpaceCore.Skills.AddExperience(who, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromTalking);
-                if (who.HasCustomProfession(SocializingSkill.Friendly))
+                Skills.AddExperience(who, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromTalking);
+                if (who.HasProfession("Friendly"))
                 {
-                    if (who.HasCustomPrestigeProfession(SocializingSkill.Friendly))
+                    if (who.HasProfession("Friendly", true))
                     {
                         who.changeFriendship((int)(ModEntry.Config.FriendlyExtraFriendship * 1.5), __instance);
                     }
@@ -407,7 +405,7 @@ class NPC_CheckAction
             {
                 return;
             }
-            if (!who.HasCustomProfession(SocializingSkill.Beloved))
+            if (!who.HasProfession("Beloved"))
             {
                 return;
             }
@@ -419,7 +417,7 @@ class NPC_CheckAction
             ModEntry.BelovedCheckedToday.Value.Add(__instance.Name);
 
             int giftPercentChance = ModEntry.Config.BelovedGiftPercentChance;
-            if (who.HasCustomPrestigeProfession(SocializingSkill.Beloved))
+            if (who.HasProfession("Beloved", true))
             {
                 giftPercentChance *= 2;
             }

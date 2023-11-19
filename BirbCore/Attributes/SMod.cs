@@ -2,7 +2,7 @@
 using System;
 using StardewModdingAPI;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 public class SMod : ClassHandler
 {
     public SMod() : base(1)

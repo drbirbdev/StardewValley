@@ -1,5 +1,5 @@
 global using SObject = StardewValley.Object;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using StardewModdingAPI;
 
 namespace RanchingToolUpgrades;

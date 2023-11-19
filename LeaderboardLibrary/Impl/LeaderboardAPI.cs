@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using BirbCore;
+using BirbCore.Attributes;
 
 namespace LeaderboardLibrary;
 

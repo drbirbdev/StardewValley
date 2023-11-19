@@ -1,6 +1,5 @@
 using System;
-using BirbCore;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using Microsoft.Xna.Framework;
 using StardewValley;
 

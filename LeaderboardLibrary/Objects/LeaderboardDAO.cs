@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using BirbCore;
+using BirbCore.Attributes;
 
 namespace LeaderboardLibrary;
 
@@ -15,7 +15,7 @@ class LeaderboardDAO
     /// </summary>
     /// <param name="stat"></param>
     /// <returns></returns>
-    public async Task<List<LeaderboardStat>> GetLocalScores(string stat)
+    public static async Task<List<LeaderboardStat>> GetLocalScores(string stat)
     {
         try
         {
@@ -68,7 +68,7 @@ class LeaderboardDAO
     /// </summary>
     /// <param name="stat"></param>
     /// <returns></returns>
-    public async Task<List<LeaderboardStat>> GetTopScores(string stat)
+    public static async Task<List<LeaderboardStat>> GetTopScores(string stat)
     {
         try
         {
@@ -112,7 +112,7 @@ class LeaderboardDAO
     /// </summary>
     /// <param name="stat"></param>
     /// <param name="score"></param>
-    public async void UploadScore(string stat, int score, string userUuid, string userName, string farmName, string secret, CachedLeaderboardAPI api)
+    public static async void UploadScore(string stat, int score, string userUuid, string userName, string farmName, string secret, CachedLeaderboardAPI api)
     {
         try
         {

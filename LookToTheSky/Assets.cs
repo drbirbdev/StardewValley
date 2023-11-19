@@ -1,4 +1,4 @@
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace LookToTheSky;

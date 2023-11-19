@@ -6,7 +6,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 
 /// <summary>
 /// A collection of assets that go through the content pipeline.

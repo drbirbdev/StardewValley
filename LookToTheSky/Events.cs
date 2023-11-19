@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using StardewModdingAPI;
 using StardewValley;
 

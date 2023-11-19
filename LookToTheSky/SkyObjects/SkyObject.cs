@@ -1,3 +1,4 @@
+using LookToTheSky.SkyObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -7,6 +8,8 @@ namespace LookToTheSky;
 
 public abstract class SkyObject
 {
+    public SkyObjectData SkyObjectData;
+
     public TemporaryAnimatedSprite Sprite;
 
     public int X => (int)this.Sprite.position.X;
@@ -14,9 +17,9 @@ public abstract class SkyObject
 
     public int Hits = 0;
 
-    public int Width { get => this.Sprite.sourceRect.Width * 4; }
+    public int Width => this.Sprite.sourceRect.Width * 4;
 
-    public int Height { get => this.Sprite.sourceRect.Height * 4; }
+    public int Height => this.Sprite.sourceRect.Height * 4;
 
     public SkyObject(TemporaryAnimatedSprite sprite, int yPos, bool moveRight)
     {
@@ -63,6 +66,22 @@ public abstract class SkyObject
                 }
                 break;
             }
+        }
+        if (this.X < 0 - (this.Width * this.Sprite.scale))
+        {
+
+        }
+        else if (this.X > Game1.viewport.Width + (this.Width * this.Sprite.scale))
+        {
+
+        }
+        else if (this.Y < 0 - (this.Height * this.Sprite.scale))
+        {
+
+        }
+        else if (this.Y > Game1.viewport.Height + (this.Height * this.Sprite.scale))
+        {
+
         }
     }
 

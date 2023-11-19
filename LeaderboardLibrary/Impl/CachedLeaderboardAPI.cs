@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BirbCore;
+using BirbCore.Attributes;
 using StardewValley;
 
 namespace LeaderboardLibrary;
@@ -72,7 +72,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
     public virtual bool RefreshCache(string stat)
     {
         this.LazyInitStat(stat);
-        this.LeaderboardDAO.GetLocalScores(stat).ContinueWith((task) =>
+        LeaderboardDAO.GetLocalScores(stat).ContinueWith((task) =>
         {
             if (CheckFailures(task, "GetLocalScores"))
             {
@@ -90,7 +90,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
             }
         });
 
-        this.LeaderboardDAO.GetTopScores(stat).ContinueWith((task) =>
+        LeaderboardDAO.GetTopScores(stat).ContinueWith((task) =>
         {
             if (CheckFailures(task, "GetTopScores"))
             {
@@ -117,7 +117,7 @@ class CachedLeaderboardAPI : ILeaderboardAPI
         LeaderboardStat current = this.GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUUID);
         if (current is null || current.Score < score)
         {
-            this.LeaderboardDAO.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name, Game1.player.farmName.Value, ModEntry.GlobalModData.Value.Secret, this);
+            LeaderboardDAO.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name, Game1.player.farmName.Value, ModEntry.GlobalModData.Value.Secret, this);
             return this.UpdateCache(stat, score, ModEntry.GlobalModData.Value.UserUUID, Game1.player.Name);
         }
         return true;

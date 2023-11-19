@@ -20,7 +20,7 @@ public static class TextureExtensions
         {
             for (int dx = x; dx < x + width; dx++)
             {
-                color[i] = texture.Data[dx + dy * texture.Width];
+                color[i] = texture.Data[dx + (dy * texture.Width)];
                 i++;
             }
         }
@@ -31,10 +31,10 @@ public static class TextureExtensions
 
     public static Color GetColor(this IRawTextureData texture, int x, int y)
     {
-        if (x < 0 || y < 0 ||  x > texture.Width || y > texture.Height)
+        if (x < 0 || y < 0 || x > texture.Width || y > texture.Height)
         {
             throw new ArgumentOutOfRangeException(nameof(GetTextureRect), "pixel must be within texture");
         }
-        return texture.Data[x + y * texture.Width];
+        return texture.Data[x + (y * texture.Width)];
     }
 }

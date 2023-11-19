@@ -1,23 +1,50 @@
-using SpaceCore;
-using StardewModdingAPI;
-using BirbCore.Extensions;
+using System;
 using System.Collections.Generic;
-using BirbCore;
+using BirbCore.APIs;
+using BirbCore.Attributes;
+using BirbCore.Extensions;
+using SpaceCore;
 using SpaceCore.Interface;
+using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using System;
 
 namespace BirbShared;
 
 public class BirbSkill : Skills.Skill
 {
+    public IMargo MargoApi;
+    public bool DoMargo
+    {
+        get
+        {
+            if (this.MargoApi is null)
+            {
+                return false;
+            }
+            IMargo.IModConfig config = this.MargoApi.GetConfig();
+            return config.EnableProfessions;
+        }
+    }
+
     public Func<int, List<string>> ExtraInfo { get; init; }
     public Func<int, string> HoverText { get; init; }
     private readonly IModHelper ModHelper;
     public static Dictionary<string, Profession> KeyedProfessions { get; } = new Dictionary<string, Profession>();
 
-    public BirbSkill(string id, IRawTextureData texture, IModHelper modHelper, bool doMargo, Dictionary<string, object> professionTokens) : base(id)
+    public static void Register(string id, IRawTextureData texture, IModHelper modHelper, Dictionary<string, object> professionTokens, Func<int, List<string>> extraInfo, Func<int, string> hoverText)
+    {
+        BirbSkill skill = new BirbSkill(id, texture, modHelper, professionTokens, extraInfo, hoverText);
+
+        Skills.RegisterSkill(skill);
+
+        if (skill.DoMargo)
+        {
+            skill.MargoApi.RegisterCustomSkillForPrestige(skill.Id);
+        }
+    }
+
+    private BirbSkill(string id, IRawTextureData texture, IModHelper modHelper, Dictionary<string, object> professionTokens, Func<int, List<string>> extraInfo, Func<int, string> hoverText) : base(id)
     {
         if (professionTokens.Count != 6)
         {
@@ -28,8 +55,11 @@ public class BirbSkill : Skills.Skill
         this.Icon = texture.GetTextureRect(0, 0, 16, 16);
         this.SkillsPageIcon = texture.GetTextureRect(16, 0, 10, 10);
         this.ExperienceBarColor = texture.GetColor(32, 0);
+        this.ExtraInfo = extraInfo;
+        this.HoverText = hoverText;
+        this.MargoApi = (IMargo)modHelper.ModRegistry.GetApi("DaLion.Overhaul");
 
-        if (doMargo)
+        if (this.DoMargo)
         {
             this.ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000,
                 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 70000 };
@@ -45,7 +75,7 @@ public class BirbSkill : Skills.Skill
             object tokens = professionTokens[profession];
 
             KeyedProfession p = new KeyedProfession(this, profession, texture.GetTextureRect(16 * i, 16, 16, 16),
-                doMargo ? texture.GetTextureRect(16 * i, 32, 16, 16) : null, modHelper, tokens);
+                this.DoMargo ? texture.GetTextureRect(16 * i, 32, 16, 16) : null, modHelper, tokens);
 
             this.Professions.Add(p);
             KeyedProfessions.Add(profession, p);

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using BirbCore;
+using BirbCore.Attributes;
 using BirbShared;
 using HarmonyLib;
 using SpaceCore;
@@ -330,7 +330,7 @@ class Farmer_ResetFriendshipForNewDay
                         {
                             __instance.changeFriendship(10, i);
                         }
-                        else if (!single && __instance.friendshipData[name].Points < 2500 || single && __instance.friendshipData[name].Points < 2000)
+                        else if ((!single && __instance.friendshipData[name].Points < 2500) || (single && __instance.friendshipData[name].Points < 2000))
                         {
                             __instance.changeFriendship(2, i);
                         }

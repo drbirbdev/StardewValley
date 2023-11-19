@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 
 namespace RealtimeFramework;
 

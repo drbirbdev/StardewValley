@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -7,7 +8,7 @@ using BirbCore.Extensions;
 using HarmonyLib;
 using StardewModdingAPI;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 
 public class SContent : ClassHandler
 {
@@ -45,7 +46,7 @@ public class SContent : ClassHandler
             return;
         }
 
-        object contentDictionary = AccessTools.CreateInstance(modEntryType);
+        IDictionary contentDictionary = (IDictionary)AccessTools.CreateInstance(modEntryType);
         if (contentDictionary is null)
         {
             Log.Error("contentDictionary was null.  Underlying type might be static? Cannot initialize.");
@@ -79,7 +80,7 @@ public class SContent : ClassHandler
             // Will use key value for dictionary, array index for list, or empty string for content object.
             if (this.IsList)
             {
-                List<object> contentList = (List<object>)content;
+                IList contentList = (IList)content;
                 for (int i = 0; i < contentList.Count; i++)
                 {
                     string id = (string)(idMember?.GetGetter()(contentList[i]) ?? i);
@@ -89,12 +90,12 @@ public class SContent : ClassHandler
             }
             else if (this.IsDictionary)
             {
-                Dictionary<string, object> contentDict = (Dictionary<string, object>)content;
-                foreach (string key in contentDict.Keys)
+                foreach (DictionaryEntry entry in (IDictionary)content)
                 {
-                    string id = (string)(idMember?.GetGetter()(contentDict[key]) ?? key);
-
-                    base.Handle(type, contentDict[key], mod, new object[] { contentPack, id });
+                    string key = (string)entry.Key;
+                    object? value = entry.Value;
+                    string id = (string)(idMember?.GetGetter()(value) ?? key);
+                    base.Handle(type, value, mod, new object[] { contentPack, id });
                 }
             }
             else
@@ -106,9 +107,7 @@ public class SContent : ClassHandler
 
             string modId = contentPack.Manifest.UniqueID;
 
-            contentDictionary.GetType().GetMethod("Add")
-                ?.MakeGenericMethod(typeof(string), modEntryValueType)
-                .Invoke(contentDictionary, new object[] { modId, content });
+            contentDictionary.Add(modId, content);
         }
         return;
     }
@@ -127,6 +126,7 @@ public class SContent : ClassHandler
                 Log.Error("Something went wrong in BirbCore Content Pack parsing");
                 return;
             }
+
             setter(instance, ((IContentPack)args[0]).Manifest.UniqueID);
         }
     }
@@ -145,7 +145,7 @@ public class SContent : ClassHandler
                 Log.Error("Something went wrong in BirbCore Content Pack parsing");
                 return;
             }
-            setter(instance, ((IContentPack)args[0]).Manifest.UniqueID + args[1]);
+            setter(instance, $"{((IContentPack)args[0]).Manifest.UniqueID}_{args[1]}");
         }
     }
 

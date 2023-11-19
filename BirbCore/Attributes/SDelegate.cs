@@ -8,7 +8,7 @@ using StardewValley;
 using StardewValley.Delegates;
 using StardewValley.Internal;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 
 public class SDelegate : ClassHandler
 {

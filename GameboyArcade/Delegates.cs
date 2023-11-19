@@ -1,5 +1,4 @@
-using BirbCore;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using Microsoft.Xna.Framework;
 using StardewValley;
 
@@ -12,7 +11,12 @@ internal class Delegates
     [SDelegate.TileAction]
     public static bool Play(GameLocation gameLocation, string[] args, Farmer farmer, Point point)
     {
-        Content content = ModEntry.GetGame(args?[0], args?[1]);
+        if (args is null || args.Length < 2)
+        {
+            Log.Error("drbirbdev.GameboyArcade_Play tile action requires GameID parameter");
+            return true;
+        }
+        Content content = ModEntry.GetGame(args[1]);
         Utilities.ShowArcadeMenu(content.UniqueID, content.Name);
         return true;
     }
@@ -20,15 +24,21 @@ internal class Delegates
     [SDelegate.EventCommand]
     public static void StartGame(Event @event, string[] args, EventContext context)
     {
+        if (args is null || args.Length < 2)
+        {
+            Log.Error("drbirbdev.GameboyArcade_StartGame event command requires GameID parameter");
+            return;
+        }
+
         if (Game1.currentMinigame != null)
         {
             return;
         }
 
-        Content content = ModEntry.GetGame(args?[0], args?[1]);
+        Content content = ModEntry.GetGame(args[1]);
         if (content is null)
         {
-            Log.Error($"Minigame [{args?[0]} {args?[1]}] does not exist.");
+            Log.Error($"Minigame [{args?[1]}] does not exist.");
             return;
         }
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using BirbCore.Annotations;
 using BirbCore.APIs;
+using BirbCore.Attributes;
 using StardewModdingAPI;
 
 namespace GameboyArcade;
@@ -8,6 +8,7 @@ namespace GameboyArcade;
 [SMod]
 public class ModEntry : Mod
 {
+    [SMod.Instance]
     internal static ModEntry Instance;
     internal static Config Config;
     internal static Command Command;
@@ -54,7 +55,11 @@ public class ModEntry : Mod
     {
         if (gameId is null)
         {
-            string[] parts = modId.Split("/");
+            string[] parts = modId.Split("_", 2);
+            if (parts.Length != 2)
+            {
+                Log.Error($"Expected a GameId in the form ModManifest_Game but got something else {modId}");
+            }
             modId = parts[0];
             gameId = parts[1];
         }

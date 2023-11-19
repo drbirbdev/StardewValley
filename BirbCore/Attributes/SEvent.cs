@@ -5,7 +5,7 @@ using BirbCore.Extensions;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 
 /// <summary>
 /// Specifies a method as a SMAPI event.  

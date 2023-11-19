@@ -1,0 +1,5 @@
+﻿{
+    "config.Button": "Button",
+    "config.SpawnChancePerSecond": "Per-second Spawn Chance",
+    "config.DoNotificationNoise": "Do Notification Noise"
+}

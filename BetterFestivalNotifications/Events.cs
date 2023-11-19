@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using BirbCore;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using StardewValley;
 using StardewValley.GameData;
 

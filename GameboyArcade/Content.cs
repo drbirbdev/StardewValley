@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using StardewModdingAPI;
 
 namespace GameboyArcade;

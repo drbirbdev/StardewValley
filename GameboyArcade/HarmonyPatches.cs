@@ -1,8 +1,9 @@
 using System;
 using System.Reflection;
-using BirbCore;
+using BirbCore.Attributes;
 using HarmonyLib;
 using StardewValley;
+using StardewValley.GameData.BigCraftables;
 
 namespace GameboyArcade;
 
@@ -26,7 +27,7 @@ class GameLocation_AnswerDialogueAction
     {
         try
         {
-            if (!__result && questionAndAnswer == "drbirbdev.GameboyArcade_Play")
+            if (questionAndAnswer == "drbirbdev.GameboyArcade_Play")
             {
                 if (questionParams is null || questionParams.Length < 2)
                 {
@@ -36,14 +37,7 @@ class GameLocation_AnswerDialogueAction
 
                 Content content = null;
 
-                if (questionParams.Length < 3)
-                {
-                    content = ModEntry.SearchGames(questionParams[1]);
-                }
-                else
-                {
-                    content = ModEntry.GetGame(questionParams[1], questionParams[2]);
-                }
+                content = ModEntry.GetGame(questionParams[1]);
 
                 if (content is null)
                 {
@@ -62,3 +56,38 @@ class GameLocation_AnswerDialogueAction
         }
     }
 }
+
+[HarmonyPatch(typeof(StardewValley.Object), nameof(StardewValley.Object.checkForAction))]
+class Object_CheckForAction
+{
+    internal static bool Prefix(Farmer who, bool justCheckingForActivity, StardewValley.Object __instance, ref bool __result)
+    {
+        try
+        {
+            if (ItemRegistry.GetData(__instance.QualifiedItemId).RawData is not BigCraftableData data)
+            {
+                return true;
+            }
+            if (!data.CustomFields.TryGetValue("drbirbdev.GameboyArcade_GameID", out string gameId))
+            {
+                return true;
+            }
+
+            if (justCheckingForActivity)
+            {
+                __result = true;
+                return false;
+            }
+            Content content = ModEntry.GetGame(gameId);
+            Utilities.ShowArcadeMenu(content.UniqueID, content.Name);
+            return false;
+
+        }
+        catch (Exception e)
+        {
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+        }
+        return true;
+    }
+}
+

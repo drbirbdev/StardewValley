@@ -6,7 +6,7 @@ using System.Text;
 using BirbCore.Extensions;
 using StardewModdingAPI;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 
 /// <summary>
 /// A collection of commands in the SMAPI console.

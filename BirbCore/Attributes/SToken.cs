@@ -5,7 +5,7 @@ using System.Reflection;
 using BirbCore.APIs;
 using StardewModdingAPI;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 
 /// <summary>
 /// Specifies a method or class as a content patcher simple or advanced token.

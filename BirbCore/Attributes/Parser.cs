@@ -5,7 +5,7 @@ using BirbCore.Extensions;
 using HarmonyLib;
 using StardewModdingAPI;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 public class Parser
 {
     public static event EventHandler? Priority1Event;
@@ -29,7 +29,7 @@ public class Parser
     {
         assembly ??= Assembly.GetCallingAssembly();
 
-        Log.Init(mod.Monitor);
+        Log.Init(mod.Monitor, assembly);
 
         foreach (Type type in assembly.GetTypes())
         {

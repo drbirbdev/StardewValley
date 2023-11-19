@@ -5,7 +5,7 @@ using BirbCore.Extensions;
 using HarmonyLib;
 using StardewModdingAPI;
 
-namespace BirbCore.Annotations;
+namespace BirbCore.Attributes;
 
 public class SData : ClassHandler
 {

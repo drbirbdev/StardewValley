@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using BirbShared;
 using SpaceCore;
 using StardewModdingAPI.Events;
@@ -15,7 +15,7 @@ internal class Events
     [SEvent.GameLaunchedLate]
     private void GameLaunched(object sender, GameLaunchedEventArgs e)
     {
-        Skills.RegisterSkill(new BirbSkill("drbirbdev.Binning", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, ModEntry.MargoLoaded, new Dictionary<string, object>()
+        BirbSkill.Register("drbirbdev.Binning", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, new Dictionary<string, object>()
         {
             {"Recycler", null },
             {"Sneak", null },
@@ -26,38 +26,31 @@ internal class Events
                 extra = ModEntry.Config.ReclaimerExtraValuePercent * 100,
                 pExtra = (ModEntry.Config.ReclaimerPrestigeExtraValuePercent + ModEntry.Config.ReclaimerExtraValuePercent) * 100
             } }
-        })
-        {
-            
-            ExtraInfo = (level) =>
-            {
-                List<string> result = new()
-                    {
-                        ModEntry.Instance.I18n.Get("skill.perk.base", new { bonusPercent = ModEntry.Config.PerLevelBaseDropChanceBonus * 100 }),
-                        ModEntry.Instance.I18n.Get("skill.perk.rare", new { bonusPercent = ModEntry.Config.PerLevelRareDropChanceBonus * 100 })
-                    };
-                if (level == ModEntry.Config.MegaMinLevel)
-                {
-                    result.Add(ModEntry.Instance.I18n.Get("skill.perk.mega_drops"));
-                }
-                if (level == ModEntry.Config.DoubleMegaMinLevel)
-                {
-                    result.Add(ModEntry.Instance.I18n.Get("skill.perk.double_mega_drops"));
-                }
+        }, PerkText, HoverText);
+    }
 
-                return result;
-            },
-            HoverText = (level) =>
-            {
-                return ModEntry.Instance.I18n.Get("skill.perk.base", new { bonusPercent = level * ModEntry.Config.PerLevelBaseDropChanceBonus * 100 });
-            }
-        });
-
-        if (ModEntry.MargoLoaded)
+    private static List<string> PerkText(int level)
+    {
+        List<string> result = new()
         {
-            string id = Skills.GetSkill("drbirbdev.Binning").Id;
-            ModEntry.MargoAPI.RegisterCustomSkillForPrestige(id);
+            ModEntry.Instance.I18n.Get("skill.perk.base", new { bonusPercent = ModEntry.Config.PerLevelBaseDropChanceBonus * 100 }),
+            ModEntry.Instance.I18n.Get("skill.perk.rare", new { bonusPercent = ModEntry.Config.PerLevelRareDropChanceBonus * 100 })
+        };
+        if (level == ModEntry.Config.MegaMinLevel)
+        {
+            result.Add(ModEntry.Instance.I18n.Get("skill.perk.mega_drops"));
         }
+        if (level == ModEntry.Config.DoubleMegaMinLevel)
+        {
+            result.Add(ModEntry.Instance.I18n.Get("skill.perk.double_mega_drops"));
+        }
+
+        return result;
+    }
+
+    private static string HoverText(int level)
+    {
+        return ModEntry.Instance.I18n.Get("skill.perk.base", new { bonusPercent = level * ModEntry.Config.PerLevelBaseDropChanceBonus * 100 });
     }
 
     private uint PreviousTrashCansChecked;

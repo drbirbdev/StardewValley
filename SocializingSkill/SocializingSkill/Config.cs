@@ -1,5 +1,4 @@
-
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 
 namespace SocializingSkill;
 

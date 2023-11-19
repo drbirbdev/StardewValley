@@ -6,5 +6,9 @@
         <Version>1.0.4</Version>
         <UpdateKeys>Nexus:15262</UpdateKeys>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BirbCore\BirbCore.csproj" />
+    </ItemGroup>
     
 </Project>

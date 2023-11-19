@@ -1,5 +1,5 @@
 using System;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using SpaceCore;
 using StardewValley;
 

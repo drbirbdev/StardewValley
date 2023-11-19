@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
-using BirbCore;
+using BirbCore.Attributes;
 
 namespace LeaderboardLibrary;
 

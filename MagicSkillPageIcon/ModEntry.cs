@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
-using BirbCore;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using HarmonyLib;
 using SpaceCore;
 using StardewModdingAPI;

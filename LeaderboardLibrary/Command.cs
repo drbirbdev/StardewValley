@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using BirbCore;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using StardewModdingAPI;
 
 namespace LeaderboardLibrary;

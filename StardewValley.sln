@@ -46,6 +46,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HalloweenSeason", "Hallowee
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BirbCore", "BirbCore\BirbCore.csproj", "{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GameboyArcadeTests", "GameboyArcadeTests\GameboyArcadeTests.shproj", "{B091A772-70C1-4AA6-B2C2-93E9E06B8C07}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GameboyArcadeTemplate", "GameboyArcadeTemplate\GameboyArcadeTemplate.shproj", "{65C1A80E-01D8-4652-A109-3FB1FCC789BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -118,5 +122,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		HalloweenSeason\HalloweenSeason.projitems*{100172ed-9f1b-4d78-8b4f-bb5c4f72537b}*SharedItemsImports = 13
 		BirbSharedSpaceCore\BirbSharedSpaceCore.projitems*{19cedb88-a912-48da-b35d-fce2509e70e6}*SharedItemsImports = 13
+		GameboyArcadeTemplate\GameboyArcadeTemplate.projitems*{65c1a80e-01d8-4652-a109-3fb1fcc789bf}*SharedItemsImports = 13
+		GameboyArcadeTests\GameboyArcadeTests.projitems*{b091a772-70c1-4aa6-b2c2-93e9e06b8c07}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

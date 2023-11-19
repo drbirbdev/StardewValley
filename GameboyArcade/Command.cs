@@ -1,5 +1,4 @@
-using BirbCore;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 
 namespace GameboyArcade;
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using BirbCore;
+using BirbCore.Attributes;
 using HarmonyLib;
 using StardewValley;
 using StardewValley.Minigames;

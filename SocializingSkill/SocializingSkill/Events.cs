@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BirbCore.Annotations;
+using BirbCore.Attributes;
 using BirbShared;
 using SpaceCore;
 using StardewValley;
@@ -12,7 +12,7 @@ internal class Events
     [SEvent.ApisLoaded]
     private void ApisLoaded(object sender, StardewModdingAPI.Events.OneSecondUpdateTickedEventArgs e)
     {
-        Skills.RegisterSkill(new BirbSkill("drbirbdev.Socializing", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, ModEntry.MargoLoaded, new Dictionary<string, object>()
+        BirbSkill.Register("drbirbdev.Socializing", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, new Dictionary<string, object>()
         {
             {"Friendly", null},
             {"Helpful", null },
@@ -20,23 +20,24 @@ internal class Events
             {"Gifter", null },
             {"Haggler", null },
             {"Beloved", null }
-        })
-        {
-            ExtraInfo = (level) =>
-            {
-                List<string> result = new()
-                {
-                    ModEntry.Instance.I18n.Get("skill.perk", new { bonus = ModEntry.Config.ChanceNoFriendshipDecayPerLevel })
-                };
+        }, PerkText, HoverText);
 
-                return result;
-            },
-            HoverText = (level) =>
-            {
-                return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel });
-            }
-        });
         SpaceCore.Events.SpaceEvents.AfterGiftGiven += this.SpaceEvents_AfterGiftGiven;
+    }
+
+    private static List<string> PerkText(int level)
+    {
+        List<string> result = new()
+        {
+            ModEntry.Instance.I18n.Get("skill.perk", new { bonus = ModEntry.Config.ChanceNoFriendshipDecayPerLevel })
+        };
+
+        return result;
+    }
+
+    private static string HoverText(int level)
+    {
+        return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel });
     }
 
     [SEvent.SaveLoaded]

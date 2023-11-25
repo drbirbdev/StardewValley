@@ -77,7 +77,7 @@ public class SkyObjectData
         sprite.alphaFade = this.AlphaFade;
         sprite.alphaFadeFade = this.AlphaFadeFade;
         sprite.animationLength = this.AnimationLength;
-        sprite.color = this.Color.ToColor();
+        sprite.color = Utility.StringToColor(this.Color) ?? Microsoft.Xna.Framework.Color.White;
         sprite.delayBeforeAnimationStart = this.DelayBeforeAnimationStart;
         sprite.endFunction = null; // TODO: end function
         sprite.endSound = this.EndSound;

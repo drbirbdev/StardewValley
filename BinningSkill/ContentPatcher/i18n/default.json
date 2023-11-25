@@ -6,5 +6,10 @@
     "bc.recyclingbin.name": "Recycling Bin",
     "bc.recyclingbin.desc": "An environmentally friendly alternative to trash. Put them around town and people might throw out some good stuff.",
     "bc.advancedrecyclingmachine.name": "Advanced Recycling Machine",
-    "bc.advancedrecyclingmachine.desc": "A more advanced Recycling Machine. Turns trash into resources, but require"
+    "bc.advancedrecyclingmachine.desc": "A more advanced Recycling Machine. Turns trash into resources, but require",
+
+    "item.GrilledCheese.name": "Grilled Cheese",
+    "item.GrilledCheese.desc": "A simple cheese sandwich.",
+    "item.FishCasserol.name": "Fish Casserol",
+    "item.FishCasserol.desc": "Made from whatever was sitting around in the fridge..."
 }

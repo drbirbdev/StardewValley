@@ -9,6 +9,7 @@ using SpaceCore;
 using StardewValley;
 using StardewValley.Characters;
 using StardewValley.GameData.GarbageCans;
+using StardewValley.Locations;
 
 namespace BinningSkill;
 
@@ -96,6 +97,7 @@ class NPC_GetGiftTasteForThisItem
 /// No Default NPC Reactions
 /// Custom animation texture if provided
 /// No animation if search failed
+/// Fix animation for indoor garbage cans
 /// </summary>
 [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.CheckGarbage))]
 class GameLocation_CheckGarbage
@@ -124,6 +126,10 @@ class GameLocation_CheckGarbage
                 yield return new CodeInstruction(OpCodes.Ret);
                 yield return new CodeInstruction(OpCodes.Ldc_I4_1).WithLabels(doTrashAnimation);
             }
+            else if (instruction.Calls(AccessTools.DeclaredMethod(typeof(GameLocation), nameof(GameLocation.GetSeasonIndex))))
+            {
+                yield return CodeInstruction.Call(typeof(GameLocation_CheckGarbage), nameof(GetAdjustedSeasonIndex));
+            }
             else
             {
                 yield return instruction;
@@ -133,10 +139,19 @@ class GameLocation_CheckGarbage
 
     public static string GetAnimationReplacement(string garbageCanId)
     {
-        GarbageCanData allData = Game1.content.Load<GarbageCanData>("Data\\GarbageCans");
+        GarbageCanData allData = Game1.content.Load<GarbageCanData>("Data/GarbageCans");
         allData.GarbageCans.TryGetValue(garbageCanId, out GarbageCanEntryData data);
         string textureName = data?.CustomFields?.GetValueOrDefault("drbirbdev.BinningSkill_AnimationTexture", null);
-        return textureName ?? "LooseSprites\\Cursors2";
+        return textureName ?? "LooseSprites/Cursors2";
+    }
+
+    private static int GetAdjustedSeasonIndex(GameLocation gameLocation)
+    {
+        if (gameLocation.IsOutdoors || gameLocation is Summit)
+        {
+            return gameLocation.GetSeasonIndex();
+        }
+        return (int)Season.Spring;
     }
 }
 
@@ -160,7 +175,7 @@ class GameLocation_TryGetGarbageIItem
             __state = true;
 
             // Check garbage can level
-            GarbageCanData allData = Game1.content.Load<GarbageCanData>("Data\\GarbageCans");
+            GarbageCanData allData = Game1.content.Load<GarbageCanData>("Data/GarbageCans");
             allData.GarbageCans.TryGetValue(id, out GarbageCanEntryData data);
             _ = int.TryParse(data?.CustomFields?.GetValueOrDefault("drbirbdev.BinningSkill_MinLevel", null), out int minLevel);
             if (Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < minLevel)

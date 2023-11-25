@@ -24,7 +24,15 @@
                 "drbirbdev.BinningSkill_TrashCan": "335 2 390 30/Field/drbirbdev.BinningSkill_TrashCan/true/drbirbdev.Binning 2/{{i18n: bc.trashcan.name}}",
                 "drbirbdev.BinningSkill_Composter": "388 70 92 20 771 30/Field/drbirbdev.BinningSkill_Composter/true/drbirbdev.Binning 4/{{i18n: bc.composter.name}}",
                 "drbirbdev.BinningSkill_RecyclingBin": "335 3 336 2 771 10/Field/drbirbdev.BinningSkill_RecyclingBin/true/drbirbdev.Binning 7/{{i18n: bc.recyclingbin.name}}",
-                "drbirbdev.BinningSkill_AdvancedRecyclingMachine": "337 5 787 2 338 10/Field/drbirbdev.BinningSkill_AdvancedRecyclingMachine/true/drbirbdev.Binning 8/{{i18n: bc.advancedrecyclingmachine.name}}"
+                "drbirbdev.BinningSkill_AdvancedRecyclingMachine": "337 5 787 2 338 10/Field/drbirbdev.BinningSkill_AdvancedRecyclingMachine/true/drbirbdev.Binning 9/{{i18n: bc.advancedrecyclingmachine.name}}"
+            }
+        },
+        {
+            "Action": "EditData",
+            "Target": "Data/CookingRecipes",
+            "Entries": {
+                "drbirbdev.BinningSkill_GrilledCheese": "216 1 424 1//drbirbdev.BinningSkill_GrilledCheese/drbirbdev.BinningSkill 1/{{i18n: item.GrilledCheese.name}}",
+                "drbirbdev.BinningSkill_FishCasserol": "-4 1 -6 1 -75 1//drbirbdev.BinningSkill_FishCasserol/drbirbdev.BinningSkill 8/{{i18n: item.FishCasserol.name}}"
             }
         },
 
@@ -76,31 +84,110 @@
                 "(BC)drbirbdev.BinningSkill_Composter": {
                     "OutputRules": [
                         {
-                            "Id": "ItemPlacedInMachine",
-                            "Trigger": "ItemPlacedInMachine",
-                            "Condition": "ITEM_HAS_EDIBILITY Input 0",
-                            "UseFirstValidOutput": true,
+                            "Id": "Default_Composter",
+                            "Triggers": [
+                                {
+                                    "Id": "ItemPlacedInMachine",
+                                    "Condition": "ITEM_HAS_EDIBILITY Input 1"
+                                }
+                            ],
                             "DaysUntilReady": 2,
+                            "UseFirstValidOutput": true,
                             "OutputItem": [
                                 {
                                     "Id": "High Quality",
                                     "RandomItemId": [ "(O)918", "(O)919", "(O)920" ],
                                     "Condition": "ITEM_HAS_EDIBILITY Input 70",
-                                    "MinStack": 2,
-                                    "MaxStack": 5
+                                    "QuanitityModifierMode": "Stack",
+                                    "QuantityModifiers": [
+                                        {
+                                            "Id": "HighValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 450"
+                                        },
+                                        {
+                                            "Id": "MediumValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 350"
+                                        },
+                                        {
+                                            "Id": "LowValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 250"
+                                        },
+                                        {
+                                            "Id": "CookedItem",
+                                            "Modification": "Add",
+                                            "Amount": 2,
+                                            "Condition": "ITEM_HAS_TAG Input category_cooking"
+                                        }
+                                    ]
                                 },
                                 {
                                     "Id": "Medium Quality",
                                     "RandomItemId": [ "(O)369", "(O)371", "(O)466" ],
                                     "Condition": "ITEM_HAS_EDIBILITY Input 30",
-                                    "MinStack": 2,
-                                    "MaxStack": 5
+                                    "QuanitityModifierMode": "Stack",
+                                    "QuantityModifiers": [
+                                        {
+                                            "Id": "HighValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 450"
+                                        },
+                                        {
+                                            "Id": "MediumValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 350"
+                                        },
+                                        {
+                                            "Id": "LowValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 250"
+                                        },
+                                        {
+                                            "Id": "CookedItem",
+                                            "Modification": "Add",
+                                            "Amount": 2,
+                                            "Condition": "ITEM_HAS_TAG Input category_cooking"
+                                        }
+                                    ]
                                 },
                                 {
                                     "Id": "Low Quality",
                                     "RandomItemId": [ "(O)368", "(O)370", "(O)465" ],
-                                    "MinStack": 2,
-                                    "MaxStack": 5
+                                    "QuanitityModifierMode": "Stack",
+                                    "QuantityModifiers": [
+                                        {
+                                            "Id": "HighValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 450"
+                                        },
+                                        {
+                                            "Id": "MediumValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 350"
+                                        },
+                                        {
+                                            "Id": "LowValue",
+                                            "Modification": "Add",
+                                            "Amount": 1,
+                                            "Condition": "drbirbdev.BirbCore_ItemHasSellPrice Input 250"
+                                        },
+                                        {
+                                            "Id": "CookedItem",
+                                            "Modification": "Add",
+                                            "Amount": 2,
+                                            "Condition": "ITEM_HAS_TAG Input category_cooking"
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -131,7 +218,7 @@
                             "OutputItem": [
                                 {
                                     "Id": "Random Trash",
-                                    "RandomItemId": ["(O)167", "(O)168", "(O)169", "(O)170", "(O)171", "(O)172"]
+                                    "RandomItemId": [ "(O)167", "(O)168", "(O)169", "(O)170", "(O)171", "(O)172" ]
                                 }
                             ]
                         }
@@ -373,6 +460,51 @@
                             "StatName": "PiecesOfTrashRecycled"
                         }
                     ]
+                }
+            }
+        },
+
+        // Add objects
+        {
+            "Action": "EditData",
+            "Target": "Data/Objects",
+            "Entries": {
+                "drbirbdev.BinningSkill_GrilledCheese": {
+                    "Name": "Grilled Cheese",
+                    "DisplayName": "{{i18n:item.GrilledCheese.name}}",
+                    "Description": "{{i18n:item.GrilledCheese.desc}}",
+                    "Type": "Cooking",
+                    "Category": -7,
+                    "Price": 100,
+                    "Texture": "Mods/drbirbdev.BinningSkill/BigCraftables",
+                    "SpriteIndex": 4,
+                    "Edibility": 50,
+                    "IsDrink": false,
+                    "Buff": {
+                        "Duration": 500,
+                        "CustomFields": {
+                            "spacechase.SpaceCore.SkillBuff.drbirbdev.Binning": "1"
+                        }
+                    }
+                },
+                "drbirbdev.BinningSkill_FishCasserol": {
+                    "Name": "Fish Casserol",
+                    "DisplayName": "{{i18n:item.FishCasserol.name}}",
+                    "Description": "{{i18n:item.FishCasserol.desc}}",
+                    "Type": "Cooking",
+                    "Category": -7,
+                    "Price": 150,
+                    "Texture": "Mods/drbirbdev.BinningSkill/BigCraftables",
+                    "SpriteIndex": 5,
+                    "Edibility": 50,
+                    "IsDrink": false,
+                    "Buff": {
+                        "Duration": 500,
+                        "CustomFields": {
+                            "spacechase.SpaceCore.SkillBuff.drbirbdev.Binning": "3",
+                            "spacechase.SpaceCore.SkillBuff.drbirbdev.Socializing": "2"
+                        }
+                    }
                 }
             }
         }

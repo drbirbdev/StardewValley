@@ -94,14 +94,25 @@ Localized versions of holiday related tokens.
 
 ### Game State Queries
 
-TODO: Add some GSQs which act similarly to the APIs.
+```
+drbirbdev.RealtimeFramework_IsHoliday
+drbirbdev.RealtimeFramework_IsComingHoliday
+drbirbdev.RealtimeFramework_IsCurrentHoliday
+drbirbdev.RealtimeFramework_IsPassingHoliday
+```
 
 ### Event Preconditions
 
-TODO: Add some Event Preconditions which act similarly to the APIs.
+```
+drbirbdev.RealtimeFramework_IsHoliday
+drbirbdev.RealtimeFramework_IsComingHoliday
+drbirbdev.RealtimeFramework_IsCurrentHoliday
+drbirbdev.RealtimeFramework_IsPassingHoliday
+```
 
 ### TokenParser
 
-TODO: Add some token parsers which handle localization
-
+```
+drbirbdev.RealtimeFramework_HolidayName
+```
 

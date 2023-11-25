@@ -6,8 +6,8 @@ namespace SlimingSkill;
 internal class Events
 {
 
-    [SEvent.ApisLoaded]
-    private void ModClassParser_ApisLoaded(object sender, StardewModdingAPI.Events.OneSecondUpdateTickedEventArgs e)
+    [SEvent.GameLaunchedLate]
+    private void GameLaunched(object sender, StardewModdingAPI.Events.GameLaunchedEventArgs e)
     {
         BirbSkill.Register("drbirbdev.Sliming", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, new Dictionary<string, object>()
         {

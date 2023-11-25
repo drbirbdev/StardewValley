@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using BirbCore.Attributes;
 using BirbShared;
 using SpaceCore;
+using StardewModdingAPI.Events;
 using StardewValley;
 
 namespace SocializingSkill;
@@ -9,8 +10,8 @@ namespace SocializingSkill;
 [SEvent]
 internal class Events
 {
-    [SEvent.ApisLoaded]
-    private void ApisLoaded(object sender, StardewModdingAPI.Events.OneSecondUpdateTickedEventArgs e)
+    [SEvent.GameLaunchedLate]
+    private void GameLaunched(object sender, GameLaunchedEventArgs e)
     {
         BirbSkill.Register("drbirbdev.Socializing", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, new Dictionary<string, object>()
         {
@@ -40,20 +41,10 @@ internal class Events
         return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel });
     }
 
-    [SEvent.SaveLoaded]
-    private void SaveLoaded(object sender, StardewModdingAPI.Events.SaveLoadedEventArgs e)
-    {
-        if (ModEntry.MargoLoaded)
-        {
-            string id = Skills.GetSkill("drbirbdev.Socializing").Id;
-            ModEntry.MargoAPI.RegisterCustomSkillForPrestige(id);
-        }
-    }
-
     // Beloved Profession
     //  - reset which villagers have been checked for bonus gifts today for each player.
     [SEvent.DayStarted]
-    private void DayStarted(object sender, StardewModdingAPI.Events.DayStartedEventArgs e)
+    private void DayStarted(object sender, DayStartedEventArgs e)
     {
         ModEntry.BelovedCheckedToday.Value = new List<string>();
     }

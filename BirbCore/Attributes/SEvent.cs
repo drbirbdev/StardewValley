@@ -29,9 +29,28 @@ public class SEvent : ClassHandler
 
     public class GameLaunchedLate : MethodHandler
     {
+        private MethodInfo? Method;
+        private IMod? Mod;
+        private object? Instance;
+
         public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
-            method.Invoke(instance, new object[] { this, new GameLaunchedEventArgs() });
+            this.Method = method;
+            this.Mod = mod;
+            this.Instance = instance;
+
+            mod.Helper.Events.GameLoop.UpdateTicked += this.DoAfterTick;
+        }
+
+        private void DoAfterTick(object? sender, UpdateTickedEventArgs e)
+        {
+            if (this.Mod is null || this.Method is null)
+            {
+                Log.Error("DoAfterTick had null Mod or Method");
+                return;
+            }
+            this.Mod.Helper.Events.GameLoop.UpdateTicked -= DoAfterTick;
+            Method.Invoke(Instance, new object[] { this, new GameLaunchedEventArgs() });
         }
     }
 
@@ -416,36 +435,6 @@ public class SEvent : ClassHandler
         public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             mod.Helper.Events.Content.LocaleChanged += method.InitDelegate<EventHandler<LocaleChangedEventArgs>>(instance);
-        }
-    }
-
-    public class ApisLoaded : MethodHandler
-    {
-        private MethodInfo? Method;
-        private IMod? Mod;
-        private object? Instance;
-
-        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
-        {
-            this.Method = method;
-            this.Mod = mod;
-            this.Instance = instance;
-
-            mod.Helper.Events.GameLoop.GameLaunched += (object? sender, GameLaunchedEventArgs e) =>
-            {
-                mod.Helper.Events.GameLoop.OneSecondUpdateTicked += this.OneSecondUpdateTicked;
-            };
-        }
-
-        private void OneSecondUpdateTicked(object? sender, OneSecondUpdateTickedEventArgs e)
-        {
-            if (this.Mod is null || this.Method is null)
-            {
-                Log.Error("ApisLoaded had null fields");
-                return;
-            }
-            this.Mod.Helper.Events.GameLoop.OneSecondUpdateTicked -= this.OneSecondUpdateTicked;
-            this.Method.Invoke(this.Instance, new object?[] { sender, e });
         }
     }
 }

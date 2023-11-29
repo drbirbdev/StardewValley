@@ -8,16 +8,16 @@
                 "drbirbdev.BinningSkill_Railroad_Spa": {
                     "Items": [
                         {
-                            "Id": "Island Bikini",
+                            "Id": "IslandBikini",
                             "ItemId": "(S)1297",
                             "IsDoubleMegaSuccess": true,
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01"
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.005 @multAllLuck"
                         },
                         {
                             "Id": "Bikini",
                             "ItemId": "(S)1134",
                             "IsMegaSuccess": true,
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.03"
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.03 @multAllLuck"
                         }
                     ],
                     "CustomFields": {
@@ -27,14 +27,14 @@
                 "drbirbdev.BinningSkill_Town_Fountain": {
                     "Items": [
                         {
-                            "Id": "Random Fish",
-                            "ItemId": "LOCATION_FISH Here 0 100 5",
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.02 @addDailyLuck"
+                            "Id": "RandomFish",
+                            "ItemId": "LOCATION_FISH Here 0 100 5", //TODO: broken?
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.2 @addAllLuck"
                         },
                         {
-                            "Id": "Random Artifact",
+                            "Id": "RandomArtifact",
                             "ItemId": "RANDOM_ARTIFACT_FOR_DIG_SPOT",
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.02 @addDailyLuck"
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.1 @addAllLuck"
                         }
                     ],
                     "CustomFields": {
@@ -44,36 +44,34 @@
                 "drbirbdev.BinningSkill_Mountain_Robins": {
                     "Items": [
                         {
-                            "Id": "Basic Crafting Materials",
-                            "RandomItemId": [
-                                "(O)388",
-                                "(O)390",
-                                "(O)330"
-                            ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.05 @addDailyLuck",
-                            "MinStack": 3,
-                            "MaxStack": 10
-                        },
-                        {
-                            "Id": "Advanced Crafting Materials",
-                            "RandomItemId": [
-                                "(O)709",
-                                "(O)382",
-                                "(O)338"
-                            ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01 @addDailyLuck",
-                            "MinStack": 1,
-                            "MaxStack": 5
-                        },
-                        {
-                            "Id": "Expert Crafting Materials",
+                            "Id": "ExpertCraftingMaterials",
                             "RandomItemId": [
                                 "(O)787",
                                 "(O)848",
                                 "(O)910"
                             ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01",
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.02 @multAllLuck",
                             "IsMegaSuccess": true
+                        },
+                        {
+                            "Id": "AdvancedCraftingMaterials",
+                            "RandomItemId": [
+                                "(O)709",
+                                "(O)382",
+                                "(O)338"
+                            ],
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.1 @multAllLuck"
+                        },
+                        {
+                            "Id": "BasicCraftingMaterials",
+                            "RandomItemId": [
+                                "(O)388",
+                                "(O)390",
+                                "(O)330"
+                            ],
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.3 @addAllLuck",
+                            "MinStack": 1,
+                            "MaxStack": 5
                         }
                     ],
                     "CustomFields": {
@@ -83,13 +81,32 @@
                 "drbirbdev.BinningSkill_Mountain_AdventurersGuild": {
                     "Items": [
                         {
-                            "Id": "Galaxy Soul",
+                            "Id": "GalaxySoul",
                             "ItemId": "(O)896",
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.005",
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.005 @multAllLuck",
                             "IsDoubleMegaSuccess": true
                         },
                         {
-                            "Id": "Basic Random Weapon",
+                            "Id": "GoodRandomWeapon",
+                            "RandomItemId": [
+                                "(W)2",
+                                "(W)45",
+                                "(W)28"
+                            ],
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.02 @multAllLuck",
+                            "IsMegaSuccess": true
+                        },
+                        {
+                            "Id": "DecentRandomWeapon",
+                            "RandomItemId": [
+                                "(W)10",
+                                "(W)51",
+                                "(W)46"
+                            ],
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.06 @multAllLuck"
+                        },
+                        {
+                            "Id": "BasicRandomWeapon",
                             "RandomItemId": [
                                 "(W)0",
                                 "(W)11",
@@ -100,26 +117,7 @@
                                 "(W)31",
                                 "(W)24"
                             ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.04 @addDailyLuck"
-                        },
-                        {
-                            "Id": "Decent Random Weapon",
-                            "RandomItemId": [
-                                "(W)10",
-                                "(W)51",
-                                "(W)46"
-                            ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.02"
-                        },
-                        {
-                            "Id": "Good Random Weapon",
-                            "RandomItemId": [
-                                "(W)2",
-                                "(W)45",
-                                "(W)28"
-                            ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01",
-                            "IsMegaSuccess": true
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.1 @addAllLuck"
                         }
                     ],
                     "CustomFields": {
@@ -129,9 +127,9 @@
                 "drbirbdev.BinningSkill_SeedShop_Store": {
                     "Items": [
                         {
-                            "Id": "Item Sold By Player",
+                            "Id": "ItemSoldByPlayer",
                             "ItemId": "ITEMS_SOLD_BY_PLAYER SeedShop",
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.1 @addDailyLuck"
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.3 @addAllLuck"
                         }
                     ],
                     "CustomFields": {
@@ -141,18 +139,23 @@
                 "drbirbdev.BinningSkill_Forest_Marnie": {
                     "Items": [
                         {
-                            "Id": "Random Basic Animal Produce",
-                            "RandomItemId": [
-                                "(O)184",
-                                "(O)176",
-                                "(O)440",
-                                "(O)442",
-                                "(O)436"
-                            ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.05 @addDailyLuck"
+                            "Id": "GoldenEgg",
+                            "ItemId": "(O)928",
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.009 @multAllLuck, PLAYER_HAS_FLAG Target Farm_Eternal",
+                            "IsDoubleMegaSuccess": true
                         },
                         {
-                            "Id": "Random Artisan Animal Produce",
+                            "Id": "WeirdEgg",
+                            "RandomItemId": [
+                                "(O)107",
+                                "(O)305",
+                                "(O)289"
+                            ],
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.02 @multAllLuck",
+                            "IsMegaSuccess": true
+                        },
+                        {
+                            "Id": "RandomArtisanAnimalProduce",
                             "RandomItemId": [
                                 "(O)424",
                                 "(O)426",
@@ -160,23 +163,18 @@
                                 "(O)430",
                                 "(O)306"
                             ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.02 @addDailyLuck"
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.1 @multAllLuck"
                         },
                         {
-                            "Id": "Weird Egg",
+                            "Id": "RandomBasicAnimalProduce",
                             "RandomItemId": [
-                                "(O)107",
-                                "(O)305",
-                                "(O)289"
+                                "(O)184",
+                                "(O)176",
+                                "(O)440",
+                                "(O)442",
+                                "(O)436"
                             ],
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01",
-                            "IsMegaSuccess": true
-                        },
-                        {
-                            "Id": "Golden Egg",
-                            "ItemId": "(O)928",
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.01, PLAYER_HAS_FLAG Target Farm_Eternal",
-                            "IsDoubleMegaSuccess": true
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.3 @addAllLuck"
                         }
                     ],
                     "CustomFields": {
@@ -189,14 +187,15 @@
                             "Id": "Alcohol",
                             "RandomItemId": [
                                 "(O)346",
-                                "(O)304"
+                                "(O)303",
+                                "(O)459"
                             ],
-                            "Condition": "!RANDOM 0.9 @addDailyLuck, TIME 1000 1700"
+                            "Condition": "!RANDOM 0.7 @addDailyLuck @addDailyLuck @addDailyLuck @addDailyLuck, TIME 1000 1700, !IS_VISITING_ISLAND Pam"
                         },
                         {
-                            "Id": "Random Artifact",
+                            "Id": "RandomArtifact",
                             "ItemId": "RANDOM_ARTIFACT_FOR_DIG_SPOT",
-                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.02 @addDailyLuck"
+                            "Condition": "drbirbdev.BinningSkill_RANDOM 0.2 @addDailyLuck"
                         }
                     ],
                     "CustomFields": {

@@ -51,15 +51,15 @@
         }
     ],
     "Changes": [
+        // Load new hats
+        {
+            "Action": "Include",
+            "FromFile": "data/hats.json"
+        },
         // Load machine data
         {
             "Action": "Include",
             "FromFile": "data/machines.json"
-        },
-        // Alter trash animations to work better with higher tier cans
-        {
-            "Action": "Include",
-            "FromFile": "data/textures.json"
         },
         // Add new cans to maps
         {

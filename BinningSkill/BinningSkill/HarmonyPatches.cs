@@ -207,9 +207,8 @@ class GameLocation_TryGetGarbageIItem
                 }
             }
 
-
             // Alter dailyLuck, adding more luck depending on level
-            dailyLuck += ModEntry.Config.PerLevelBaseDropChanceBonus * Game1.player.GetCustomSkillLevel("drbirbdev.Binning") / 100.0f;
+            dailyLuck += ModEntry.Config.PerLevelBaseDropChanceBonus * Game1.player.GetCustomSkillLevel("drbirbdev.Binning");
 
         }
         catch (Exception e)

@@ -21,7 +21,7 @@
                         }
                     ],
                     "CustomFields": {
-                        "drbirbdev.BinningSkill_AddToMap": "Maps/RailRoad 5 56 Default"
+                        "drbirbdev.BinningSkill_AddToMap": "Maps/Railroad 5 56 Default"
                     }
                 },
                 "drbirbdev.BinningSkill_Town_Fountain": {
@@ -426,7 +426,7 @@
                     "Items": [
                     ],
                     "CustomFields": {
-                        "drbirbdev.BinningSkill_AddToMap": "Maps/Railroad 31 26 Prismatic"
+                        "drbirbdev.BinningSkill_AddToMap": "Maps/Railroad 31 25 Prismatic"
                     }
                 }
             }

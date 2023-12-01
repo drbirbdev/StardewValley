@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text;
 using BirbCore.Extensions;
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
+using StardewValley;
 
 namespace BirbCore.Attributes;
 
@@ -155,17 +157,16 @@ public class SCommand : ClassHandler
                 for (int i = 0; i < method.GetParameters().Length; i++)
                 {
                     ParameterInfo parameter = method.GetParameters()[i];
+                    string? arg = args?.Length > i ? args?[i] : null;
 
+
+                    commandArgs.Add(ParseArg(arg, parameter));
                     if (parameter.GetCustomAttribute(typeof(ParamArrayAttribute), false) is not null)
                     {
-                        for (int j = i; j < (args?.Length ?? 0); j++)
+                        for (int j = i + 1; j < (args?.Length ?? 0); j++)
                         {
                             commandArgs.Add(ParseArg(args?[j], parameter));
                         }
-                    }
-                    else
-                    {
-                        commandArgs.Add(ParseArg(args?[i], parameter));
                     }
                 }
 
@@ -213,6 +214,34 @@ public class SCommand : ClassHandler
             else if (parameter.ParameterType == typeof(bool))
             {
                 return bool.Parse(arg);
+            }
+            else if (parameter.ParameterType == typeof(GameLocation))
+            {
+                return Utility.fuzzyLocationSearch(arg);
+            }
+            else if (parameter.ParameterType == typeof(NPC))
+            {
+                return Utility.fuzzyCharacterSearch(arg);
+            }
+            else if (parameter.ParameterType == typeof(FarmAnimal))
+            {
+                return Utility.fuzzyAnimalSearch(arg);
+            }
+            else if (parameter.ParameterType == typeof(Farmer))
+            {
+                if (long.TryParse(arg, out long playerId))
+                {
+                    return Game1.getFarmerMaybeOffline(playerId);
+                }
+                else if (arg.Equals("host", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return Game1.MasterPlayer;
+                }
+                return Game1.player;
+            }
+            else if (parameter.ParameterType == typeof(Item))
+            {
+                return Utility.fuzzyItemSearch(arg);
             }
             else
             {

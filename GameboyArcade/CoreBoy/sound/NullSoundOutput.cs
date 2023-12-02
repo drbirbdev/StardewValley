@@ -10,7 +10,7 @@ namespace CoreBoy.sound
         {
         }
 
-        public void Play(int left, int right)
+        public void Play(byte left, byte right)
         {
         }
     }

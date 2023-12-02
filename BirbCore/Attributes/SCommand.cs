@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using BirbCore.Extensions;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using StardewValley;
 
 namespace BirbCore.Attributes;

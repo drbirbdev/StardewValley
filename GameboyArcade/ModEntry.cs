@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using BirbCore.APIs;
 using BirbCore.Attributes;
 using StardewModdingAPI;
@@ -19,7 +20,7 @@ public class ModEntry : Mod
 
     public override void Entry(IModHelper helper)
     {
-        Parser.ParseAll(this);
+        Parser.ParseAll(this, Assembly.GetExecutingAssembly());
     }
 
     public override object GetApi()

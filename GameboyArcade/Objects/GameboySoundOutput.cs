@@ -24,7 +24,7 @@ namespace GameboyArcade
         const short CHANNELS = 2;
         const int SAMPLES_PER_SECOND = 12000;
         const short BITS_PER_SAMPLE = 8;
-        const short FRAME_SIZE = (short)(CHANNELS * ((BITS_PER_SAMPLE + 7) / 8));
+        const short FRAME_SIZE = CHANNELS * ((BITS_PER_SAMPLE + 7) / 8);
         const int BYTES_PER_SECOND = SAMPLES_PER_SECOND * CHANNELS * BITS_PER_SAMPLE / 8;
         const int WAVE_SIZE = 4;
         const int SAMPLES = BUFFER_SIZE / 2;
@@ -71,7 +71,7 @@ namespace GameboyArcade
             this.Writer.Write((byte)(left + 127));
             this.Writer.Write((byte)(right + 127));
             this.I += 2;
-            
+
             if (this.I >= BUFFER_SIZE)
             {
                 this.Stream.Seek(0, SeekOrigin.Begin);
@@ -81,7 +81,7 @@ namespace GameboyArcade
                     continue;
                 }
                 this.Sound?.Dispose();
-                
+
                 this.Sound = SoundEffect.FromStream(this.Stream).CreateInstance();
                 this.Sound.Play();
 
@@ -106,10 +106,10 @@ namespace GameboyArcade
 
                 this.I = 0;
                 this.Generated++;
-                if (Generated % 100 == 0)
+                if (this.Generated % 100 == 0)
                 {
-                    Log.Info($"{Stopwatch.Elapsed.TotalMilliseconds / 100} ms per sound frame");
-                    Stopwatch.Restart();
+                    Log.Info($"{this.Stopwatch.Elapsed.TotalMilliseconds / 100} ms per sound frame");
+                    this.Stopwatch.Restart();
                 }
             }
 

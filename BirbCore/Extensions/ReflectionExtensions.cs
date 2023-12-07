@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Reflection;
 
@@ -6,7 +7,7 @@ public static class ReflectionExtensions
 {
     public const BindingFlags AllDeclared = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
-    public static MemberInfo GetMemberOfType(this Type type, Type memberType)
+    public static MemberInfo? GetMemberOfType(this Type type, Type memberType)
     {
         foreach (FieldInfo fieldInfo in type.GetFields(AllDeclared))
         {
@@ -25,7 +26,7 @@ public static class ReflectionExtensions
         return null;
     }
 
-    public static MemberInfo GetMemberOfName(this Type type, string name)
+    public static MemberInfo? GetMemberOfName(this Type type, string name)
     {
         foreach (FieldInfo fieldInfo in type.GetFields(AllDeclared))
         {
@@ -44,7 +45,7 @@ public static class ReflectionExtensions
         return null;
     }
 
-    public static MemberInfo GetMemberWithCustomAttribute(this Type type, Type attributeType)
+    public static MemberInfo? GetMemberWithCustomAttribute(this Type type, Type attributeType)
     {
         foreach (FieldInfo fieldInfo in type.GetFields(AllDeclared))
         {
@@ -69,7 +70,7 @@ public static class ReflectionExtensions
         return null;
     }
 
-    public static Type GetReflectedType(this MemberInfo member)
+    public static Type? GetReflectedType(this MemberInfo member)
     {
         if (member is FieldInfo field)
         {
@@ -82,7 +83,7 @@ public static class ReflectionExtensions
         return null;
     }
 
-    public static Func<object, object> GetGetter(this MemberInfo member)
+    public static Func<object?, object?>? GetGetter(this MemberInfo member)
     {
         if (member is FieldInfo field)
         {
@@ -95,7 +96,7 @@ public static class ReflectionExtensions
         return null;
     }
 
-    public static Action<object, object> GetSetter(this MemberInfo member)
+    public static Action<object?, object?>? GetSetter(this MemberInfo member)
     {
         if (member is FieldInfo field)
         {
@@ -108,7 +109,7 @@ public static class ReflectionExtensions
         return null;
     }
 
-    public static T InitDelegate<T>(this MethodInfo method, object instance = null) where T : Delegate
+    public static T InitDelegate<T>(this MethodInfo method, object? instance = null) where T : Delegate
     {
         if (method.IsStatic)
         {

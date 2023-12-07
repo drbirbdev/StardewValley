@@ -68,7 +68,7 @@ internal class Events
 
                 if (!can.Value.CustomFields.TryGetValue("drbirbdev.BinningSkill_AddToMap", out string data))
                 {
-                    
+
                     can.Value.Items.Insert(0, GetGarbageHatItemData("Default"));
                     continue;
                 }
@@ -124,7 +124,7 @@ internal class Events
                     "Prismatic" => "12",
                     _ => "7"
                 };
-                
+
             }
         });
     }
@@ -254,12 +254,13 @@ internal class Events
             Size tilesheetSize = new Size(ModEntry.Assets.TrashCanTilesheet.Width / 16, ModEntry.Assets.TrashCanTilesheet.Height / 16);
 
             editor.Data.AddTileSheet(new TileSheet("z_trashcans", editor.Data, ModEntry.Assets.TrashCanTilesheetAssetName.Name, tilesheetSize, new Size(16, 16)));
-            
-            foreach (GarbageCanEdit edit in edits) {
-                Location botLocation = new Location(edit.X, edit.Y);
+
+            foreach (GarbageCanEdit edit in edits)
+            {
+                Location bottomLocation = new Location(edit.X, edit.Y);
                 xTile.Layers.Layer buildingLayer = editor.Data.GetLayer("Buildings");
-                buildingLayer.Tiles[botLocation] = new StaticTile(buildingLayer, editor.Data.GetTileSheet("z_trashcans"), BlendMode.Alpha, 7 + edit.SourceX);
-                buildingLayer.Tiles[botLocation].Properties["Action"] = $"Garbage {edit.Key}";
+                buildingLayer.Tiles[bottomLocation] = new StaticTile(buildingLayer, editor.Data.GetTileSheet("z_trashcans"), BlendMode.Alpha, 7 + edit.SourceX);
+                buildingLayer.Tiles[bottomLocation].Properties["Action"] = $"Garbage {edit.Key}";
 
                 Location topLocation = new Location(edit.X, edit.Y - 1);
                 xTile.Layers.Layer frontLayer = editor.Data.GetLayer("Front");

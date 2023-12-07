@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BirbCore.Attributes;
-using StardewValley.GameData.GarbageCans;
 using StardewValley;
+using StardewValley.GameData.GarbageCans;
 
 namespace BinningSkill.BinningSkill;
 
@@ -28,7 +28,8 @@ internal class Command
 
         List<GarbageCanItemData> items = new List<GarbageCanItemData>();
         items.AddRange(allData.BeforeAll);
-        if (data is not null && data.Items is not null) {
+        if (data is not null && data.Items is not null)
+        {
             items.AddRange(data.Items);
         }
         items.AddRange(allData.AfterAll);
@@ -133,7 +134,7 @@ internal class Command
         sortedItemDataCounts.Sort((a, b) => b.Value - a.Value);
 
         Log.Info($"{noItem,10}\t{100.0f * noItem / rounds,10}%\tnothing found...");
-        foreach(var entry in sortedItemDataCounts)
+        foreach (var entry in sortedItemDataCounts)
         {
             Log.Info($"{entry.Value,10}\t{100.0f * entry.Value / rounds,10}%\t{entry.Key}");
         }

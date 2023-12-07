@@ -189,7 +189,7 @@ internal class Command
             {
                 foreach (var tile in location.Map.GetLayer("Buildings").Tiles.Array)
                 {
-                    if (tile is null || tile.Properties.Count() == 0)
+                    if (tile is null || tile.Properties.Count == 0)
                     {
                         continue;
                     }

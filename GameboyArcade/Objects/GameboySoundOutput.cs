@@ -35,7 +35,7 @@ namespace GameboyArcade
         private int I;
         private long Generated = 0;
         private int Tick;
-        private Stopwatch Stopwatch = new Stopwatch();
+        private readonly Stopwatch Stopwatch = new Stopwatch();
         private MemoryStream Stream;
         private BinaryWriter Writer;
         private SoundEffectInstance Sound;

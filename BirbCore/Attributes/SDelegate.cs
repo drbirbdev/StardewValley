@@ -7,6 +7,7 @@ using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Delegates;
 using StardewValley.Internal;
+using StardewValley.TokenizableStrings;
 
 namespace BirbCore.Attributes;
 
@@ -27,7 +28,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
-            Event.RegisterCustomCommand($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<EventCommandDelegate>(instance));
+            Event.RegisterCommand($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<EventCommandDelegate>(instance));
         }
     }
 
@@ -35,7 +36,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
-            Event.RegisterCustomPrecondition($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<EventPreconditionDelegate>(instance));
+            Event.RegisterPrecondition($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<EventPreconditionDelegate>(instance));
         }
     }
 
@@ -59,7 +60,7 @@ public class SDelegate : ClassHandler
     {
         public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
-            StardewValley.TokenParser.RegisterParser($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<TokenParserDelegate>(instance));
+            StardewValley.TokenizableStrings.TokenParser.RegisterParser($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<TokenParserDelegate>(instance));
         }
     }
 

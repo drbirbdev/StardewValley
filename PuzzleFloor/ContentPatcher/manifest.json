@@ -1,0 +1,16 @@
+﻿{
+    "Name": "[CP] Puzzle Floor",
+    "Author": "drbirbdev",
+    "Version": "1.0.0",
+    "Description": "Puzzle Floor Content Patcher",
+    "UniqueID": "drbirbdev.PuzzleFloor.CP",
+    "ContentPackFor": {
+        "UniqueID": "Pathoschild.ContentPatcher"
+    },
+    "UpdateKeys": [],
+    "Dependencies": [
+        {
+            "UniqueID": "drbirbdev.PuzzleFloor"
+        }
+    ]
+}

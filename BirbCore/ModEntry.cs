@@ -12,6 +12,6 @@ internal class ModEntry : Mod
     {
         Instance = this;
         Parser.InitEvents();
-        Parser.ParseAll(this, Assembly.GetExecutingAssembly());
+        Parser.ParseAll(this);
     }
 }

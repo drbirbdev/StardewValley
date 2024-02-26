@@ -20,7 +20,7 @@ public class ModEntry : Mod
 
     public override void Entry(IModHelper helper)
     {
-        Parser.ParseAll(this, Assembly.GetExecutingAssembly());
+        Parser.ParseAll(this);
     }
 
     public override object GetApi()

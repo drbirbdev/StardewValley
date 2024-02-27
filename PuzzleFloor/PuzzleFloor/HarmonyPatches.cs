@@ -16,7 +16,7 @@ internal class Furniture_UpdateRotation
         }
 
         // TODO: this is just copied from furniture class.  Actually patch to make rugs fully rotateable
-        __instance.flipped.Value = false;
+        __instance.Flipped = false;
         if (__instance.currentRotation.Value > 0)
         {
             Point specialRotationOffsets = __instance.furniture_type.Value switch
@@ -65,14 +65,14 @@ internal class Furniture_UpdateRotation
                         break;
                     case 3:
                         __instance.sourceRect.Value = new Rectangle(__instance.defaultSourceRect.X + __instance.defaultSourceRect.Width, __instance.defaultSourceRect.Y, __instance.defaultSourceRect.Height - 16 + (specialRotationOffsets.Y * 16) + (specialSpecialSourceRectOffset.X * 16), __instance.defaultSourceRect.Width + 16 + (specialRotationOffsets.X * 16) + (specialSpecialSourceRectOffset.Y * 16));
-                        __instance.flipped.Value = true;
+                        __instance.Flipped = true;
                         break;
                 }
             }
             else
             {
-                __instance.flipped.Value = __instance.currentRotation.Value == 3;
-                if ((int)__instance.rotations == 2)
+                __instance.Flipped = __instance.currentRotation.Value == 3;
+                if ((int)__instance.rotations.Value == 2)
                 {
                     __instance.sourceRect.Value = new Rectangle(__instance.defaultSourceRect.X + (((__instance.currentRotation.Value == 2) ? 1 : 0) * __instance.defaultSourceRect.Width), __instance.defaultSourceRect.Y, __instance.defaultSourceRect.Width, __instance.defaultSourceRect.Height);
                 }

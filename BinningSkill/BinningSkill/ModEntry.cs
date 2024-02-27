@@ -15,7 +15,7 @@ public class ModEntry : Mod
 
     internal ITranslationHelper I18n => this.Helper.Translation;
 
-    public static PerScreen<ISet<string>> UnderleveledCheckedGarbage = new();
+    public static readonly PerScreen<ISet<string>> UnderleveledCheckedGarbage = new();
 
     public override void Entry(IModHelper helper)
     {

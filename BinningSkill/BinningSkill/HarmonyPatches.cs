@@ -105,7 +105,6 @@ class NPC_GetGiftTasteForThisItem
 /// TODO: No animation if search failed
 /// </summary>
 [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.CheckGarbage))]
-[HarmonyDebug]
 class GameLocation_CheckGarbage
 {
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
@@ -174,6 +173,11 @@ class GameLocation_CheckGarbage
         int minLevel = data?.CustomFields?.TryGetInt("drbirbdev.BinningSkill_MinLevel") ?? 0;
         if (who.GetCustomSkillLevel("drbirbdev.Binning") < minLevel)
         {
+            if (ModEntry.UnderleveledCheckedGarbage.Value.Contains(garbageCanId))
+            {
+                return false;
+            }
+            ModEntry.UnderleveledCheckedGarbage.Value.Add(garbageCanId);
             Game1.showGlobalMessage(ModEntry.Instance.I18n.Get("skill.required_level", new { level = minLevel }));
             return false;
         }

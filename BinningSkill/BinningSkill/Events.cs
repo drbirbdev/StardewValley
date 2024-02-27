@@ -25,6 +25,12 @@ internal class Events
         public int SourceX { get; set; }
     }
 
+    [SEvent.DayStarted]
+    private void GameStarted(object sender, DayStartedEventArgs e)
+    {
+        ModEntry.UnderleveledCheckedGarbage.Value = new HashSet<string>();
+    }
+
     [SEvent.GameLaunchedLate]
     private void GameLaunched(object sender, GameLaunchedEventArgs e)
     {

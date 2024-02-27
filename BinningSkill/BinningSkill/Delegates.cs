@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using BirbCore.Attributes;
 using SpaceCore;
@@ -19,7 +18,7 @@ internal class Delegates
     [SDelegate.GameStateQuery]
     public static bool Random(string[] query, GameStateQueryContext context)
     {
-        
+
         if (!ArgUtility.TryGetFloat(query, 1, out float chance, out string error))
         {
             return GameStateQuery.Helpers.ErrorResult(query, error);

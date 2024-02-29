@@ -20,7 +20,7 @@ namespace CoreBoy.memory.cart.type
         {
             this._cartridge = cartridge;
             this._ram = new int[0x2000 * Math.Max(ramBanks, 1)];
-            for (var i = 0; i < this._ram.Length; i++)
+            for (int i = 0; i < this._ram.Length; i++)
             {
                 this._ram[i] = 0xff;
             }
@@ -28,7 +28,7 @@ namespace CoreBoy.memory.cart.type
             this._clock = new RealTimeClock(Clock.SystemClock);
             this._battery = battery;
 
-            var clockData = new long[12];
+            long[] clockData = new long[12];
             battery.LoadRamWithClock(this._ram, clockData);
             this._clock.Deserialize(clockData);
         }
@@ -53,7 +53,7 @@ namespace CoreBoy.memory.cart.type
             }
             else if (address >= 0x2000 && address < 0x4000)
             {
-                var bank = value & 0b01111111;
+                int bank = value & 0b01111111;
                 this.SelectRomBank(bank);
             }
             else if (address >= 0x4000 && address < 0x6000)
@@ -80,7 +80,7 @@ namespace CoreBoy.memory.cart.type
             }
             else if (address >= 0xa000 && address < 0xc000 && this._ramWriteEnabled && this._selectedRamBank < 4)
             {
-                var ramAddress = this.GetRamAddress(address);
+                int ramAddress = this.GetRamAddress(address);
                 if (ramAddress < this._ram.Length)
                 {
                     this._ram[ramAddress] = value;
@@ -115,7 +115,7 @@ namespace CoreBoy.memory.cart.type
             }
             else if (address >= 0xa000 && address < 0xc000 && this._selectedRamBank < 4)
             {
-                var ramAddress = this.GetRamAddress(address);
+                int ramAddress = this.GetRamAddress(address);
                 if (ramAddress < this._ram.Length)
                 {
                     return this._ram[ramAddress];
@@ -137,7 +137,7 @@ namespace CoreBoy.memory.cart.type
 
         private int GetRomByte(int bank, int address)
         {
-            var cartOffset = (bank * 0x4000) + address;
+            int cartOffset = (bank * 0x4000) + address;
             if (cartOffset < this._cartridge.Length)
             {
                 return this._cartridge[cartOffset];
@@ -170,7 +170,7 @@ namespace CoreBoy.memory.cart.type
                     return this._clock.GetDayCounter() & 0xff;
 
                 case 0x0c:
-                    var result = (this._clock.GetDayCounter() & 0x100) >> 8;
+                    int result = (this._clock.GetDayCounter() & 0x100) >> 8;
                     result |= this._clock.IsHalt() ? (1 << 6) : 0;
                     result |= this._clock.IsCounterOverflow() ? (1 << 7) : 0;
                     return result;
@@ -181,7 +181,7 @@ namespace CoreBoy.memory.cart.type
 
         private void SetTimer(int value)
         {
-            var dayCounter = this._clock.GetDayCounter();
+            int dayCounter = this._clock.GetDayCounter();
             switch (this._selectedRamBank)
             {
                 case 0x08:

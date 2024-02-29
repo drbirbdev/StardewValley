@@ -247,7 +247,7 @@ namespace CoreBoy.cpu.opcode
 
             public override int Execute(Registers registers, IAddressSpace addressSpace, int[] args, int context)
             {
-                var lsb = addressSpace.GetByte(registers.SP);
+                int lsb = addressSpace.GetByte(registers.SP);
                 registers.SP = this._func(registers.Flags, registers.SP);
                 return lsb;
             }
@@ -268,7 +268,7 @@ namespace CoreBoy.cpu.opcode
 
             public override int Execute(Registers registers, IAddressSpace addressSpace, int[] args, int context)
             {
-                var msb = addressSpace.GetByte(registers.SP);
+                int msb = addressSpace.GetByte(registers.SP);
                 registers.SP = this._func(registers.Flags, registers.SP);
                 return context | (msb << 8);
             }
@@ -310,7 +310,7 @@ namespace CoreBoy.cpu.opcode
 
             public override int Execute(Registers registers, IAddressSpace addressSpace, int[] args, int v1)
             {
-                var v2 = this._arg2.Read(registers, addressSpace, args);
+                int v2 = this._arg2.Read(registers, addressSpace, args);
                 return this._func(registers.Flags, v1, v2);
             }
 
@@ -448,7 +448,7 @@ namespace CoreBoy.cpu.opcode
 
             public override int Execute(Registers registers, IAddressSpace addressSpace, int[] args, int context)
             {
-                var value = addressSpace.GetByte(registers.HL);
+                int value = addressSpace.GetByte(registers.HL);
                 var flags = registers.Flags;
                 flags.SetN(false);
                 flags.SetH(true);

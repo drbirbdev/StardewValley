@@ -20,7 +20,7 @@ namespace CoreBoy.memory
 
         public int GetByte(int address)
         {
-            var index = address - this._offset;
+            int index = address - this._offset;
             if (index < 0 || index >= this._space.Length)
             {
                 throw new IndexOutOfRangeException("Address: " + address);

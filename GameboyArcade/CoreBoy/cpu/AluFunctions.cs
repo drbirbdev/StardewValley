@@ -20,7 +20,7 @@ namespace CoreBoy.cpu
         {
             this.AddFunction("INC", DataType.D8, (flags, arg) =>
             {
-                var result = (arg + 1) & 0xff;
+                int result = (arg + 1) & 0xff;
                 flags.SetZ(result == 0);
                 flags.SetN(false);
                 flags.SetH((arg & 0x0f) == 0x0f);
@@ -30,7 +30,7 @@ namespace CoreBoy.cpu
             this.AddFunction("INC", DataType.D16, (flags, arg) => (arg + 1) & 0xffff);
             this.AddFunction("DEC", DataType.D8, (flags, arg) =>
             {
-                var result = (arg - 1) & 0xff;
+                int result = (arg - 1) & 0xff;
                 flags.SetZ(result == 0);
                 flags.SetN(true);
                 flags.SetH((arg & 0x0f) == 0x0);
@@ -50,14 +50,14 @@ namespace CoreBoy.cpu
                 flags.SetZ(false);
                 flags.SetN(false);
 
-                var result = arg1 + arg2;
+                int result = arg1 + arg2;
                 flags.SetC((((arg1 & 0xff) + (arg2 & 0xff)) & 0x100) != 0);
                 flags.SetH((((arg1 & 0x0f) + (arg2 & 0x0f)) & 0x10) != 0);
                 return result & 0xffff;
             });
             this.AddFunction("DAA", DataType.D8, (flags, arg) =>
             {
-                var result = arg;
+                int result = arg;
                 if (flags.IsN())
                 {
                     if (flags.IsH())
@@ -123,7 +123,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("ADC", DataType.D8, DataType.D8, (flags, byte1, byte2) =>
             {
-                var carry = flags.IsC() ? 1 : 0;
+                int carry = flags.IsC() ? 1 : 0;
                 flags.SetZ(((byte1 + byte2 + carry) & 0xff) == 0);
                 flags.SetN(false);
                 flags.SetH((byte1 & 0x0f) + (byte2 & 0x0f) + carry > 0x0f);
@@ -140,8 +140,8 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("SBC", DataType.D8, DataType.D8, (flags, byte1, byte2) =>
             {
-                var carry = flags.IsC() ? 1 : 0;
-                var res = byte1 - byte2 - carry;
+                int carry = flags.IsC() ? 1 : 0;
+                int res = byte1 - byte2 - carry;
 
                 flags.SetZ((res & 0xff) == 0);
                 flags.SetN(true);
@@ -151,7 +151,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("AND", DataType.D8, DataType.D8, (flags, byte1, byte2) =>
             {
-                var result = byte1 & byte2;
+                int result = byte1 & byte2;
                 flags.SetZ(result == 0);
                 flags.SetN(false);
                 flags.SetH(true);
@@ -160,7 +160,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("OR", DataType.D8, DataType.D8, (flags, byte1, byte2) =>
             {
-                var result = byte1 | byte2;
+                int result = byte1 | byte2;
                 flags.SetZ(result == 0);
                 flags.SetN(false);
                 flags.SetH(false);
@@ -169,7 +169,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("XOR", DataType.D8, DataType.D8, (flags, byte1, byte2) =>
             {
-                var result = (byte1 ^ byte2) & 0xff;
+                int result = (byte1 ^ byte2) & 0xff;
                 flags.SetZ(result == 0);
                 flags.SetN(false);
                 flags.SetH(false);
@@ -186,7 +186,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("RLC", DataType.D8, (flags, arg) =>
             {
-                var result = (arg << 1) & 0xff;
+                int result = (arg << 1) & 0xff;
                 if ((arg & (1 << 7)) != 0)
                 {
                     result |= 1;
@@ -204,7 +204,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("RRC", DataType.D8, (flags, arg) =>
             {
-                var result = arg >> 1;
+                int result = arg >> 1;
                 if ((arg & 1) == 1)
                 {
                     result |= 1 << 7;
@@ -222,7 +222,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("RL", DataType.D8, (flags, arg) =>
             {
-                var result = (arg << 1) & 0xff;
+                int result = (arg << 1) & 0xff;
                 result |= flags.IsC() ? 1 : 0;
                 flags.SetC((arg & (1 << 7)) != 0);
                 flags.SetZ(result == 0);
@@ -232,7 +232,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("RR", DataType.D8, (flags, arg) =>
             {
-                var result = arg >> 1;
+                int result = arg >> 1;
                 result |= flags.IsC() ? (1 << 7) : 0;
                 flags.SetC((arg & 1) != 0);
                 flags.SetZ(result == 0);
@@ -242,7 +242,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("SLA", DataType.D8, (flags, arg) =>
             {
-                var result = (arg << 1) & 0xff;
+                int result = (arg << 1) & 0xff;
                 flags.SetC((arg & (1 << 7)) != 0);
                 flags.SetZ(result == 0);
                 flags.SetN(false);
@@ -251,7 +251,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("SRA", DataType.D8, (flags, arg) =>
             {
-                var result = (arg >> 1) | (arg & (1 << 7));
+                int result = (arg >> 1) | (arg & (1 << 7));
                 flags.SetC((arg & 1) != 0);
                 flags.SetZ(result == 0);
                 flags.SetN(false);
@@ -260,9 +260,9 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("SWAP", DataType.D8, (flags, arg) =>
             {
-                var upper = arg & 0xf0;
-                var lower = arg & 0x0f;
-                var result = (lower << 4) | (upper >> 4);
+                int upper = arg & 0xf0;
+                int lower = arg & 0x0f;
+                int result = (lower << 4) | (upper >> 4);
                 flags.SetZ(result == 0);
                 flags.SetN(false);
                 flags.SetH(false);
@@ -271,7 +271,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("SRL", DataType.D8, (flags, arg) =>
             {
-                var result = arg >> 1;
+                int result = arg >> 1;
                 flags.SetC((arg & 1) != 0);
                 flags.SetZ(result == 0);
                 flags.SetN(false);
@@ -280,7 +280,7 @@ namespace CoreBoy.cpu
             });
             this.AddFunction("BIT", DataType.D8, DataType.D8, (flags, arg1, arg2) =>
             {
-                var bit = arg2;
+                int bit = arg2;
                 flags.SetN(false);
                 flags.SetH(true);
                 if (bit < 8)
@@ -331,7 +331,7 @@ namespace CoreBoy.cpu
             {
                 unchecked
                 {
-                    var hashCode = this._name != null ? this._name.GetHashCode() : 0;
+                    int hashCode = this._name != null ? this._name.GetHashCode() : 0;
                     hashCode = (hashCode * 397) ^ (int)this._type1;
                     hashCode = (hashCode * 397) ^ (int)this._type2;
                     return hashCode;

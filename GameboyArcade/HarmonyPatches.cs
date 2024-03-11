@@ -68,6 +68,11 @@ class Object_CheckForAction
             {
                 return true;
             }
+
+            if (data.CustomFields == null)
+            {
+                return true;
+            }
             if (!data.CustomFields.TryGetValue("drbirbdev.GameboyArcade_GameID", out string gameId))
             {
                 return true;
@@ -85,7 +90,7 @@ class Object_CheckForAction
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
         return true;
     }

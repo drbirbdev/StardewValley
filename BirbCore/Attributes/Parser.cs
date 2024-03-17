@@ -6,9 +6,10 @@ using HarmonyLib;
 using StardewModdingAPI;
 
 namespace BirbCore.Attributes;
+
 public class Parser
 {
-    public static event EventHandler? Priority1Event;
+    internal static event EventHandler? Priority1Event;
     internal static event EventHandler? Priority2Event;
     internal static event EventHandler? Priority3Event;
     internal static event EventHandler? Priority4Event;
@@ -24,7 +25,6 @@ public class Parser
     /// loading and saving data to properties, creating events and delegates, initializing APIs, and more.
     /// </summary>
     /// <param name="mod">The mod being parsed.</param>
-    /// <param name="assembly">The assembly to scan for attributes. Defaults to the assembly calling ParseAll.</param>
     public static void ParseAll(IMod mod)
     {
         Assembly assembly = mod.GetType().Assembly;
@@ -39,16 +39,36 @@ public class Parser
                 {
                     switch (handler.Priority)
                     {
-                        case 0: handler.Handle(type, null, mod); break;
-                        case 1: Priority1Event += (sender, e) => handler.Handle(type, null, mod); break;
-                        case 2: Priority2Event += (sender, e) => handler.Handle(type, null, mod); break;
-                        case 3: Priority3Event += (sender, e) => handler.Handle(type, null, mod); break;
-                        case 4: Priority4Event += (sender, e) => handler.Handle(type, null, mod); break;
-                        case 5: Priority5Event += (sender, e) => handler.Handle(type, null, mod); break;
-                        case 6: Priority6Event += (sender, e) => handler.Handle(type, null, mod); break;
-                        case 7: Priority7Event += (sender, e) => handler.Handle(type, null, mod); break;
-                        case 8: Priority8Event += (sender, e) => handler.Handle(type, null, mod); break;
-                        case 9: Priority9Event += (sender, e) => handler.Handle(type, null, mod); break;
+                        case 0:
+                            handler.Handle(type, null, mod);
+                            break;
+                        case 1:
+                            Priority1Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
+                        case 2:
+                            Priority2Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
+                        case 3:
+                            Priority3Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
+                        case 4:
+                            Priority4Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
+                        case 5:
+                            Priority5Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
+                        case 6:
+                            Priority6Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
+                        case 7:
+                            Priority7Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
+                        case 8:
+                            Priority8Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
+                        case 9:
+                            Priority9Event += (sender, e) => handler.Handle(type, null, mod);
+                            break;
                     }
                 }
             }
@@ -66,18 +86,28 @@ public class Parser
 
     private static void GameLoop_GameLaunched(object? sender, StardewModdingAPI.Events.GameLaunchedEventArgs e)
     {
-        Priority1Event?.Invoke(sender, new EventArgs());
+        Priority1Event?.Invoke(sender, EventArgs.Empty);
     }
 
     private static void GameLoop_UpdateTicking(object? sender, StardewModdingAPI.Events.UpdateTickingEventArgs e)
     {
         switch (e.Ticks)
         {
-            case 0: Priority2Event?.Invoke(sender, new EventArgs()); break;
-            case 1: Priority4Event?.Invoke(sender, new EventArgs()); break;
-            case 2: Priority6Event?.Invoke(sender, new EventArgs()); break;
-            case 3: Priority8Event?.Invoke(sender, new EventArgs()); break;
-            default: ModEntry.Instance.Helper.Events.GameLoop.UpdateTicking -= GameLoop_UpdateTicking; break;
+            case 0:
+                Priority2Event?.Invoke(sender, EventArgs.Empty);
+                break;
+            case 1:
+                Priority4Event?.Invoke(sender, EventArgs.Empty);
+                break;
+            case 2:
+                Priority6Event?.Invoke(sender, EventArgs.Empty);
+                break;
+            case 3:
+                Priority8Event?.Invoke(sender, EventArgs.Empty);
+                break;
+            default:
+                ModEntry.Instance.Helper.Events.GameLoop.UpdateTicking -= GameLoop_UpdateTicking;
+                break;
         }
     }
 
@@ -85,24 +115,29 @@ public class Parser
     {
         switch (e.Ticks)
         {
-            case 0: Priority3Event?.Invoke(sender, new EventArgs()); break;
-            case 1: Priority5Event?.Invoke(sender, new EventArgs()); break;
-            case 2: Priority7Event?.Invoke(sender, new EventArgs()); break;
-            case 3: Priority9Event?.Invoke(sender, new EventArgs()); break;
-            default: ModEntry.Instance.Helper.Events.GameLoop.UpdateTicked -= GameLoop_UpdateTicked; break;
+            case 0:
+                Priority3Event?.Invoke(sender, EventArgs.Empty);
+                break;
+            case 1:
+                Priority5Event?.Invoke(sender, EventArgs.Empty);
+                break;
+            case 2:
+                Priority7Event?.Invoke(sender, EventArgs.Empty);
+                break;
+            case 3:
+                Priority9Event?.Invoke(sender, EventArgs.Empty);
+                break;
+            default:
+                ModEntry.Instance.Helper.Events.GameLoop.UpdateTicked -= GameLoop_UpdateTicked;
+                break;
         }
     }
 }
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public abstract class ClassHandler : Attribute
+[AttributeUsage(AttributeTargets.Class)]
+public abstract class ClassHandler(int priority = 0) : Attribute
 {
-    public int Priority = 0;
-
-    public ClassHandler(int priority = 0)
-    {
-        this.Priority = priority;
-    }
+    public int Priority = priority;
 
     public virtual void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
@@ -116,6 +151,7 @@ public abstract class ClassHandler : Attribute
                 }
             }
         }
+
         foreach (PropertyInfo propertyInfo in type.GetProperties(ReflectionExtensions.AllDeclared))
         {
             foreach (Attribute attribute in propertyInfo.GetCustomAttributes())
@@ -126,6 +162,7 @@ public abstract class ClassHandler : Attribute
                 }
             }
         }
+
         foreach (MethodInfo method in type.GetMethods(ReflectionExtensions.AllDeclared))
         {
             foreach (Attribute attribute in method.GetCustomAttributes())
@@ -139,13 +176,13 @@ public abstract class ClassHandler : Attribute
     }
 }
 
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Method)]
 public abstract class MethodHandler : Attribute
 {
     public abstract void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null);
 }
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public abstract class FieldHandler : Attribute
 {
     public void Handle(FieldInfo fieldInfo, object? instance, IMod mod, object[]? args = null)
@@ -155,8 +192,10 @@ public abstract class FieldHandler : Attribute
 
     public void Handle(PropertyInfo propertyInfo, object? instance, IMod mod, object[]? args = null)
     {
-        this.Handle(propertyInfo.Name, propertyInfo.PropertyType, propertyInfo.GetValue, propertyInfo.SetValue, instance, mod, args);
+        this.Handle(propertyInfo.Name, propertyInfo.PropertyType, propertyInfo.GetValue, propertyInfo.SetValue,
+            instance, mod, args);
     }
 
-    public abstract void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null);
+    protected abstract void Handle(string name, Type fieldType, Func<object?, object?> getter,
+        Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null);
 }

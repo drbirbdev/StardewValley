@@ -31,7 +31,7 @@ public class SMod : ClassHandler
             this.IsRequired = isRequired;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
+        protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
             object? api = mod.Helper.ModRegistry.GetType().GetMethod("GetApi", 1, new Type[] { typeof(string) })
                 ?.MakeGenericMethod(fieldType)
@@ -46,7 +46,7 @@ public class SMod : ClassHandler
 
     public class Instance : FieldHandler
     {
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
+        protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
             setter(instance, mod);
         }

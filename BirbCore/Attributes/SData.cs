@@ -16,8 +16,7 @@ public class SData : ClassHandler
 
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
-        MemberInfo modData = mod.GetType().GetMemberOfType(type);
-        if (modData == null)
+        if (!mod.GetType().TryGetMemberOfType(type, out MemberInfo modData))
         {
             Log.Error("Mod must define a data property");
             return;
@@ -26,7 +25,6 @@ public class SData : ClassHandler
         instance = Activator.CreateInstance(type);
         modData.GetSetter()(mod, instance);
         base.Handle(type, instance, mod);
-        return;
     }
 
     public class SaveData : FieldHandler
@@ -38,7 +36,7 @@ public class SData : ClassHandler
             this.Key = key;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
+        protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
             mod.Helper.Events.GameLoop.SaveLoaded += (object? sender, StardewModdingAPI.Events.SaveLoadedEventArgs e) =>
             {
@@ -74,7 +72,7 @@ public class SData : ClassHandler
             this.JsonFile = jsonFile;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
+        protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
             object? localData = mod.Helper.Data.GetType().GetMethod("ReadJsonFile")
                 ?.MakeGenericMethod(fieldType)
@@ -102,7 +100,7 @@ public class SData : ClassHandler
             this.Key = key;
         }
 
-        public override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
+        protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
             object? globalData = mod.Helper.Data.GetType().GetMethod("ReadGlobalData")
                 ?.MakeGenericMethod(fieldType)

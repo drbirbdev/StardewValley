@@ -10,7 +10,7 @@ using StardewModdingAPI;
 
 namespace BirbCore.Attributes;
 
-public class SContent(string fileName = "content.json", bool isList = false, bool isDictionary = false) : ClassHandler(0)
+public class SContent(string fileName = "content.json", bool isList = false, bool isDictionary = false) : ClassHandler
 {
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
@@ -84,21 +84,20 @@ public class SContent(string fileName = "content.json", bool isList = false, boo
                     string key = (string)entry.Key;
                     object? value = entry.Value;
                     string id = (string)(idMember?.GetGetter()(value) ?? key);
-                    base.Handle(type, value, mod, new object[] { contentPack, id });
+                    base.Handle(type, value, mod, [contentPack, id]);
                 }
             }
             else
             {
                 string id = (string)(idMember?.GetGetter()(content) ?? "");
 
-                base.Handle(type, content, mod, new object[] { contentPack, id });
+                base.Handle(type, content, mod, [contentPack, id]);
             }
 
             string modId = contentPack.Manifest.UniqueID;
 
             contentDictionary.Add(modId, content);
         }
-        return;
     }
 
     public class ModId : FieldHandler

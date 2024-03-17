@@ -40,9 +40,9 @@ internal class Events
                 { "Sneak", null },
                 { "Environmentalist", new
                     {
-                        amount = (ModEntry.Config.RecyclingCountToGainFriendship),
-                        extra = (ModEntry.Config.RecyclingFriendshipGain),
-                        pExtra = (ModEntry.Config.RecyclingFriendshipGain + ModEntry.Config.RecyclingPrestigeFriendshipGain)
+                        amount = (ModEntry.Config.EnvironmentalistRecyclingCountToGainFriendship),
+                        extra = (ModEntry.Config.EnvironmentalistRecyclingFriendshipGain),
+                        pExtra = (ModEntry.Config.EnvironmentalistRecyclingFriendshipGain + ModEntry.Config.EnvironmentalistPrestigeRecyclingFriendshipGain)
                     }
                 },
                 { "Salvager", null },
@@ -206,15 +206,15 @@ internal class Events
 
         for (uint i = e.OldStat + 1; i <= e.NewStat; i++)
         {
-            if (i % ModEntry.Config.RecyclingCountToGainFriendship != 0)
+            if (i % ModEntry.Config.EnvironmentalistRecyclingCountToGainFriendship != 0)
             {
                 continue;
             }
 
-            int friendship = ModEntry.Config.RecyclingFriendshipGain;
+            int friendship = ModEntry.Config.EnvironmentalistRecyclingFriendshipGain;
             if (Game1.player.HasProfession("Environmentalist", true))
             {
-                friendship += ModEntry.Config.RecyclingPrestigeFriendshipGain;
+                friendship += ModEntry.Config.EnvironmentalistPrestigeRecyclingFriendshipGain;
             }
 
             // TODO: figure out better region than hard-coding Town

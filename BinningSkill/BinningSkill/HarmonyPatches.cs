@@ -215,7 +215,7 @@ class GameLocation_CheckGarbage
         GarbageCanData allData = DataLoader.GarbageCans(Game1.content);
         allData.GarbageCans.TryGetValue(garbageCanId, out GarbageCanEntryData data);
         int noiseLevel = data?.CustomFields?.TryGetInt("drbirbdev.BinningSkill_NoiseLevel") ?? 7;
-        noiseLevel += ModEntry.Config.PrestigeNoiseIncrease;
+        noiseLevel += ModEntry.Config.SneakPrestigeNoiseIncrease;
 
         foreach (NPC villager in Utility.GetNpcsWithinDistance(tile, noiseLevel, location))
         {
@@ -264,7 +264,7 @@ class GameLocation_CheckGarbage
         int noiseLevel = data?.CustomFields?.TryGetInt("drbirbdev.BinningSkill_NoiseLevel") ?? 7;
         if (who.HasProfession("Sneak"))
         {
-            noiseLevel -= ModEntry.Config.NoiseReduction;
+            noiseLevel -= ModEntry.Config.SneakNoiseReduction;
         }
 
         return Utility.GetNpcsWithinDistance(centerTile, noiseLevel, location);

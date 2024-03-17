@@ -40,7 +40,7 @@ class Utility_GetTrashReclamationPrice
             }
 
             float extraPercentage = ModEntry.Config.ReclaimerExtraValuePercent;
-            if (f.HasProfession("Reclaimer"))
+            if (f.HasProfession("Reclaimer", true))
             {
                 extraPercentage += ModEntry.Config.ReclaimerPrestigeExtraValuePercent;
             }

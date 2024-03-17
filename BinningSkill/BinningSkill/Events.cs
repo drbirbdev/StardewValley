@@ -38,7 +38,13 @@ internal class Events
             {
                 { "Recycler", null },
                 { "Sneak", null },
-                { "Environmentalist", null },
+                { "Environmentalist", new
+                    {
+                        amount = (ModEntry.Config.RecyclingCountToGainFriendship),
+                        extra = (ModEntry.Config.RecyclingFriendshipGain),
+                        pExtra = (ModEntry.Config.RecyclingFriendshipGain + ModEntry.Config.RecyclingPrestigeFriendshipGain)
+                    }
+                },
                 { "Salvager", null },
                 { "Upseller", null },
                 {
@@ -50,6 +56,34 @@ internal class Events
                     }
                 }
             }, PerkText, HoverText);
+    }
+
+    private static List<string> PerkText(int level)
+    {
+        List<string> result =
+        [
+            ModEntry.Instance.I18N.Get("skill.perk.base",
+                new { bonusPercent = (ModEntry.Config.PerLevelBaseDropChanceBonus * 100).ToString("0.0") }),
+            ModEntry.Instance.I18N.Get("skill.perk.rare",
+                new { bonusPercent = (ModEntry.Config.PerLevelRareDropChanceBonus * 100).ToString("0.0") })
+        ];
+        if (level == ModEntry.Config.MegaMinLevel)
+        {
+            result.Add(ModEntry.Instance.I18N.Get("skill.perk.mega_drops"));
+        }
+
+        if (level == ModEntry.Config.DoubleMegaMinLevel)
+        {
+            result.Add(ModEntry.Instance.I18N.Get("skill.perk.double_mega_drops"));
+        }
+
+        return result;
+    }
+
+    private static string HoverText(int level)
+    {
+        return ModEntry.Instance.I18N.Get("skill.perk.base",
+            new { bonusPercent = (level * ModEntry.Config.PerLevelBaseDropChanceBonus * 100).ToString("0.0") });
     }
 
     [SEvent.AssetRequested]
@@ -160,54 +194,22 @@ internal class Events
         return item;
     }
 
-    private static List<string> PerkText(int level)
+    [SEvent.StatChanged(StatKeys.PiecesOfTrashRecycled)]
+    private void StatChanged_PiecesOfTrashRecycled(object sender, SEvent.StatChanged.EventArgs e)
     {
-        List<string> result =
-        [
-            ModEntry.Instance.I18N.Get("skill.perk.base",
-                new { bonusPercent = (ModEntry.Config.PerLevelBaseDropChanceBonus * 100).ToString("0.0") }),
-            ModEntry.Instance.I18N.Get("skill.perk.rare",
-                new { bonusPercent = (ModEntry.Config.PerLevelRareDropChanceBonus * 100).ToString("0.0") })
-        ];
-        if (level == ModEntry.Config.MegaMinLevel)
+        Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromRecycling * e.Delta);
+
+        if (!Game1.player.HasProfession("Environmentalist"))
         {
-            result.Add(ModEntry.Instance.I18N.Get("skill.perk.mega_drops"));
+            return;
         }
 
-        if (level == ModEntry.Config.DoubleMegaMinLevel)
+        for (uint i = e.OldStat + 1; i <= e.NewStat; i++)
         {
-            result.Add(ModEntry.Instance.I18N.Get("skill.perk.double_mega_drops"));
-        }
-
-        return result;
-    }
-
-    private static string HoverText(int level)
-    {
-        return ModEntry.Instance.I18N.Get("skill.perk.base",
-            new { bonusPercent = (level * ModEntry.Config.PerLevelBaseDropChanceBonus * 100).ToString("0.0") });
-    }
-
-    private uint PreviousTrashCansChecked;
-    private int PiecesOfTrashUntilFriendshipIncrease;
-    private uint PreviousPiecesOfTrashRecycled;
-    private uint PreviousRecyclingBinsChecked;
-    private uint PreviousFoodComposted;
-
-    [SEvent.TimeChanged]
-    private void TimeChanged(object sender, TimeChangedEventArgs e)
-    {
-        int recycled = (int)(Game1.stats.Get(StatKeys.PiecesOfTrashRecycled) - this.PreviousPiecesOfTrashRecycled);
-        this.PreviousPiecesOfTrashRecycled = Game1.stats.Get(StatKeys.PiecesOfTrashRecycled);
-        if (recycled > 0)
-        {
-            Skills.AddExperience(Game1.player, "drbirbdev.Binning", ModEntry.Config.ExperienceFromRecycling * recycled);
-        }
-
-        this.PiecesOfTrashUntilFriendshipIncrease -= recycled;
-        if (Game1.player.HasProfession("Environmentalist") && this.PiecesOfTrashUntilFriendshipIncrease < 0)
-        {
-            this.PiecesOfTrashUntilFriendshipIncrease += ModEntry.Config.RecyclingCountToGainFriendship;
+            if (i % ModEntry.Config.RecyclingCountToGainFriendship != 0)
+            {
+                continue;
+            }
 
             int friendship = ModEntry.Config.RecyclingFriendshipGain;
             if (Game1.player.HasProfession("Environmentalist", true))
@@ -218,32 +220,27 @@ internal class Events
             // TODO: figure out better region than hard-coding Town
             Utility.improveFriendshipWithEveryoneInRegion(Game1.player, friendship, "Town");
         }
+    }
 
-        int trashChecked = (int)(Game1.player.stats.Get(StatKeys.TrashCansChecked) - this.PreviousTrashCansChecked);
-        this.PreviousTrashCansChecked = Game1.stats.Get(StatKeys.TrashCansChecked);
-        if (trashChecked > 0)
-        {
-            Skills.AddExperience(Game1.player, "drbirbdev.Binning",
-                ModEntry.Config.ExperienceFromCheckingTrash * trashChecked);
-        }
+    [SEvent.StatChanged(StatKeys.TrashCansChecked)]
+    private void StatChanged_TrashCansChecked(object sender, SEvent.StatChanged.EventArgs e)
+    {
+        Skills.AddExperience(Game1.player, "drbirbdev.Binning",
+            ModEntry.Config.ExperienceFromCheckingTrash * e.Delta);
+    }
 
-        int recyclingChecked = (int)(Game1.stats.Get("drbirbdev.BinningSkill_RecyclingBinsChecked") -
-                                     this.PreviousRecyclingBinsChecked);
-        this.PreviousRecyclingBinsChecked = Game1.stats.Get("drbirbdev.BinningSkill_RecyclingBinsChecked");
-        if (recyclingChecked > 0)
-        {
-            Skills.AddExperience(Game1.player, "drbirbdev.Binning",
-                ModEntry.Config.ExperienceFromCheckingRecycling * recyclingChecked);
-        }
+    [SEvent.StatChanged("drbirbdev.BinningSkill_RecyclingBinsChecked")]
+    private void StatChanged_RecyclingBinsChecked(object sender, SEvent.StatChanged.EventArgs e)
+    {
+        Skills.AddExperience(Game1.player, "drbirbdev.Binning",
+            ModEntry.Config.ExperienceFromCheckingRecycling * e.Delta);
+    }
 
-        int compostingChecked =
-            (int)(Game1.stats.Get("drbirbdev.BinningSkill_FoodComposted") - this.PreviousFoodComposted);
-        this.PreviousFoodComposted = Game1.stats.Get("drbirbdev.BinningSkill_FoodComposted");
-        if (compostingChecked > 0)
-        {
-            Skills.AddExperience(Game1.player, "drbirbdev.Binning",
-                ModEntry.Config.ExperienceFromComposting * compostingChecked);
-        }
+    [SEvent.StatChanged("drbirbdev.BinningSkill_FoodComposted")]
+    private void StatChanged_FoodComposted(object sender, SEvent.StatChanged.EventArgs e)
+    {
+        Skills.AddExperience(Game1.player, "drbirbdev.Binning",
+            ModEntry.Config.ExperienceFromComposting * e.Delta);
     }
 
     [SEvent.AssetRequested]
@@ -327,7 +324,7 @@ internal class Events
 
             if (!MapGarbageCanEdits.TryGetValue(mapName, out List<GarbageCanEdit> edits))
             {
-                edits = new List<GarbageCanEdit>();
+                edits = [];
                 MapGarbageCanEdits[mapName] = edits;
             }
 

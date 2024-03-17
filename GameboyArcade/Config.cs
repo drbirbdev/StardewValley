@@ -37,6 +37,6 @@ class Config
     [SConfig.Option]
     public SButton Turbo { get; set; } = SButton.F1;
 
-    [SConfig.Option(Min = 10000, Max = 22050, Interval = 1)]
+    [SConfig.Option(10000, 22050, 1)]
     public int MusicSampleRate { get; set; } = 22050;
 }

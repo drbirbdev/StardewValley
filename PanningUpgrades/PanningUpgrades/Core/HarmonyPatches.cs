@@ -384,6 +384,3 @@ class Event_SkipEvent
         return true;
     }
 }
-
-// TODO: buying pan from Willy configs
-// TODO: remove upgrade cost configs

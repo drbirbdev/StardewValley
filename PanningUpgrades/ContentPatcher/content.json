@@ -57,7 +57,7 @@
                     "SpriteIndex": 10,
                     "UpgradeLevel": 2,
                     "ApplyUpgradeLevelToDisplayName": true,
-                    "ConventionalUpgradeFrom": "(T)drbirbdev.PanningUpgrades_CopperPan"
+                    "ConventionalUpgradeFrom": "(T)Pan"
                 },
                 "drbirbdev.PanningUpgrades_GoldPan": {
                     "ClassName": "Pan",

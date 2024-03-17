@@ -73,7 +73,7 @@ class Pan_DoFunction
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -102,7 +102,7 @@ class Utility_PerformSpecialItemPlaceReplacement
     {
         try
         {
-            if (placedItem != null && placedItem is Pan pan)
+            if (placedItem is Pan pan)
             {
                 __result = PanUtility.PanToHat(pan);
                 return false;
@@ -110,7 +110,7 @@ class Utility_PerformSpecialItemPlaceReplacement
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
         return true;
     }
@@ -129,7 +129,7 @@ class Utility_PerformSpecialItemGrabReplacement
     {
         try
         {
-            if (heldItem != null && heldItem is Hat hat)
+            if (heldItem is Hat hat)
             {
                 __result = PanUtility.HatToPan(hat);
                 return false;
@@ -137,7 +137,7 @@ class Utility_PerformSpecialItemGrabReplacement
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
         return true;
     }
@@ -154,10 +154,11 @@ class InventoryPage_ReceiveLeftClick
     {
         if (Game1.player.CursorSlotItem is Pan)
         {
-            __state = new Item[] {
+            __state =
+            [
                 Game1.player.CursorSlotItem,
-                Game1.player.hat.Value,
-            };
+                Game1.player.hat.Value
+            ];
         }
     }
 
@@ -176,7 +177,7 @@ class InventoryPage_ReceiveLeftClick
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -191,85 +192,87 @@ class FarmerSprite_GetAnimationFromIndex
     {
         try
         {
-            if (index == 303)
+            if (index != 303)
             {
-                Farmer owner = Traverse.Create(requester).Field("owner").GetValue<Farmer>();
-                if (owner is null)
-                {
-                    return;
-                }
-
-
-
-                int upgradeLevel = owner.CurrentTool.UpgradeLevel;
-                int genderOffset = owner.IsMale ? -1 : 0;
-                string texture = "Mods/drbirbdev.PanningUpgrades/PanTool";
-                Rectangle sourceRect = new Rectangle(16, upgradeLevel * 16, 16, 16);
-                GameLocation location = Game1.currentLocation;
-                location.temporarySprites.Add(new TemporaryAnimatedSprite(
-                    textureName: texture,
-                    sourceRect: sourceRect,
-                    animationInterval: ModEntry.Config.AnimationFrameDuration,
-                    animationLength: 4,
-                    numberOfLoops: 3,
-                    position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
-                    flicker: false,
-                    flipped: false,
-                    layerDepth: 1f,
-                    alphaFade: 0f,
-                    color: Color.White,
-                    scale: 4f,
-                    scaleChange: 0f,
-                    rotation: 0f,
-                    rotationChange: 0f)
-                {
-                    // TODO: figure out why endFunction doesn't get called in most multiplayer contexts.
-                    endFunction = extraInfo =>
-                    {
-                        location.temporarySprites.Add(new TemporaryAnimatedSprite(
-                            textureName: texture,
-                            sourceRect: sourceRect,
-                            animationInterval: ModEntry.Config.AnimationFrameDuration,
-                            animationLength: 3,
-                            numberOfLoops: 0,
-                            position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
-                            flicker: false,
-                            flipped: false,
-                            layerDepth: 1f,
-                            alphaFade: 0f,
-                            color: Color.White,
-                            scale: 4f,
-                            scaleChange: 0f,
-                            rotation: 0f,
-                            rotationChange: 0f)
-                        {
-                            endFunction = extraInfo =>
-                            {
-                                location.temporarySprites.Add(new TemporaryAnimatedSprite(
-                                    textureName: texture,
-                                    sourceRect: sourceRect,
-                                    animationInterval: ModEntry.Config.AnimationFrameDuration * 2.5f,
-                                    animationLength: 1,
-                                    numberOfLoops: 0,
-                                    position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
-                                    flicker: false,
-                                    flipped: false,
-                                    layerDepth: 1f,
-                                    alphaFade: 0f,
-                                    color: Color.White,
-                                    scale: 4f,
-                                    scaleChange: 0f,
-                                    rotation: 0f,
-                                    rotationChange: 0f));
-                            }
-                        });
-                    }
-                });
+                return;
             }
+
+            Farmer owner = Traverse.Create(requester).Field("owner").GetValue<Farmer>();
+            if (owner is null)
+            {
+                return;
+            }
+
+
+
+            int upgradeLevel = owner.CurrentTool.UpgradeLevel;
+            int genderOffset = owner.IsMale ? -1 : 0;
+            string texture = "Mods/drbirbdev.PanningUpgrades/PanTool";
+            Rectangle sourceRect = new Rectangle(16, upgradeLevel * 16, 16, 16);
+            GameLocation location = Game1.currentLocation;
+            location.temporarySprites.Add(new TemporaryAnimatedSprite(
+                textureName: texture,
+                sourceRect: sourceRect,
+                animationInterval: ModEntry.Config.AnimationFrameDuration,
+                animationLength: 4,
+                numberOfLoops: 3,
+                position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                flicker: false,
+                flipped: false,
+                layerDepth: 1f,
+                alphaFade: 0f,
+                color: Color.White,
+                scale: 4f,
+                scaleChange: 0f,
+                rotation: 0f,
+                rotationChange: 0f)
+            {
+                // TODO: figure out why endFunction doesn't get called in most multiplayer contexts.
+                endFunction = extraInfo =>
+                {
+                    location.temporarySprites.Add(new TemporaryAnimatedSprite(
+                        textureName: texture,
+                        sourceRect: sourceRect,
+                        animationInterval: ModEntry.Config.AnimationFrameDuration,
+                        animationLength: 3,
+                        numberOfLoops: 0,
+                        position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                        flicker: false,
+                        flipped: false,
+                        layerDepth: 1f,
+                        alphaFade: 0f,
+                        color: Color.White,
+                        scale: 4f,
+                        scaleChange: 0f,
+                        rotation: 0f,
+                        rotationChange: 0f)
+                    {
+                        endFunction = extraInfo2 =>
+                        {
+                            location.temporarySprites.Add(new TemporaryAnimatedSprite(
+                                textureName: texture,
+                                sourceRect: sourceRect,
+                                animationInterval: ModEntry.Config.AnimationFrameDuration * 2.5f,
+                                animationLength: 1,
+                                numberOfLoops: 0,
+                                position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                                flicker: false,
+                                flipped: false,
+                                layerDepth: 1f,
+                                alphaFade: 0f,
+                                color: Color.White,
+                                scale: 4f,
+                                scaleChange: 0f,
+                                rotation: 0f,
+                                rotationChange: 0f));
+                        }
+                    });
+                }
+            });
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -297,7 +300,7 @@ class Event_Command_AwardFestivalPrize
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
         return true;
     }
@@ -322,7 +325,7 @@ class Event_Command_ItemAboveHead
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
         return true;
     }
@@ -352,10 +355,10 @@ class Event_SkipEvent
                 ___actorPositionsAfterMove.Clear();
                 foreach (NPC i in __instance.actors)
                 {
-                    bool ignore_stop_animation = i.Sprite.ignoreStopAnimation;
+                    bool ignoreStopAnimation = i.Sprite.ignoreStopAnimation;
                     i.Sprite.ignoreStopAnimation = true;
                     i.Halt();
-                    i.Sprite.ignoreStopAnimation = ignore_stop_animation;
+                    i.Sprite.ignoreStopAnimation = ignoreStopAnimation;
                     __instance.resetDialogueIfNecessary(i);
                 }
                 __instance.farmer.Halt();
@@ -376,8 +379,11 @@ class Event_SkipEvent
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
         return true;
     }
 }
+
+// TODO: buying pan from Willy configs
+// TODO: remove upgrade cost configs

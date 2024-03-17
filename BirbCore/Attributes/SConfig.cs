@@ -35,7 +35,6 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
 
         var getter = configField.GetGetter();
         var setter = configField.GetSetter();
-        instance = Activator.CreateInstance(type);
         setter(mod, instance);
 
         _api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
@@ -200,7 +199,7 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
     /// <summary>
     /// Adds a section title to the config menu.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class SectionTitle(string key) : FieldHandler
     {
         protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
@@ -221,7 +220,7 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
     /// <summary>
     /// Adds a paragraph to the config menu.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class Paragraph(string key) : FieldHandler
     {
         protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
@@ -241,7 +240,7 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
     /// <summary>
     /// Starts a page block.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class PageBlock(string pageId) : FieldHandler
     {
         protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
@@ -262,7 +261,7 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
     /// <summary>
     /// Adds a link to a config page to the config menu.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class PageLink(string pageId) : FieldHandler
     {
         protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
@@ -284,7 +283,7 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
     /// <summary>
     /// Adds an image to the config menu.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class Image(string texture, int x = 0, int y = 0, int width = 0, int height = 0) : FieldHandler
     {
         protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
@@ -305,7 +304,7 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
     /// <summary>
     /// Starts or ends a block of title-screen exclusive configs.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class StartTitleOnlyBlock : FieldHandler
     {
         protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
@@ -325,7 +324,7 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
     /// <summary>
     /// Starts or ends a block of title-screen exclusive configs.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class EndTitleOnlyBlock : FieldHandler
     {
         protected override void Handle(string name, Type fieldType, Func<object?, object?> getter, Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)

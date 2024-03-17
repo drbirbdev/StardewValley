@@ -25,7 +25,6 @@ public class SAsset : ClassHandler
 
         this._modAssets = memberInfo;
 
-        instance = Activator.CreateInstance(type);
         Action<object?, object?> setter = this._modAssets.GetSetter();
 
         setter(mod, instance);

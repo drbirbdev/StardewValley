@@ -20,7 +20,6 @@ public class SDelegate : ClassHandler
 
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
-        instance = Activator.CreateInstance(type);
         base.Handle(type, instance, mod);
     }
 

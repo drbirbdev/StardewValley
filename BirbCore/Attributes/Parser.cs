@@ -33,43 +33,47 @@ public class Parser
 
         foreach (Type type in assembly.GetTypes())
         {
-            foreach (Attribute attribute in type.GetCustomAttributes())
+            ClassHandler[] classHandlers = (ClassHandler[])Attribute.GetCustomAttributes(type, typeof(ClassHandler));
+            if (classHandlers.Length == 0)
             {
-                if (attribute is ClassHandler handler)
+                continue;
+            }
+
+            object? instance = Activator.CreateInstance(type);
+            foreach (ClassHandler handler in classHandlers)
+            {
+                switch (handler.Priority)
                 {
-                    switch (handler.Priority)
-                    {
-                        case 0:
-                            handler.Handle(type, null, mod);
-                            break;
-                        case 1:
-                            Priority1Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                        case 2:
-                            Priority2Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                        case 3:
-                            Priority3Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                        case 4:
-                            Priority4Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                        case 5:
-                            Priority5Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                        case 6:
-                            Priority6Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                        case 7:
-                            Priority7Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                        case 8:
-                            Priority8Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                        case 9:
-                            Priority9Event += (sender, e) => handler.Handle(type, null, mod);
-                            break;
-                    }
+                    case 0:
+                        handler.Handle(type, instance, mod);
+                        break;
+                    case 1:
+                        Priority1Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
+                    case 2:
+                        Priority2Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
+                    case 3:
+                        Priority3Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
+                    case 4:
+                        Priority4Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
+                    case 5:
+                        Priority5Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
+                    case 6:
+                        Priority6Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
+                    case 7:
+                        Priority7Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
+                    case 8:
+                        Priority8Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
+                    case 9:
+                        Priority9Event += (sender, e) => handler.Handle(type, instance, mod);
+                        break;
                 }
             }
         }
@@ -86,6 +90,7 @@ public class Parser
 
     private static void GameLoop_GameLaunched(object? sender, StardewModdingAPI.Events.GameLaunchedEventArgs e)
     {
+        Log.Trace("=== Running Priority 1 events ===");
         Priority1Event?.Invoke(sender, EventArgs.Empty);
     }
 
@@ -94,15 +99,19 @@ public class Parser
         switch (e.Ticks)
         {
             case 0:
+                Log.Trace("=== Running Priority 2 events ===");
                 Priority2Event?.Invoke(sender, EventArgs.Empty);
                 break;
             case 1:
+                Log.Trace("=== Running Priority 4 events ===");
                 Priority4Event?.Invoke(sender, EventArgs.Empty);
                 break;
             case 2:
+                Log.Trace("=== Running Priority 6 events ===");
                 Priority6Event?.Invoke(sender, EventArgs.Empty);
                 break;
             case 3:
+                Log.Trace("=== Running Priority 8 events ===");
                 Priority8Event?.Invoke(sender, EventArgs.Empty);
                 break;
             default:
@@ -116,15 +125,19 @@ public class Parser
         switch (e.Ticks)
         {
             case 0:
+                Log.Trace("=== Running Priority 3 events ===");
                 Priority3Event?.Invoke(sender, EventArgs.Empty);
                 break;
             case 1:
+                Log.Trace("=== Running Priority 5 events ===");
                 Priority5Event?.Invoke(sender, EventArgs.Empty);
                 break;
             case 2:
+                Log.Trace("=== Running Priority 7 events ===");
                 Priority7Event?.Invoke(sender, EventArgs.Empty);
                 break;
             case 3:
+                Log.Trace("=== Running Priority 9 events ===");
                 Priority9Event?.Invoke(sender, EventArgs.Empty);
                 break;
             default:
@@ -141,11 +154,13 @@ public abstract class ClassHandler(int priority = 0) : Attribute
 
     public virtual void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
+        string className = this.ToString() ?? "";
         foreach (FieldInfo fieldInfo in type.GetFields(ReflectionExtensions.AllDeclared))
         {
             foreach (Attribute attribute in fieldInfo.GetCustomAttributes())
             {
-                if (attribute is FieldHandler handler)
+                string attributeName = attribute.ToString() ?? "";
+                if (attribute is FieldHandler handler && attributeName.StartsWith(className))
                 {
                     handler.Handle(fieldInfo, instance, mod, args);
                 }
@@ -156,7 +171,8 @@ public abstract class ClassHandler(int priority = 0) : Attribute
         {
             foreach (Attribute attribute in propertyInfo.GetCustomAttributes())
             {
-                if (attribute is FieldHandler handler)
+                string attributeName = attribute.ToString() ?? "";
+                if (attribute is FieldHandler handler && attributeName.StartsWith(className))
                 {
                     handler.Handle(propertyInfo, instance, mod, args);
                 }
@@ -167,7 +183,8 @@ public abstract class ClassHandler(int priority = 0) : Attribute
         {
             foreach (Attribute attribute in method.GetCustomAttributes())
             {
-                if (attribute is MethodHandler handler)
+                string attributeName = attribute.ToString() ?? "";
+                if (attribute is MethodHandler handler && attributeName.StartsWith(className))
                 {
                     handler.Handle(method, instance, mod, args);
                 }

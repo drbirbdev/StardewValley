@@ -24,7 +24,6 @@ public class SEvent : ClassHandler
             Log.Warn("Parsing events before parsing all other annotations might have unexpected results");
         }
 
-        instance = Activator.CreateInstance(type);
         base.Handle(type, instance, mod);
     }
 

@@ -20,7 +20,6 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
 
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
-        instance = Activator.CreateInstance(type);
         base.Handle(type, instance, mod, [this._commands, this._helps, name]);
 
         mod.Helper.ConsoleCommands.Add(

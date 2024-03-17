@@ -22,7 +22,6 @@ public class SData : ClassHandler
             return;
         }
 
-        instance = Activator.CreateInstance(type);
         modData.GetSetter()(mod, instance);
         base.Handle(type, instance, mod);
     }

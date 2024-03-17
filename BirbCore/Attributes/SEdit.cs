@@ -30,7 +30,6 @@ public class SEdit : ClassHandler
 
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
-        instance = Activator.CreateInstance(type);
         base.Handle(type, instance, mod, args);
 
         mod.Helper.Events.Content.AssetRequested += (sender, e) =>

@@ -7,13 +7,13 @@ namespace LeaderboardLibrary;
 [SCommand("leaderboard")]
 class Command
 {
-    private static readonly Dictionary<string, ILeaderboardAPI> Apis = new Dictionary<string, ILeaderboardAPI>();
+    private static readonly Dictionary<string, ILeaderboardApi> Apis = new();
 
-    private static void LazyInitAPI(string modId)
+    private static void LazyInitApi(string modId)
     {
         if (!Apis.ContainsKey(modId))
         {
-            Apis[modId] = new LeaderboardAPI(modId);
+            Apis[modId] = new LeaderboardApi(modId);
         }
     }
 
@@ -28,7 +28,7 @@ class Command
     [SCommand.Command("Get local rank for the player")]
     public static void GetLocalRank(string modId, string stat)
     {
-        LazyInitAPI(modId);
+        LazyInitApi(modId);
         int localRank = Apis[modId].GetLocalRank(stat);
         Log.Info($"Local Rank is {localRank}");
     }
@@ -36,7 +36,7 @@ class Command
     [SCommand.Command("Get local top score records")]
     public static void GetLocalTopN(string modId, string stat, int count = 10)
     {
-        LazyInitAPI(modId);
+        LazyInitApi(modId);
         List<Dictionary<string, string>> localTop = Apis[modId].GetLocalTopN(stat, count);
         PrintRecords(localTop.ToArray());
     }
@@ -44,7 +44,7 @@ class Command
     [SCommand.Command("Get personal best record")]
     public static void GetPersonalBest(string modId, string stat)
     {
-        LazyInitAPI(modId);
+        LazyInitApi(modId);
         Dictionary<string, string> personalBest = Apis[modId].GetPersonalBest(stat);
         PrintRecords(personalBest);
     }
@@ -52,7 +52,7 @@ class Command
     [SCommand.Command("Get global rank for the player")]
     public static void GetRank(string modId, string stat)
     {
-        LazyInitAPI(modId);
+        LazyInitApi(modId);
         int globalRank = Apis[modId].GetRank(stat);
         Log.Info($"Global Rank is {globalRank}");
     }
@@ -60,7 +60,7 @@ class Command
     [SCommand.Command("Get global top score records")]
     public static void GetTopN(string modId, string stat, int count = 10)
     {
-        LazyInitAPI(modId);
+        LazyInitApi(modId);
         List<Dictionary<string, string>> globalTop = Apis[modId].GetTopN(stat, count);
         PrintRecords(globalTop.ToArray());
     }
@@ -68,7 +68,7 @@ class Command
     [SCommand.Command("Refresh leaderboard cache")]
     public static void RefreshCache(string modId, string stat)
     {
-        LazyInitAPI(modId);
+        LazyInitApi(modId);
         Apis[modId].RefreshCache(stat);
     }
 
@@ -99,7 +99,7 @@ class Command
     [SCommand.Command("Print leaderboard tracking data for the current user")]
     public static void PrintUserInfo()
     {
-        Log.Info($"User UUID = {ModEntry.GlobalModData.GetValueForScreen(0).UserUUID} and Secret starts with {ModEntry.GlobalModData.GetValueForScreen(0).Secret[..3]}");
+        Log.Info($"User UUID = {ModEntry.GlobalModData.GetValueForScreen(0).UserUuid} and Secret starts with {ModEntry.GlobalModData.GetValueForScreen(0).Secret[..3]}");
     }
 
     [SCommand.Command("Dumps the contents of the local cache")]
@@ -149,7 +149,7 @@ class Command
         }
 
         Log.Info("Local Users");
-        foreach (string playerUuid in ModEntry.LocalModData.MultiplayerUUIDs)
+        foreach (string playerUuid in ModEntry.LocalModData.MultiplayerUuiDs)
         {
             Log.Info($"    {playerUuid}");
         }

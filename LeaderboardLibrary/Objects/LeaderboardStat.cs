@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using BirbCore.Attributes;
@@ -13,10 +14,11 @@ public class LeaderboardStat : IComparable
     internal const string TOP_SCORES_INDEX_NAME = "TopScores";
 
     [DynamoDBHashKey]
-    public string Stat { get; set; }
+    public string Stat { get; init; }
 
     [DynamoDBRangeKey]
-    public string UserUUID { get; set; }
+    // ReSharper disable once InconsistentNaming
+    public string UserUUID { get; init; }
 
     [DynamoDBLocalSecondaryIndexRangeKey(TOP_SCORES_INDEX_NAME)]
     public double Score { get; set; }
@@ -36,10 +38,10 @@ public class LeaderboardStat : IComparable
     public int CompareTo(object obj)
     {
         LeaderboardStat l = (LeaderboardStat)obj;
-        return this.Score.CompareTo(l.Score);
+        return this.Score.CompareTo(l?.Score);
     }
 
-    public static LeaderboardStat FromDdbShape(Dictionary<string, AttributeValue> ddb)
+    private static LeaderboardStat FromDdbShape(Dictionary<string, AttributeValue> ddb)
     {
         if (!int.TryParse(ddb.GetValueOrDefault("Score", new AttributeValue()).N, out int score))
         {
@@ -80,8 +82,8 @@ public class LeaderboardStat : IComparable
             {"Stat", this.Stat.Split(":")[1] },
             {"Name", this.Name },
             {"Farm", this.Farm },
-            {"Score", this.Score.ToString() },
-            {"DateTime", this.DateTime.ToString() },
+            {"Score", this.Score.ToString(CultureInfo.InvariantCulture) },
+            {"DateTime", this.DateTime.ToString(CultureInfo.InvariantCulture) },
             {"UserUUID", this.UserUUID },
         };
     }

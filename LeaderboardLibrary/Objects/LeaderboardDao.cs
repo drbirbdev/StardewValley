@@ -7,7 +7,7 @@ using BirbCore.Attributes;
 
 namespace LeaderboardLibrary;
 
-class LeaderboardDAO
+class LeaderboardDao
 {
 
     /// <summary>
@@ -20,8 +20,8 @@ class LeaderboardDAO
         try
         {
             Log.Debug($"Getting local scores from DDB for {stat}");
-            List<Dictionary<string, AttributeValue>> keys = new List<Dictionary<string, AttributeValue>>();
-            foreach (string playerUuid in ModEntry.LocalModData.MultiplayerUUIDs)
+            List<Dictionary<string, AttributeValue>> keys = [];
+            foreach (string playerUuid in ModEntry.LocalModData.MultiplayerUuiDs)
             {
                 keys.Add(new Dictionary<string, AttributeValue>
             {
@@ -30,12 +30,12 @@ class LeaderboardDAO
             });
             }
 
-            BatchGetItemRequest request = new BatchGetItemRequest()
+            BatchGetItemRequest request = new()
             {
                 RequestItems = new Dictionary<string, KeysAndAttributes>
             {
-                { LeaderboardStat.TABLE_NAME, new KeysAndAttributes()
-                {
+                { LeaderboardStat.TABLE_NAME, new KeysAndAttributes
+                    {
                     Keys = keys,
                     ProjectionExpression = "Stat, UserUUID, Score, #n, Farm, #d",
                     ExpressionAttributeNames = new Dictionary<string, string>
@@ -112,7 +112,12 @@ class LeaderboardDAO
     /// </summary>
     /// <param name="stat"></param>
     /// <param name="score"></param>
-    public static async void UploadScore(string stat, int score, string userUuid, string userName, string farmName, string secret, CachedLeaderboardAPI api)
+    /// <param name="userUuid"></param>
+    /// <param name="userName"></param>
+    /// <param name="farmName"></param>
+    /// <param name="secret"></param>
+    /// <param name="api"></param>
+    public static async void UploadScore(string stat, int score, string userUuid, string userName, string farmName, string secret, CachedLeaderboardApi api)
     {
         try
         {

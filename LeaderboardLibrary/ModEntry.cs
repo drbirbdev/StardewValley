@@ -34,14 +34,14 @@ public class ModEntry : Mod
             GlobalModData.SetValueForScreen(0, new GlobalModData());
             this.Helper.Data.WriteGlobalData<GlobalModData>(GLOBAL_DATA_KEY, GlobalModData.Value);
         }
-        Log.Debug($"Using leaderboard identity {GlobalModData?.Value?.UserUUID ?? ""} and secret staring with {GlobalModData?.Value?.Secret?[..3]}" ?? "");
+        Log.Debug($"Using leaderboard identity {GlobalModData?.Value?.UserUuid ?? ""} and secret staring with {GlobalModData?.Value?.Secret?[..3]}" ?? "");
 
 
         LocalModData = this.Helper.Data.ReadJsonFile<LocalModData>("data/cached_leaderboards.json");
         if (LocalModData is null)
         {
             Log.Debug("Creating new local leaderboard cache...");
-            LocalModData = new LocalModData(GlobalModData.Value.UserUUID);
+            LocalModData = new LocalModData(GlobalModData.Value.UserUuid);
             this.Helper.Data.WriteJsonFile<LocalModData>("data/cached_leaderboards.json", LocalModData);
         }
 
@@ -60,20 +60,20 @@ public class ModEntry : Mod
     {
         if (!Context.IsMainPlayer)
         {
-            this.Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { this.ModManifest.UniqueID });
+            this.Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUuid, "ShareUUID", new[] { this.ModManifest.UniqueID });
         }
     }
 
     private void Multiplayer_PeerConnected(object sender, StardewModdingAPI.Events.PeerConnectedEventArgs e)
     {
-        this.Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUUID, "ShareUUID", new[] { this.ModManifest.UniqueID });
+        this.Helper.Multiplayer.SendMessage<string>(GlobalModData.Value.UserUuid, "ShareUUID", new[] { this.ModManifest.UniqueID });
         if (e.Peer.IsSplitScreen)
         {
             if (e.Peer.ScreenID != 0)
             {
                 GlobalModData globalData = new GlobalModData()
                 {
-                    UserUUID = $"{GlobalModData.GetValueForScreen(0).UserUUID}+guest",
+                    UserUuid = $"{GlobalModData.GetValueForScreen(0).UserUuid}+guest",
                     Secret = GlobalModData.GetValueForScreen(0).Secret,
                 };
                 GlobalModData.SetValueForScreen(e.Peer.ScreenID.Value, globalData);
@@ -85,7 +85,7 @@ public class ModEntry : Mod
     {
         if (e.FromModID == ModEntry.Instance.ModManifest.UniqueID && e.Type == "ShareUUID" && e.FromPlayerID != Game1.player.UniqueMultiplayerID)
         {
-            LocalModData.MultiplayerUUIDs.Add(e.ReadAs<string>());
+            LocalModData.MultiplayerUuiDs.Add(e.ReadAs<string>());
         }
     }
 
@@ -95,7 +95,7 @@ public class ModEntry : Mod
         {
             this.Helper.Data.WriteJsonFile<LocalModData>("data/cached_leaderboards.json", LocalModData);
         }
-        return new LeaderboardAPI(mod.Manifest.UniqueID);
+        return new LeaderboardApi(mod.Manifest.UniqueID);
     }
 
     public static bool TryAddModToCache(string modId)

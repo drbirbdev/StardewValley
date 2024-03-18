@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using BirbCore.Attributes;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
@@ -30,11 +31,15 @@ class PanUtility
     {
         return hat.QualifiedItemId switch
         {
-            "(H)drbirbdev.PanningUpgrades_NormalPanHat" => (Pan)ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_NormalPan"),
+            "(H)drbirbdev.PanningUpgrades_NormalPanHat" => (Pan)ItemRegistry.Create(
+                "(T)drbirbdev.PanningUpgrades_NormalPan"),
             "(H)71" => (Pan)ItemRegistry.Create("(T)Pan"),
-            "(H)drbirbdev.PanningUpgrades_SteelPanHat" => (Pan)ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_SteelPan"),
-            "(H)drbirbdev.PanningUpgrades_GoldPanHat" => (Pan)ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_GoldPan"),
-            "(H)drbirbdev.PanningUpgrades_IridiumPanHat" => (Pan)ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_IridiumPan"),
+            "(H)drbirbdev.PanningUpgrades_SteelPanHat" => (Pan)ItemRegistry.Create(
+                "(T)drbirbdev.PanningUpgrades_SteelPan"),
+            "(H)drbirbdev.PanningUpgrades_GoldPanHat" => (Pan)ItemRegistry.Create(
+                "(T)drbirbdev.PanningUpgrades_GoldPan"),
+            "(H)drbirbdev.PanningUpgrades_IridiumPanHat" => (Pan)ItemRegistry.Create(
+                "(T)drbirbdev.PanningUpgrades_IridiumPan"),
             _ => null
         };
     }
@@ -49,11 +54,14 @@ class Pan_DoFunction
         {
             List<Item> extraPanItems = [];
             float dailyLuck = (float)who.DailyLuck * ModEntry.Config.DailyLuckMultiplier;
-            Log.Debug($"Daily Luck {who.DailyLuck} * Multiplier {ModEntry.Config.DailyLuckMultiplier} = Weighted Daily Luck {dailyLuck}");
+            Log.Debug(
+                $"Daily Luck {who.DailyLuck} * Multiplier {ModEntry.Config.DailyLuckMultiplier} = Weighted Daily Luck {dailyLuck}");
             float buffLuck = who.LuckLevel * ModEntry.Config.LuckLevelMultiplier;
-            Log.Debug($"Buff Luck {who.LuckLevel} * Multiplier {ModEntry.Config.LuckLevelMultiplier} = Weighted Buff Luck {buffLuck}");
+            Log.Debug(
+                $"Buff Luck {who.LuckLevel} * Multiplier {ModEntry.Config.LuckLevelMultiplier} = Weighted Buff Luck {buffLuck}");
             float chance = ModEntry.Config.ExtraDrawBaseChance + dailyLuck + buffLuck;
-            Log.Debug($"Chance of Extra Draw {chance} = Base Chance {ModEntry.Config.ExtraDrawBaseChance} + Weighted Daily Luck {dailyLuck} + Weighted Buff Luck {buffLuck}");
+            Log.Debug(
+                $"Chance of Extra Draw {chance} = Base Chance {ModEntry.Config.ExtraDrawBaseChance} + Weighted Daily Luck {dailyLuck} + Weighted Buff Luck {buffLuck}");
             int panCount = 1;
 
             for (int i = 0; i < __instance.UpgradeLevel; i++)
@@ -69,6 +77,7 @@ class Pan_DoFunction
                 panCount++;
                 extraPanItems.AddRange(__instance.getPanItems(location, who));
             }
+
             Log.Debug($"Did {panCount} draws using level {__instance.UpgradeLevel} pan.");
 
             who.addItemsByMenuIfNecessary(extraPanItems);
@@ -80,15 +89,52 @@ class Pan_DoFunction
     }
 }
 
-[HarmonyPatch(typeof(Tool), nameof(Tool.doesShowTileLocationMarker))]
-class Tool_DoesShowTileLocationMarker
+/// <summary>
+/// Extend the pan range based on tool level.
+/// </summary>
+[HarmonyPatch(typeof(Pan), nameof(Pan.beginUsing))]
+class Pan_BeginUsing
 {
-    public static void Postfix(ref bool __result, Tool __instance)
+    public static IEnumerable<CodeInstruction> Transpile(IEnumerable<CodeInstruction> instructions)
     {
-        if (__instance is Pan)
+        foreach (CodeInstruction instruction in instructions)
         {
-            __result = false;
+            if (instruction.Calls(AccessTools.DeclaredMethod(typeof(Vector2), nameof(Vector2.Zero))))
+            {
+                yield return new CodeInstruction(OpCodes.Ldarg_0);
+                yield return new CodeInstruction(OpCodes.Ldarg_S, "who");
+                yield return new CodeInstruction(OpCodes.Ldloc_0);
+                yield return CodeInstruction.Call(typeof(Pan_BeginUsing), nameof(WithinPanExtendedRange));
+                yield return new CodeInstruction(OpCodes.Stloc_0);
+
+                yield return instruction;
+            }
+            else
+            {
+                yield return instruction;
+            }
         }
+    }
+
+    public static bool WithinPanExtendedRange(Pan pan, Farmer who, bool doPan)
+    {
+        if (pan.UpgradeLevel <= 0)
+        {
+            return doPan;
+        }
+
+        float range = pan.UpgradeLevel switch
+        {
+            0 => 192,
+            1 => 256,
+            2 => 320,
+            3 => 384,
+            4 => 448,
+            _ => 512
+        };
+
+        return doPan || Utility.distance(who.StandingPixel.X, who.StandingPixel.Y,
+            who.currentLocation.orePanPoint.X, who.currentLocation.orePanPoint.Y) < range;
     }
 }
 
@@ -114,6 +160,7 @@ class Utility_PerformSpecialItemPlaceReplacement
         {
             Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
+
         return true;
     }
 }
@@ -121,7 +168,6 @@ class Utility_PerformSpecialItemPlaceReplacement
 [HarmonyPatch(typeof(Utility), nameof(Utility.PerformSpecialItemGrabReplacement))]
 class Utility_PerformSpecialItemGrabReplacement
 {
-
     /// <summary>
     /// Handles using pan as a hat in certain menus.
     /// </summary>
@@ -141,6 +187,7 @@ class Utility_PerformSpecialItemGrabReplacement
         {
             Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
+
         return true;
     }
 }
@@ -206,7 +253,6 @@ class FarmerSprite_GetAnimationFromIndex
             }
 
 
-
             int upgradeLevel = owner.CurrentTool.UpgradeLevel;
             int genderOffset = owner.IsMale ? -1 : 0;
             const string texture = "Mods/drbirbdev.PanningUpgrades/PanTool";
@@ -238,7 +284,8 @@ class FarmerSprite_GetAnimationFromIndex
                         animationInterval: ModEntry.Config.AnimationFrameDuration,
                         animationLength: 3,
                         numberOfLoops: 0,
-                        position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                        position: owner.Position +
+                                  new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
                         flicker: false,
                         flipped: false,
                         layerDepth: 1f,
@@ -257,7 +304,8 @@ class FarmerSprite_GetAnimationFromIndex
                                 animationInterval: ModEntry.Config.AnimationFrameDuration * 2.5f,
                                 animationLength: 1,
                                 numberOfLoops: 0,
-                                position: owner.Position + new Vector2(0f, (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
+                                position: owner.Position + new Vector2(0f,
+                                    (ModEntry.Config.AnimationYOffset + genderOffset) * 4),
                                 flicker: false,
                                 flipped: false,
                                 layerDepth: 1f,
@@ -296,6 +344,7 @@ class Event_Command_AwardFestivalPrize
                 {
                     @event.CurrentCommand++;
                 }
+
                 @event.CurrentCommand++;
                 return false;
             }
@@ -304,6 +353,7 @@ class Event_Command_AwardFestivalPrize
         {
             Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
+
         return true;
     }
 }
@@ -329,6 +379,7 @@ class Event_Command_ItemAboveHead
         {
             Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
+
         return true;
     }
 }
@@ -353,6 +404,7 @@ class Event_SkipEvent
                 {
                     __instance.EndPlayerControlSequence();
                 }
+
                 Game1.playSound("drumkit6");
                 ___actorPositionsAfterMove.Clear();
                 foreach (NPC i in __instance.actors)
@@ -363,6 +415,7 @@ class Event_SkipEvent
                     i.Sprite.ignoreStopAnimation = ignoreStopAnimation;
                     __instance.resetDialogueIfNecessary(i);
                 }
+
                 __instance.farmer.Halt();
                 __instance.farmer.ignoreCollisions = false;
                 Game1.exitActiveMenu();
@@ -373,8 +426,10 @@ class Event_SkipEvent
                 // Event specific skip logic.
                 if (Game1.player.getToolFromName("Pan") is null)
                 {
-                    Game1.player.addItemByMenuIfNecessary(ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_NormalPan"));
+                    Game1.player.addItemByMenuIfNecessary(
+                        ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_NormalPan"));
                 }
+
                 __instance.endBehaviors(["end"], Game1.currentLocation);
                 return false;
             }
@@ -383,6 +438,7 @@ class Event_SkipEvent
         {
             Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
+
         return true;
     }
 }

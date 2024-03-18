@@ -48,37 +48,49 @@ public class Parser
                         handler.Handle(type, instance, mod);
                         break;
                     case 1:
-                        Priority1Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority1Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                     case 2:
-                        Priority2Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority2Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                     case 3:
-                        Priority3Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority3Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                     case 4:
-                        Priority4Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority4Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                     case 5:
-                        Priority5Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority5Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                     case 6:
-                        Priority6Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority6Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                     case 7:
-                        Priority7Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority7Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                     case 8:
-                        Priority8Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority8Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                     case 9:
-                        Priority9Event += (sender, e) => handler.Handle(type, instance, mod);
+                        Priority9Event += (sender, e) => WrapHandler(handler, type, instance, mod);
                         break;
                 }
             }
         }
 
         new Harmony(mod.ModManifest.UniqueID).PatchAll(assembly);
+    }
+
+    private static void WrapHandler(ClassHandler handler, Type type, object? instance, IMod mod)
+    {
+        try
+        {
+            handler.Handle(type, instance, mod);
+        }
+        catch (Exception e)
+        {
+            mod.Monitor.Log($"BirbCore failed to parse {handler.GetType().Name} class {type}: {e}", LogLevel.Error);
+        }
     }
 
     internal static void InitEvents()
@@ -162,7 +174,14 @@ public abstract class ClassHandler(int priority = 0) : Attribute
                 string attributeName = attribute.ToString() ?? "";
                 if (attribute is FieldHandler handler && attributeName.StartsWith(className))
                 {
-                    handler.Handle(fieldInfo, instance, mod, args);
+                    try
+                    {
+                        handler.Handle(fieldInfo, instance, mod, args);
+                    }
+                    catch (Exception e)
+                    {
+                        mod.Monitor.Log($"BirbCore failed to parse {handler.GetType().Name} field {fieldInfo.Name}: {e}", LogLevel.Error);
+                    }
                 }
             }
         }
@@ -174,7 +193,14 @@ public abstract class ClassHandler(int priority = 0) : Attribute
                 string attributeName = attribute.ToString() ?? "";
                 if (attribute is FieldHandler handler && attributeName.StartsWith(className))
                 {
-                    handler.Handle(propertyInfo, instance, mod, args);
+                    try
+                    {
+                        handler.Handle(propertyInfo, instance, mod, args);
+                    }
+                    catch (Exception e)
+                    {
+                        mod.Monitor.Log($"BirbCore failed to parse {handler.GetType().Name} property {propertyInfo.Name}: {e}", LogLevel.Error);
+                    }
                 }
             }
         }
@@ -186,7 +212,14 @@ public abstract class ClassHandler(int priority = 0) : Attribute
                 string attributeName = attribute.ToString() ?? "";
                 if (attribute is MethodHandler handler && attributeName.StartsWith(className))
                 {
-                    handler.Handle(method, instance, mod, args);
+                    try
+                    {
+                        handler.Handle(method, instance, mod, args);
+                    }
+                    catch (Exception e)
+                    {
+                        mod.Monitor.Log($"BirbCore failed to parse {handler.GetType().Name} method {method.Name}: {e}", LogLevel.Error);
+                    }
                 }
             }
         }

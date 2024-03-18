@@ -1,6 +1,7 @@
 using System;
 using BirbCore.Attributes;
 using StardewValley;
+using StardewValley.Delegates;
 using static StardewValley.GameStateQuery;
 
 namespace RealtimeFramework;
@@ -9,7 +10,7 @@ namespace RealtimeFramework;
 internal class Delegates
 {
     [SDelegate.GameStateQuery]
-    public static bool IsHoliday(string[] query, GameLocation _, Farmer _1, Item _2, Item _3, Random _4)
+    public static bool IsHoliday(string[] query, GameStateQueryContext _)
     {
         return !ArgUtility.TryGet(query, 1, out string value, out string error)
             ? Helpers.ErrorResult(query, error)
@@ -17,7 +18,7 @@ internal class Delegates
     }
 
     [SDelegate.GameStateQuery]
-    public static bool IsComingHoliday(string[] query, GameLocation _, Farmer _1, Item _2, Item _3, Random _4)
+    public static bool IsComingHoliday(string[] query, GameStateQueryContext _)
     {
         return !ArgUtility.TryGet(query, 1, out string value, out string error)
             ? Helpers.ErrorResult(query, error)
@@ -25,7 +26,7 @@ internal class Delegates
     }
 
     [SDelegate.GameStateQuery]
-    public static bool IsCurrentHoliday(string[] query, GameLocation _, Farmer _1, Item _2, Item _3, Random _4)
+    public static bool IsCurrentHoliday(string[] query, GameStateQueryContext _)
     {
         return !ArgUtility.TryGet(query, 1, out string value, out string error)
             ? Helpers.ErrorResult(query, error)
@@ -33,7 +34,7 @@ internal class Delegates
     }
 
     [SDelegate.GameStateQuery]
-    public static bool IsPassingHoliday(string[] query, GameLocation _, Farmer _1, Item _2, Item _3, Random _4)
+    public static bool IsPassingHoliday(string[] query, GameStateQueryContext _)
     {
         return !ArgUtility.TryGet(query, 1, out string value, out string error)
             ? Helpers.ErrorResult(query, error)

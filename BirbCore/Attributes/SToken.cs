@@ -37,6 +37,7 @@ public class SToken() : ClassHandler(2)
     {
         private object? _instance;
         private Func<object?, object?>? _getter;
+
         protected override void Handle(string name, Type fieldType, Func<object?, object?> getter,
             Action<object?, object?> setter, object? instance, IMod mod, object[]? args = null)
         {
@@ -66,6 +67,7 @@ public class SToken() : ClassHandler(2)
                     {
                         yield return (string)item;
                     }
+
                     break;
                 }
                 default:
@@ -85,7 +87,7 @@ public class SToken() : ClassHandler(2)
                 return;
             }
 
-            _api.RegisterToken(mod.ModManifest, method.Name, method.CreateDelegate<Func<IEnumerable<string>>>(instance));
+            _api.RegisterToken(mod.ModManifest, method.Name, () => (IEnumerable<string>?)method.Invoke(instance, []));
         }
     }
 

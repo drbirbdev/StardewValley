@@ -74,7 +74,8 @@ class Object_PerformObjectDropInAction
 {
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        int index = instructions.FindBCloseToA(new CodeInstruction(OpCodes.Ldstr, "coin"),
+        return instructions;
+        /*int index = instructions.FindBCloseToA(new CodeInstruction(OpCodes.Ldstr, "coin"),
             new CodeInstruction(OpCodes.Ldc_I4, 4000));
         instructions = instructions.InsertAfterIndex(new CodeInstruction[]
         {
@@ -90,7 +91,7 @@ class Object_PerformObjectDropInAction
             new CodeInstruction(OpCodes.Ldarg_0),
             new CodeInstruction(OpCodes.Call,
                 AccessTools.Method(typeof(Object_PerformObjectDropInAction), nameof(PressSlimeEgg))),
-        }, index);
+        }, index);*/
     }
 
     public static void IncubateSlimeEgg(Object incubator)

@@ -4,12 +4,15 @@ using BirbCore.Attributes;
 namespace RanchingToolUpgrades;
 
 [SConfig]
+[SToken]
 internal class Config
 {
     [SConfig.Option(0, 100000, 500)]
+    [SToken.FieldToken]
     public int PailBuyCost = 1000;
 
     [SConfig.Option(0, 100000, 500)]
+    [SToken.FieldToken]
     public int ShearsBuyCost = 1000;
 
     /*

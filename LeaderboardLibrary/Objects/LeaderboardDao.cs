@@ -53,10 +53,7 @@ class LeaderboardDao
         }
         catch (Exception e)
         {
-            Log.Error($"Failed to retrieve local scores\n" +
-                      $"Stat : {stat}\n");
-            Log.Error(e.Message);
-
+            Log.Error($"Failed to retrieve local scores for stat {stat}: {e}");
             return null;
         }
     }
@@ -95,10 +92,7 @@ class LeaderboardDao
         }
         catch (Exception e)
         {
-            Log.Error($"Failed to retrieve global scores\n" +
-                      $"Stat : {stat}\n");
-            Log.Error(e.Message);
-
+            Log.Error($"Failed to retrieve global scores for stat {stat}: {e}");
             return null;
         }
     }
@@ -162,8 +156,7 @@ class LeaderboardDao
                       $"Stat : {stat}\n" +
                       $"Name : {userName}\n" +
                       $"Farm : {farmName}\n" +
-                      $"UUID : {userUuid}\n");
-            Log.Error(e.Message);
+                      $"UUID : {userUuid}\n{e}");
         }
     }
 }

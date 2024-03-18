@@ -25,7 +25,7 @@ public class SEdit : ClassHandler
         OnDayStart,
         OnLocationChange,
         OnTimeChange,
-        OnTick,
+        OnTick
     }
 
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
@@ -180,24 +180,24 @@ public class SEdit : ClassHandler
 
             foreach (object toEditValue in toEdit)
             {
-                if (toEditValue is IList toEditValueList)
+                switch (toEditValue)
                 {
-                    this.ApplyListEdit(toEditValueList, edit);
-                }
-                else if (toEditValue is IDictionary toEditValueDictionary)
-                {
-                    this.ApplyDictionaryEdit(toEditValueDictionary, edit, name);
-                }
-                else
-                {
-                    ApplyMemberEdit(toEditValue, edit);
+                    case IList toEditValueList:
+                        ApplyListEdit(toEditValueList, edit);
+                        break;
+                    case IDictionary toEditValueDictionary:
+                        this.ApplyDictionaryEdit(toEditValueDictionary, edit, name);
+                        break;
+                    default:
+                        ApplyMemberEdit(toEditValue, edit);
+                        break;
                 }
             }
         }
 
-        private static List<object> GetListEdits(string field, IList toEdit)
+        private static IEnumerable<object> GetListEdits(string field, IList toEdit)
         {
-            List<object> nextToEdit = new List<object>();
+            List<object> nextToEdit = [];
             if (toEdit.Count <= 0)
             {
                 return nextToEdit;
@@ -241,7 +241,7 @@ public class SEdit : ClassHandler
                 }
                 if (!t.TryGetMemberOfName("Id", out MemberInfo id) && !t.TryGetMemberOfName("ID", out id))
                 {
-                    Log.Error($"SEdit.Data could not find key field for list");
+                    Log.Error("SEdit.Data could not find key field for list");
                     return nextToEdit;
                 }
 
@@ -277,12 +277,13 @@ public class SEdit : ClassHandler
                 return [];
             }
             object? item = toEdit[field];
-            if (item is null)
+            if (item is not null)
             {
-                Log.Error($"SEdit.Data dictionary contained null value for {field}");
-                return [];
+                return [item];
             }
-            return [item];
+
+            Log.Error($"SEdit.Data dictionary contained null value for {field}");
+            return [];
         }
 
         private static IEnumerable<object> GetMemberEdits(string field, object toEdit)
@@ -294,20 +295,21 @@ public class SEdit : ClassHandler
             }
 
             object? nextToEdit = memberInfo.GetValue(toEdit);
-            if (nextToEdit is null)
+            if (nextToEdit is not null)
             {
-                Log.Error($"SEdit.Data could not find field or property of name {field}");
-                return [];
+                return [nextToEdit];
             }
-            return [nextToEdit];
+
+            Log.Error($"SEdit.Data could not find field or property of name {field}");
+            return [];
         }
 
-        private void ApplyListEdit(IList toEdit, object? edit)
+        private static void ApplyListEdit(IList toEdit, object? edit)
         {
             Type? t = toEdit[0]?.GetType();
             if (t is null)
             {
-                Log.Error($"SEdit.Data could not find edits");
+                Log.Error("SEdit.Data could not find edits");
                 return;
             }
 

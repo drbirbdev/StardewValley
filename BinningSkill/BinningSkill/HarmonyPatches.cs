@@ -261,7 +261,7 @@ class GameLocation_CheckGarbage
     {
         GarbageCanData allData = DataLoader.GarbageCans(Game1.content);
         allData.GarbageCans.TryGetValue(garbageCanId, out GarbageCanEntryData data);
-        int noiseLevel = data?.CustomFields?.TryGetInt("drbirbdev.BinningSkill_NoiseLevel") ?? 7;
+        int noiseLevel = data?.CustomFields?.TryGetInt("drbirbdev.BinningSkill_NoiseLevel") ?? tilesAway;
         if (who.HasProfession("Sneak"))
         {
             noiseLevel -= ModEntry.Config.SneakNoiseReduction;
@@ -302,14 +302,16 @@ class GameLocation_TryGetGarbageIItem
             }
 
             // Remove Mega, DoubleMega results if not meeting level requirements
-            if ((selected.IsMegaSuccess &&
-                 Game1.player.GetCustomSkillLevel("drbirbdev.Binning") < ModEntry.Config.MegaMinLevel) ||
-                (selected.IsDoubleMegaSuccess && Game1.player.GetCustomSkillLevel("drbirbdev.Binning") <
+            if ((!selected.IsMegaSuccess ||
+                 Game1.player.GetCustomSkillLevel("drbirbdev.Binning") >= ModEntry.Config.MegaMinLevel) &&
+                (!selected.IsDoubleMegaSuccess || Game1.player.GetCustomSkillLevel("drbirbdev.Binning") >=
                     ModEntry.Config.DoubleMegaMinLevel))
             {
-                item = null;
-                selected = null;
+                return;
             }
+
+            item = null;
+            selected = null;
         }
         catch (Exception e)
         {

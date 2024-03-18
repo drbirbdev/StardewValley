@@ -57,7 +57,7 @@ public class SContent(string fileName = "content.json", bool isList = false, boo
         {
             object? content = contentPack.GetType().GetMethod("ReadJsonFile")
                 ?.MakeGenericMethod(modEntryValueType)
-                .Invoke(contentPack, new object[] { fileName });
+                .Invoke(contentPack, [fileName]);
 
             if (content is null)
             {
@@ -74,7 +74,7 @@ public class SContent(string fileName = "content.json", bool isList = false, boo
                 {
                     string id = (string)(idMember?.GetGetter()(contentList[i]) ?? i);
 
-                    base.Handle(type, contentList[i], mod, new object[] { contentPack, id });
+                    base.Handle(type, contentList[i], mod, [contentPack, id]);
                 }
             }
             else if (isDictionary)
@@ -128,7 +128,7 @@ public class SContent(string fileName = "content.json", bool isList = false, boo
                 Log.Error("Content instance might be static? Failing to add all content packs");
                 return;
             }
-            if (args?[0] == null || args?[1] == null)
+            if (args?[0] == null)
             {
                 Log.Error("Something went wrong in BirbCore Content Pack parsing");
                 return;

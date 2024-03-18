@@ -41,13 +41,14 @@ public class LeaderboardStat : IComparable
         return this.Score.CompareTo(l?.Score);
     }
 
-    private static LeaderboardStat FromDdbShape(Dictionary<string, AttributeValue> ddb)
+    private static LeaderboardStat FromDdbShape(IReadOnlyDictionary<string, AttributeValue> ddb)
     {
         if (!int.TryParse(ddb.GetValueOrDefault("Score", new AttributeValue()).N, out int score))
         {
             Log.Warn("Failed to parse score from DDB document");
             score = 0;
         }
+        // ReSharper disable once InvertIf
         if (!int.TryParse(ddb.GetValueOrDefault("DateTime", new AttributeValue()).S, out int time))
         {
             Log.Warn("Failed to parse time from DDB document");
@@ -61,13 +62,13 @@ public class LeaderboardStat : IComparable
             Score = score,
             Name = ddb.GetValueOrDefault("Name", new AttributeValue()).S,
             Farm = ddb.GetValueOrDefault("Farm", new AttributeValue()).S,
-            DateTime = time,
+            DateTime = time
         };
     }
 
     public static List<LeaderboardStat> FromDdbList(List<Dictionary<string, AttributeValue>> ddbList)
     {
-        List<LeaderboardStat> result = new();
+        List<LeaderboardStat> result = [];
         foreach (Dictionary<string, AttributeValue> ddbItem in ddbList)
         {
             result.Add(FromDdbShape(ddbItem));
@@ -84,13 +85,13 @@ public class LeaderboardStat : IComparable
             {"Farm", this.Farm },
             {"Score", this.Score.ToString(CultureInfo.InvariantCulture) },
             {"DateTime", this.DateTime.ToString(CultureInfo.InvariantCulture) },
-            {"UserUUID", this.UserUUID },
+            {"UserUUID", this.UserUUID }
         };
     }
 
     public static List<Dictionary<string, string>> ToApiList(List<LeaderboardStat> leaderboardStats)
     {
-        List<Dictionary<string, string>> result = new();
+        List<Dictionary<string, string>> result = [];
         foreach (LeaderboardStat leaderboard in leaderboardStats)
         {
             result.Add(leaderboard.ToApiShape());

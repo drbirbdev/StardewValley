@@ -11,7 +11,7 @@ public class ModEntry : Mod
     internal static Config Config;
     internal static Assets Assets;
 
-    internal ITranslationHelper I18n => this.Helper.Translation;
+    internal ITranslationHelper I18N => this.Helper.Translation;
 
     public override void Entry(IModHelper helper)
     {

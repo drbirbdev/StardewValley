@@ -66,6 +66,7 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
             {
                 Log.Info(this.GetHelp());
             }
+
             return;
         }
 
@@ -80,8 +81,6 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
             Log.Trace(e.ToString());
         }
     }
-
-
 
 
     /// <summary>
@@ -115,11 +114,13 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
                 Log.Error("SCommand class may be static? Cannot parse subcommands.");
                 return;
             }
+
             if (args is null)
             {
                 Log.Error("SCommand class didn't pass args");
                 return;
             }
+
             Dictionary<string, Action<string[]>> commands = (Dictionary<string, Action<string[]>>)args[0];
             Dictionary<string, string> helps = (Dictionary<string, string>)args[1];
             string command = (string)args[2];
@@ -129,7 +130,7 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
 
             commands.Add(subCommand, commandArgs =>
             {
-                List<object> commandArgsList = new();
+                List<object> commandArgsList = [];
 
                 for (int i = 0; i < method.GetParameters().Length; i++)
                 {
@@ -138,20 +139,21 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
 
 
                     commandArgsList.Add(ParseArg(arg, parameter));
-                    if (parameter.GetCustomAttribute(typeof(ParamArrayAttribute), false) is not null)
+                    if (parameter.GetCustomAttribute(typeof(ParamArrayAttribute), false) is null)
                     {
-                        for (int j = i + 1; j < (commandArgs?.Length ?? 0); j++)
-                        {
-                            commandArgsList.Add(ParseArg(commandArgs?[j], parameter));
-                        }
+                        continue;
+                    }
+
+                    for (int j = i + 1; j < (commandArgs?.Length ?? 0); j++)
+                    {
+                        commandArgsList.Add(ParseArg(commandArgs?[j], parameter));
                     }
                 }
 
                 method.Invoke(instance, commandArgsList.ToArray());
-
             });
 
-            StringBuilder help1 = new StringBuilder();
+            StringBuilder help1 = new();
             help1.Append($"{command} {subCommand}");
             foreach (ParameterInfo parameter in method.GetParameters())
             {
@@ -165,6 +167,7 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
                     help1.Append($" <{parameter.Name}{dotDotDot}>");
                 }
             }
+
             help1.Append($"\n\t\t{help}");
 
             helps.Add(subCommand, help1.ToString());
@@ -176,54 +179,55 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
             {
                 return Type.Missing;
             }
-            else if (parameter.ParameterType == typeof(string))
+
+            if (parameter.ParameterType == typeof(string))
             {
                 return arg;
             }
-            else if (parameter.ParameterType == typeof(int))
+
+            if (parameter.ParameterType == typeof(int))
             {
                 return int.Parse(arg);
             }
-            else if (parameter.ParameterType == typeof(double) || parameter.ParameterType == typeof(float))
+
+            if (parameter.ParameterType == typeof(double) || parameter.ParameterType == typeof(float))
             {
                 return float.Parse(arg);
             }
-            else if (parameter.ParameterType == typeof(bool))
+
+            if (parameter.ParameterType == typeof(bool))
             {
                 return bool.Parse(arg);
             }
-            else if (parameter.ParameterType == typeof(GameLocation))
+
+            if (parameter.ParameterType == typeof(GameLocation))
             {
                 return Utility.fuzzyLocationSearch(arg);
             }
-            else if (parameter.ParameterType == typeof(NPC))
+
+            if (parameter.ParameterType == typeof(NPC))
             {
                 return Utility.fuzzyCharacterSearch(arg);
             }
-            else if (parameter.ParameterType == typeof(FarmAnimal))
+
+            if (parameter.ParameterType == typeof(FarmAnimal))
             {
                 return Utility.fuzzyAnimalSearch(arg);
             }
-            else if (parameter.ParameterType == typeof(Farmer))
+
+            if (parameter.ParameterType == typeof(Farmer))
             {
                 if (long.TryParse(arg, out long playerId))
                 {
                     return Game1.getFarmerMaybeOffline(playerId);
                 }
-                else if (arg.Equals("host", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return Game1.MasterPlayer;
-                }
-                return Game1.player;
+
+                return arg.Equals("host", StringComparison.InvariantCultureIgnoreCase)
+                    ? Game1.MasterPlayer
+                    : Game1.player;
             }
-            else if (parameter.ParameterType == typeof(Item))
-            {
-                return Utility.fuzzyItemSearch(arg);
-            }
-            else
-            {
-                return Type.Missing;
-            }
+
+            return parameter.ParameterType == typeof(Item) ? Utility.fuzzyItemSearch(arg) : Type.Missing;
         }
     }
 }

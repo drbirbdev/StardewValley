@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BirbCore.Attributes;
 using StardewValley;
 using StardewValley.Internal;
+using Object = StardewValley.Object;
 
 namespace BirbCore;
 
@@ -11,7 +12,7 @@ internal class Delegates
 {
 
     [SDelegate.ResolveItemQuery]
-    public static IList<ItemQueryResult> CustomFlavoredItem(string key, string arguments, ItemQueryContext context, bool avoidRepeat, HashSet<string> avoidItemIds, Action<string, string> logError)
+    public static IList<ItemQueryResult> CustomFlavoredItem(string key, string arguments, ItemQueryContext _, bool _1, HashSet<string> _2, Action<string, string> logError)
     {
         string[] splitArgs = ItemQueryResolver.Helpers.SplitArguments(arguments);
         if (!ArgUtility.TryGet(splitArgs, 0, out string flavoredItemId, out string error) ||
@@ -21,16 +22,29 @@ internal class Delegates
             return ItemQueryResolver.Helpers.ErrorResult(key, arguments, logError, error);
         }
 
-        StardewValley.Object ingredient = ItemRegistry.Create(ingredientPreservedItemId ?? ingredientItemId) as StardewValley.Object;
+        Object ingredient = ItemRegistry.Create(ingredientPreservedItemId ?? ingredientItemId) as Object;
 
-        StardewValley.Object flavored = ItemRegistry.Create(flavoredItemId, 1) as StardewValley.Object;
+        if (ItemRegistry.Create(flavoredItemId) is not Object flavored)
+        {
+            return null;
+        }
+
+        if (ingredient == null)
+        {
+            return new ItemQueryResult[]
+            {
+                new(flavored)
+            };
+        }
+
         flavored.Name += ingredient.Name;
         // flavored.preserve.Value = ...
         flavored.preservedParentSheetIndex.Value = ingredient.ItemId;
 
-        return new ItemQueryResult[1]
+        return new ItemQueryResult[]
         {
-            new ItemQueryResult(flavored)
+            new(flavored)
         };
+
     }
 }

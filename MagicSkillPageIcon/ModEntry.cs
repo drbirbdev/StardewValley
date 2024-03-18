@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using BirbCore.Attributes;
 using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
 using StardewModdingAPI;
+#pragma warning disable CS0169 // Field is never used
 
 namespace MagicSkillPageIcon;
 
@@ -37,5 +39,6 @@ class Skill_Constructor
 public class Assets
 {
     [SAsset.Asset("assets/magic_skill_page_icon.png")]
-    public static Texture2D SkillPageIcon { get; set; }
+    [SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible")]
+    public static Texture2D SkillPageIcon;
 }

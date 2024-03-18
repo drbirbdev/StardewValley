@@ -13,7 +13,7 @@ internal class Delegates
     public static bool Level(string[] query, GameStateQueryContext context)
     {
         return GameStateQuery.Helpers.PlayerSkillLevelImpl(query, context.Player,
-            (target) => target.GetCustomBuffedSkillLevel("drbirbdev.Binning"));
+            target => target.GetCustomBuffedSkillLevel("drbirbdev.Binning"));
     }
 
     [SDelegate.GameStateQuery]

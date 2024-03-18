@@ -67,15 +67,15 @@ public class BirbSkill : Skills.Skill
 
         if (this.DoMargo)
         {
-            this.ExperienceCurve = new[]
-            {
+            this.ExperienceCurve =
+            [
                 100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000,
                 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 70000
-            };
+            ];
         }
         else
         {
-            this.ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000 };
+            this.ExperienceCurve = [100, 380, 770, 1300, 2150, 3300, 4000, 6900, 10000, 15000];
         }
 
         int i = 0;
@@ -83,7 +83,7 @@ public class BirbSkill : Skills.Skill
         {
             object tokens = professionTokens[profession];
 
-            KeyedProfession p = new KeyedProfession(this, profession, texture.GetTextureRect(16 * i, 16, 16, 16),
+            KeyedProfession p = new(this, profession, texture.GetTextureRect(16 * i, 16, 16, 16),
                 this.DoMargo ? texture.GetTextureRect(16 * i, 32, 16, 16) : null, modHelper, tokens);
 
             this.Professions.Add(p);

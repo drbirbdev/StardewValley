@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using BirbCore.Attributes;
 using StardewModdingAPI;
+// ReSharper disable InconsistentNaming
 
 namespace GameboyArcade;
 

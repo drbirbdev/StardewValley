@@ -5,11 +5,11 @@ using System.Reflection;
 namespace BirbCore.Extensions;
 public static class ReflectionExtensions
 {
-    public const BindingFlags AllDeclared = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+    public const BindingFlags ALL_DECLARED = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
     public static bool TryGetMemberOfType(this Type type, Type memberType, out MemberInfo memberInfo)
     {
-        foreach (FieldInfo fieldInfo in type.GetFields(AllDeclared))
+        foreach (FieldInfo fieldInfo in type.GetFields(ALL_DECLARED))
         {
             if (fieldInfo.FieldType != memberType)
             {
@@ -19,7 +19,7 @@ public static class ReflectionExtensions
             memberInfo = fieldInfo;
             return true;
         }
-        foreach (PropertyInfo propertyInfo in type.GetProperties(AllDeclared))
+        foreach (PropertyInfo propertyInfo in type.GetProperties(ALL_DECLARED))
         {
             if (propertyInfo.PropertyType != memberType)
             {
@@ -36,7 +36,7 @@ public static class ReflectionExtensions
 
     public static bool TryGetMemberOfName(this Type type, string name, out MemberInfo memberInfo)
     {
-        foreach (FieldInfo fieldInfo in type.GetFields(AllDeclared))
+        foreach (FieldInfo fieldInfo in type.GetFields(ALL_DECLARED))
         {
             if (fieldInfo.Name != name)
             {
@@ -46,7 +46,7 @@ public static class ReflectionExtensions
             memberInfo = fieldInfo;
             return true;
         }
-        foreach (PropertyInfo propertyInfo in type.GetProperties(AllDeclared))
+        foreach (PropertyInfo propertyInfo in type.GetProperties(ALL_DECLARED))
         {
             if (propertyInfo.Name != name)
             {
@@ -87,7 +87,7 @@ public static class ReflectionExtensions
 
     public static bool TryGetMemberWithCustomAttribute(this Type type, Type attributeType, out MemberInfo memberInfo)
     {
-        foreach (FieldInfo fieldInfo in type.GetFields(AllDeclared))
+        foreach (FieldInfo fieldInfo in type.GetFields(ALL_DECLARED))
         {
             foreach (Attribute attribute in fieldInfo.GetCustomAttributes())
             {
@@ -100,7 +100,7 @@ public static class ReflectionExtensions
                 return true;
             }
         }
-        foreach (PropertyInfo propertyInfo in type.GetProperties(AllDeclared))
+        foreach (PropertyInfo propertyInfo in type.GetProperties(ALL_DECLARED))
         {
             foreach (Attribute attribute in propertyInfo.GetCustomAttributes())
             {
@@ -124,7 +124,7 @@ public static class ReflectionExtensions
         {
             FieldInfo field => field.FieldType,
             PropertyInfo property => property.PropertyType,
-            _ => typeof(int), // default case shouldn't happen
+            _ => typeof(int) // default case shouldn't happen
         };
     }
 
@@ -144,7 +144,7 @@ public static class ReflectionExtensions
         {
             FieldInfo field => field.SetValue,
             PropertyInfo property => property.SetValue,
-            _ => (a, b) => {}, // default case shouldn't happen
+            _ => (a, b) => {} // default case shouldn't happen
         };
     }
 

@@ -54,11 +54,11 @@ internal class Command
             bool pass = GameStateQuery.CheckConditions(item.Condition, canLocation);
             if (pass)
             {
-                Log.Info($"\t\tConditions:");
+                Log.Info("\t\tConditions:");
             }
             else
             {
-                Log.Trace($"\t\tConditions:");
+                Log.Trace("\t\tConditions:");
             }
 
             string[] rawQueries = GameStateQuery.SplitRaw(item.Condition);
@@ -94,8 +94,8 @@ internal class Command
             return;
         }
 
-        Dictionary<string, int> itemDataCounts = new Dictionary<string, int>();
-        Dictionary<string, int> itemCounts = new Dictionary<string, int>();
+        Dictionary<string, int> itemDataCounts = new();
+        Dictionary<string, int> itemCounts = new();
 
         uint daysPlayed = Game1.stats.DaysPlayed;
         uint noItem = 0;
@@ -170,7 +170,7 @@ internal class Command
 
             if (entryData is null)
             {
-                Log.Debug($"Found no garbage cans...");
+                Log.Debug("Found no garbage cans...");
                 return false;
             }
         }

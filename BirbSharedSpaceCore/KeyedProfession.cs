@@ -18,7 +18,8 @@ namespace BirbShared
         private bool _isPrestiged;
         readonly IModHelper _modHelper;
 
-        public KeyedProfession(Skills.Skill skill, string id, Texture2D icon, Texture2D prestigeIcon, IModHelper modHelper, object tokens = null) : base(skill, id)
+        public KeyedProfession(Skills.Skill skill, string id, Texture2D icon, Texture2D prestigeIcon,
+            IModHelper modHelper, object tokens = null) : base(skill, id)
         {
             this.Icon = icon;
             this._i18N = modHelper.Translation;
@@ -60,18 +61,15 @@ namespace BirbShared
             {
                 return;
             }
+
             this.Icon = this._normalIcon;
             this._isPrestiged = false;
         }
 
         public override string GetDescription()
         {
-            if (this.CheckPrestigeMenu())
-            {
-                return this._i18N.Get($"profession.{this.Id}.pdesc", this._tokens);
-            }
-
-            return this._i18N.Get($"profession.{this.Id}.desc", this._tokens);
+            return this._i18N.Get(
+                this.CheckPrestigeMenu() ? $"profession.{this.Id}.pdesc" : $"profession.{this.Id}.desc", this._tokens);
         }
 
         private bool CheckPrestigeMenu()
@@ -80,23 +78,28 @@ namespace BirbShared
             {
                 return false;
             }
+
             if (this._isPrestiged)
             {
                 return true;
             }
+
             if (Game1.activeClickableMenu is not SkillLevelUpMenu currMenu)
             {
                 return false;
             }
+
             if (!currMenu.isProfessionChooser)
             {
                 return false;
             }
+
             string currSkill = this._modHelper.Reflection.GetField<string>(currMenu, "currentSkill").GetValue();
             if (currSkill != this.Skill.Id)
             {
                 return false;
             }
+
             int currentLevel = this._modHelper.Reflection.GetField<int>(currMenu, "currentLevel").GetValue();
             if (currentLevel <= 10)
             {

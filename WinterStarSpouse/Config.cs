@@ -6,9 +6,9 @@ namespace WinterStarSpouse;
 internal class Config
 {
 
-    [SConfig.Option(0, 100, 1)]
-    public int SpouseIsRecipientChance { get; set; } = 50;
+    [SConfig.Option(0, 100)]
+    public int SpouseIsRecipientChance = 50;
 
-    [SConfig.Option(0, 100, 1)]
-    public int SpouseIsGiverChance { get; set; } = 50;
+    [SConfig.Option(0, 100)]
+    public int SpouseIsGiverChance = 50;
 }

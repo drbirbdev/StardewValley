@@ -19,12 +19,12 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
     {
         if (!this.LocalLeaderboards.ContainsKey(stat))
         {
-            this.LocalLeaderboards[stat] = new List<LeaderboardStat>();
+            this.LocalLeaderboards[stat] = [];
         }
 
         if (!this.TopLeaderboards.ContainsKey(stat))
         {
-            this.TopLeaderboards[stat] = new List<LeaderboardStat>();
+            this.TopLeaderboards[stat] = [];
         }
     }
 
@@ -32,7 +32,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
     {
         this.LazyInitStat(stat);
         return this.LocalLeaderboards[stat]
-            .FindIndex((match) => match.UserUUID == ModEntry.GlobalModData.Value.UserUuid) + 1;
+            .FindIndex(match => match.UserUUID == ModEntry.GLOBAL_MOD_DATA.Value.UserUuid) + 1;
     }
 
     public List<Dictionary<string, string>> GetLocalTopN(string stat, int count)
@@ -49,7 +49,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
     public Dictionary<string, string> GetPersonalBest(string stat)
     {
         this.LazyInitStat(stat);
-        return this.GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUuid).ToApiShape();
+        return this.GetPlayerStat(stat, ModEntry.GLOBAL_MOD_DATA.Value.UserUuid).ToApiShape();
     }
 
     public int GetRank(string stat)
@@ -71,7 +71,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
     public bool RefreshCache(string stat)
     {
         this.LazyInitStat(stat);
-        LeaderboardDao.GetLocalScores(stat).ContinueWith((task) =>
+        LeaderboardDao.GetLocalScores(stat).ContinueWith(task =>
         {
             if (CheckFailures(task, "GetLocalScores"))
             {
@@ -82,7 +82,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
             this.LocalLeaderboards[stat].Sort();
             try
             {
-                ModEntry.Instance.Helper.Data.WriteJsonFile($"data/cached_leaderboards.json", ModEntry.LocalModData);
+                ModEntry.Instance.Helper.Data.WriteJsonFile("data/cached_leaderboards.json", ModEntry.LocalModData);
             }
             catch (Exception)
             {
@@ -90,7 +90,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
             }
         });
 
-        LeaderboardDao.GetTopScores(stat).ContinueWith((task) =>
+        LeaderboardDao.GetTopScores(stat).ContinueWith(task =>
         {
             if (CheckFailures(task, "GetTopScores"))
             {
@@ -100,7 +100,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
             this.TopLeaderboards[stat] = task.Result;
             try
             {
-                ModEntry.Instance.Helper.Data.WriteJsonFile($"data/cached_leaderboards.json", ModEntry.LocalModData);
+                ModEntry.Instance.Helper.Data.WriteJsonFile("data/cached_leaderboards.json", ModEntry.LocalModData);
             }
             catch (Exception)
             {
@@ -115,15 +115,15 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
     public bool UploadScore(string stat, int score)
     {
         this.LazyInitStat(stat);
-        LeaderboardStat current = this.GetPlayerStat(stat, ModEntry.GlobalModData.Value.UserUuid);
+        LeaderboardStat current = this.GetPlayerStat(stat, ModEntry.GLOBAL_MOD_DATA.Value.UserUuid);
         if (current is not null && !(current.Score < score))
         {
             return true;
         }
 
-        LeaderboardDao.UploadScore(stat, score, ModEntry.GlobalModData.Value.UserUuid, Game1.player.Name,
-            Game1.player.farmName.Value, ModEntry.GlobalModData.Value.Secret, this);
-        return this.UpdateCache(stat, score, ModEntry.GlobalModData.Value.UserUuid, Game1.player.Name);
+        LeaderboardDao.UploadScore(stat, score, ModEntry.GLOBAL_MOD_DATA.Value.UserUuid, Game1.player.Name,
+            Game1.player.farmName.Value, ModEntry.GLOBAL_MOD_DATA.Value.Secret, this);
+        return this.UpdateCache(stat, score, ModEntry.GLOBAL_MOD_DATA.Value.UserUuid, Game1.player.Name);
     }
 
     public bool UpdateCache(string stat, int score, string userUuid, string userName)
@@ -140,7 +140,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
             current = new LeaderboardStat
             {
                 Stat = stat,
-                UserUUID = userUuid,
+                UserUUID = userUuid
             };
             this.LocalLeaderboards[stat].Add(current);
         }
@@ -154,7 +154,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
 
         if (this.TopLeaderboards[stat].Count < 10 || this.TopLeaderboards[stat].Last().Score < score)
         {
-            LeaderboardStat existing = this.TopLeaderboards[stat].Find((match) => match.UserUUID == userUuid);
+            LeaderboardStat existing = this.TopLeaderboards[stat].Find(match => match.UserUUID == userUuid);
             if (existing is not null)
             {
                 this.TopLeaderboards[stat].Remove(existing);
@@ -170,7 +170,7 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
 
         try
         {
-            ModEntry.Instance.Helper.Data.WriteJsonFile($"data/cached_leaderboards.json", ModEntry.LocalModData);
+            ModEntry.Instance.Helper.Data.WriteJsonFile("data/cached_leaderboards.json", ModEntry.LocalModData);
         }
         catch (Exception e)
         {
@@ -207,12 +207,13 @@ sealed class CachedLeaderboardApi(string modId) : ILeaderboardApi
             return true;
         }
 
-        if (!task.IsCompleted)
+        if (task.IsCompleted)
         {
-            Log.Warn(queryName + " failed to complete");
-            return true;
+            return false;
         }
 
-        return false;
+        Log.Warn(queryName + " failed to complete");
+        return true;
+
     }
 }

@@ -90,11 +90,13 @@ class RanchToolUtility
             }
         }
         Log.Debug($"Extra Produce Chance {ModEntry.Config.ExtraProduceChance} generated {extraProduce} additional produce from {tool.UpgradeLevel} draws.");
-        if (extraProduce > 0)
+        if (extraProduce <= 0)
         {
-            SObject produce = ItemRegistry.Create<SObject>("(O)" + animal.currentProduce.Value, extraProduce, animal.produceQuality.Value);
-            produce.CanBeSetDown = false;
-            farmer.addItemToInventory(produce);
+            return;
         }
+
+        SObject produce = ItemRegistry.Create<SObject>("(O)" + animal.currentProduce.Value, extraProduce, animal.produceQuality.Value);
+        produce.CanBeSetDown = false;
+        farmer.addItemToInventory(produce);
     }
 }

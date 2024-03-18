@@ -11,7 +11,7 @@ internal class Config
     public string StartSound = "crystal";
 
 
-    [SConfig.Option(1, 10, 1)]
+    [SConfig.Option(1, 10)]
     public int WarnHoursAheadOfTime = 2;
 
     [SConfig.Option]

@@ -155,7 +155,7 @@ public abstract class ClassHandler(int priority = 0) : Attribute
     public virtual void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
         string className = this.ToString() ?? "";
-        foreach (FieldInfo fieldInfo in type.GetFields(ReflectionExtensions.AllDeclared))
+        foreach (FieldInfo fieldInfo in type.GetFields(ReflectionExtensions.ALL_DECLARED))
         {
             foreach (Attribute attribute in fieldInfo.GetCustomAttributes())
             {
@@ -167,7 +167,7 @@ public abstract class ClassHandler(int priority = 0) : Attribute
             }
         }
 
-        foreach (PropertyInfo propertyInfo in type.GetProperties(ReflectionExtensions.AllDeclared))
+        foreach (PropertyInfo propertyInfo in type.GetProperties(ReflectionExtensions.ALL_DECLARED))
         {
             foreach (Attribute attribute in propertyInfo.GetCustomAttributes())
             {
@@ -179,7 +179,7 @@ public abstract class ClassHandler(int priority = 0) : Attribute
             }
         }
 
-        foreach (MethodInfo method in type.GetMethods(ReflectionExtensions.AllDeclared))
+        foreach (MethodInfo method in type.GetMethods(ReflectionExtensions.ALL_DECLARED))
         {
             foreach (Attribute attribute in method.GetCustomAttributes())
             {

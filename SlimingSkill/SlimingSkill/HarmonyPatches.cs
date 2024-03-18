@@ -17,8 +17,12 @@ class Slime_TakeDamage_Transpiler
 {
     static IEnumerable<MethodBase> TargetMethods()
     {
-        yield return AccessTools.Method(typeof(BigSlime), nameof(BigSlime.takeDamage), new System.Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) });
-        yield return AccessTools.Method(typeof(GreenSlime), nameof(GreenSlime.takeDamage), new System.Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) });
+        yield return AccessTools.Method(typeof(BigSlime), nameof(BigSlime.takeDamage), [
+            typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer)
+        ]);
+        yield return AccessTools.Method(typeof(GreenSlime), nameof(GreenSlime.takeDamage), [
+            typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer)
+        ]);
     }
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -28,8 +32,10 @@ class Slime_TakeDamage_Transpiler
             if (instr.Is(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Stats), nameof(Stats.SlimesKilled))))
             {
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
-                yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Slime_TakeDamage_Transpiler), nameof(DoDeathXp)));
+                yield return new CodeInstruction(OpCodes.Call,
+                    AccessTools.Method(typeof(Slime_TakeDamage_Transpiler), nameof(DoDeathXp)));
             }
+
             yield return instr;
         }
     }
@@ -68,18 +74,22 @@ class Object_PerformObjectDropInAction
 {
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        int index = instructions.FindBCloseToA(new CodeInstruction(OpCodes.Ldstr, "coin"), new CodeInstruction(OpCodes.Ldc_I4, 4000));
+        int index = instructions.FindBCloseToA(new CodeInstruction(OpCodes.Ldstr, "coin"),
+            new CodeInstruction(OpCodes.Ldc_I4, 4000));
         instructions = instructions.InsertAfterIndex(new CodeInstruction[]
         {
             new CodeInstruction(OpCodes.Ldarg_0),
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Object_PerformObjectDropInAction), nameof(IncubateSlimeEgg))),
+            new CodeInstruction(OpCodes.Call,
+                AccessTools.Method(typeof(Object_PerformObjectDropInAction), nameof(IncubateSlimeEgg))),
         }, index + 1);
 
-        index = instructions.FindBCloseToA(new CodeInstruction(OpCodes.Ldstr, "slimeHit"), new CodeInstruction(OpCodes.Ldstr, "bubbles"));
+        index = instructions.FindBCloseToA(new CodeInstruction(OpCodes.Ldstr, "slimeHit"),
+            new CodeInstruction(OpCodes.Ldstr, "bubbles"));
         return instructions.InsertAfterIndex(new CodeInstruction[]
         {
             new CodeInstruction(OpCodes.Ldarg_0),
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Object_PerformObjectDropInAction), nameof(PressSlimeEgg))),
+            new CodeInstruction(OpCodes.Call,
+                AccessTools.Method(typeof(Object_PerformObjectDropInAction), nameof(PressSlimeEgg))),
         }, index);
     }
 
@@ -109,10 +119,11 @@ class Object_CheckForAction
         {
             if (instr.Is(OpCodes.Ldstr, "slimedead"))
             {
-
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
-                yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Object_CheckForAction), nameof(OpenSlimeball)));
+                yield return new CodeInstruction(OpCodes.Call,
+                    AccessTools.Method(typeof(Object_CheckForAction), nameof(OpenSlimeball)));
             }
+
             yield return instr;
         }
     }

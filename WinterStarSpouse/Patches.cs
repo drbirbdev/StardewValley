@@ -35,21 +35,23 @@ class Event_SetUpPlayerControlSequence
                 Log.Trace("Overrode secret santa recipient with " + signiificantOther.Name);
             }
 
-            if (random.Next(100) < ModEntry.Config.SpouseIsGiverChance)
+            if (random.Next(100) >= ModEntry.Config.SpouseIsGiverChance)
             {
-                __instance.mySecretSanta = signiificantOther;
-                Log.Trace("Overrode secret santa giver with " + signiificantOther.Name);
+                return;
             }
+
+            __instance.mySecretSanta = signiificantOther;
+            Log.Trace("Overrode secret santa giver with " + signiificantOther.Name);
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
 
 
-[HarmonyPatch(typeof(LetterViewerMenu), MethodType.Constructor, new Type[] { typeof(string), typeof(string), typeof(bool) })]
+[HarmonyPatch(typeof(LetterViewerMenu), MethodType.Constructor, [typeof(string), typeof(string), typeof(bool)])]
 class LetterViewerMenu_Constructor
 {
     internal static void Postfix(string mailTitle, bool fromCollection, LetterViewerMenu __instance)
@@ -73,31 +75,31 @@ class LetterViewerMenu_Constructor
             Dictionary<string, string> mailDict = DataLoader.Mail(Game1.content);
             string mail = mailDict[mailTitle];
 
-            mail = mail.Split(new string[1] { "[#]" }, StringSplitOptions.None)[0];
+            mail = mail.Split(["[#]"], StringSplitOptions.None)[0];
             mail = mail.Replace("@", Game1.player.Name);
 
-            bool hide_secret_santa = fromCollection;
+            bool hideSecretSanta = fromCollection;
             if (Game1.currentSeason == "winter" && Game1.dayOfMonth >= 18 && Game1.dayOfMonth <= 25)
             {
-                hide_secret_santa = false;
+                hideSecretSanta = false;
             }
-            if (hide_secret_santa)
+            if (hideSecretSanta)
             {
                 return;
             }
 
             mail = mail.Replace("%secretsanta", significantOther.displayName);
 
-            int page_height = __instance.height - 128;
+            int pageHeight = __instance.height - 128;
             if (__instance.HasInteractable())
             {
-                page_height = __instance.height - 128 - 32;
+                pageHeight = __instance.height - 128 - 32;
             }
-            __instance.mailMessage = SpriteText.getStringBrokenIntoSectionsOfHeight(mail, __instance.width - 64, page_height);
+            __instance.mailMessage = SpriteText.getStringBrokenIntoSectionsOfHeight(mail, __instance.width - 64, pageHeight);
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -116,15 +118,17 @@ class Utilities
             foreach (string friend in Game1.player.friendshipData.Keys)
             {
                 Friendship friendship = Game1.player.friendshipData[friend];
-                if (friendship.IsDating())
+                if (!friendship.IsDating())
                 {
-                    if (significantOther != null)
-                    {
-                        // If you are dating multiple people, don't affect Christmas Star
-                        return null;
-                    }
-                    significantOther = Game1.getCharacterFromName(friend);
+                    continue;
                 }
+
+                if (significantOther != null)
+                {
+                    // If you are dating multiple people, don't affect Christmas Star
+                    return null;
+                }
+                significantOther = Game1.getCharacterFromName(friend);
             }
         }
         return significantOther;

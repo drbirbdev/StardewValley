@@ -115,7 +115,7 @@ public class SAsset : ClassHandler
 
         private static object? LoadValue(Type fieldType, string assetPath, IMod mod)
         {
-            return mod.Helper.ModContent.GetType().GetMethod("Load", new[] { typeof(string) })
+            return mod.Helper.ModContent.GetType().GetMethod("Load", [typeof(string)])
                 ?.MakeGenericMethod(fieldType)
                 .Invoke(mod.Helper.ModContent, [assetPath]);
         }

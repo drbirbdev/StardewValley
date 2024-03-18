@@ -16,18 +16,23 @@ class MultiplayerLeaderboardApi : ChainableLeaderboardApi
 
     private void Multiplayer_ModMessageReceived(object sender, StardewModdingAPI.Events.ModMessageReceivedEventArgs e)
     {
-        if (e.FromModID == ModEntry.Instance.ModManifest.UniqueID && e.Type == $"{this._modId}:UploadScore" && e.FromPlayerID != Game1.player.UniqueMultiplayerID)
+        if (e.FromModID != ModEntry.Instance.ModManifest.UniqueID || e.Type != $"{this._modId}:UploadScore" ||
+            e.FromPlayerID == Game1.player.UniqueMultiplayerID)
         {
-            string name = Game1.getFarmer(e.FromPlayerID)?.Name;
-            UploadScoreMessage message = e.ReadAs<UploadScoreMessage>();
-            ((CachedLeaderboardApi)this.Delegate).UpdateCache(message.Stat, message.Score, message.UserUuid, name);
+            return;
         }
+
+        string name = Game1.getFarmer(e.FromPlayerID)?.Name;
+        UploadScoreMessage message = e.ReadAs<UploadScoreMessage>();
+        ((CachedLeaderboardApi)this.Delegate).UpdateCache(message.Stat, message.Score, message.UserUuid, name);
     }
 
     public override bool UploadScore(string stat, int score)
     {
-        UploadScoreMessage message = new(stat, score, ModEntry.GlobalModData.Value.UserUuid);
-        ModEntry.Instance.Helper.Multiplayer.SendMessage(message, $"{this._modId}:UploadScore", new[] { ModEntry.Instance.ModManifest.UniqueID });
+        UploadScoreMessage message = new(stat, score, ModEntry.GLOBAL_MOD_DATA.Value.UserUuid);
+        ModEntry.Instance.Helper.Multiplayer.SendMessage(message, $"{this._modId}:UploadScore", [
+            ModEntry.Instance.ModManifest.UniqueID
+        ]);
         return this.Delegate.UploadScore(stat, score);
     }
 }

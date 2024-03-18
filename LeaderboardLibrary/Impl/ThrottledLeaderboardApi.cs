@@ -29,7 +29,7 @@ class ThrottledLeaderboardApi(string modId) : ChainableLeaderboardApi
     public override bool UploadScore(string stat, int score)
     {
         int oldScore = 0;
-        Dictionary<string, string> oldRecord = this.Delegate.GetLocalTopN(stat, 10).Find((match) => match["UserUUID"] == ModEntry.GlobalModData.Value.UserUuid);
+        Dictionary<string, string> oldRecord = this.Delegate.GetLocalTopN(stat, 10).Find(match => match["UserUUID"] == ModEntry.GLOBAL_MOD_DATA.Value.UserUuid);
         if (oldRecord is not null)
         {
             _ = int.TryParse(oldRecord["Score"], out oldScore);

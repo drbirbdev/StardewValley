@@ -24,7 +24,7 @@ internal class Events
     {
         List<string> result = new()
         {
-            ModEntry.Instance.I18n.Get("skill.perk", new { bonus = 0 })
+            ModEntry.Instance.I18N.Get("skill.perk", new { bonus = 0 })
         };
 
         return result;
@@ -32,7 +32,7 @@ internal class Events
 
     private static string HoverText(int level)
     {
-        return ModEntry.Instance.I18n.Get("skill.perk", new { bonus = level * 0 });
+        return ModEntry.Instance.I18N.Get("skill.perk", new { bonus = level * 0 });
     }
 
     [SEvent.SaveLoaded]

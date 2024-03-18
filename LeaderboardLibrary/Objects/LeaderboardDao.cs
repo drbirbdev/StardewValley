@@ -9,7 +9,6 @@ namespace LeaderboardLibrary;
 
 class LeaderboardDao
 {
-
     /// <summary>
     /// Get the local scores.  These can be cached for a variety of APIs.
     /// </summary>
@@ -24,29 +23,29 @@ class LeaderboardDao
             foreach (string playerUuid in ModEntry.LocalModData.MultiplayerUuiDs)
             {
                 keys.Add(new Dictionary<string, AttributeValue>
-            {
-                {"Stat", new AttributeValue { S = stat } },
-                {"UserUUID", new AttributeValue { S = playerUuid } },
-            });
+                {
+                    { "Stat", new AttributeValue { S = stat } },
+                    { "UserUUID", new AttributeValue { S = playerUuid } }
+                });
             }
 
             BatchGetItemRequest request = new()
             {
                 RequestItems = new Dictionary<string, KeysAndAttributes>
-            {
-                { LeaderboardStat.TABLE_NAME, new KeysAndAttributes
+                {
                     {
-                    Keys = keys,
-                    ProjectionExpression = "Stat, UserUUID, Score, #n, Farm, #d",
-                    ExpressionAttributeNames = new Dictionary<string, string>
-                    {
-                        {"#n", "Name" },
-                        {"#d", "DateTime" },
-                    },
+                        LeaderboardStat.TABLE_NAME, new KeysAndAttributes
+                        {
+                            Keys = keys,
+                            ProjectionExpression = "Stat, UserUUID, Score, #n, Farm, #d",
+                            ExpressionAttributeNames = new Dictionary<string, string>
+                            {
+                                { "#n", "Name" },
+                                { "#d", "DateTime" }
+                            }
+                        }
+                    }
                 }
-                }
-            }
-
             };
             BatchGetItemResponse response = await ModEntry.DdbClient.BatchGetItemAsync(request);
 
@@ -55,12 +54,11 @@ class LeaderboardDao
         catch (Exception e)
         {
             Log.Error($"Failed to retrieve local scores\n" +
-                $"Stat : {stat}\n");
+                      $"Stat : {stat}\n");
             Log.Error(e.Message);
 
             return null;
         }
-
     }
 
     /// <summary>
@@ -73,23 +71,23 @@ class LeaderboardDao
         try
         {
             Log.Debug($"Getting global scores from DDB for {stat}");
-            QueryRequest request = new QueryRequest()
+            QueryRequest request = new()
             {
                 TableName = LeaderboardStat.TABLE_NAME,
                 IndexName = LeaderboardStat.TOP_SCORES_INDEX_NAME,
                 KeyConditionExpression = "Stat = :stat",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-            {
-                { ":stat", new AttributeValue { S = stat } },
-            },
+                {
+                    { ":stat", new AttributeValue { S = stat } }
+                },
                 Limit = 10,
                 ProjectionExpression = "Stat, UserUUID, Score, #n, Farm, #d",
                 ExpressionAttributeNames = new Dictionary<string, string>
-            {
-                {"#n", "Name" },
-                {"#d", "DateTime" },
-            },
-                ScanIndexForward = false,
+                {
+                    { "#n", "Name" },
+                    { "#d", "DateTime" }
+                },
+                ScanIndexForward = false
             };
             QueryResponse response = await ModEntry.DdbClient.QueryAsync(request);
 
@@ -98,7 +96,7 @@ class LeaderboardDao
         catch (Exception e)
         {
             Log.Error($"Failed to retrieve global scores\n" +
-                $"Stat : {stat}\n");
+                      $"Stat : {stat}\n");
             Log.Error(e.Message);
 
             return null;
@@ -117,36 +115,37 @@ class LeaderboardDao
     /// <param name="farmName"></param>
     /// <param name="secret"></param>
     /// <param name="api"></param>
-    public static async void UploadScore(string stat, int score, string userUuid, string userName, string farmName, string secret, CachedLeaderboardApi api)
+    public static async void UploadScore(string stat, int score, string userUuid, string userName, string farmName,
+        string secret, CachedLeaderboardApi api)
     {
         try
         {
             Log.Debug($"Uploading score ({score}) to DDB for {stat}");
-            UpdateItemRequest request = new UpdateItemRequest()
+            UpdateItemRequest request = new()
             {
                 TableName = LeaderboardStat.TABLE_NAME,
                 Key = new Dictionary<string, AttributeValue>
-            {
-                { "Stat", new AttributeValue { S = stat } },
-                { "UserUUID", new AttributeValue { S = userUuid } },
-            },
+                {
+                    { "Stat", new AttributeValue { S = stat } },
+                    { "UserUUID", new AttributeValue { S = userUuid } }
+                },
                 // TODO: Get condition expression working with secrets
                 ConditionExpression = "attribute_not_exists(Score) OR Score < :score",
                 UpdateExpression = "SET Score = :score, #n = :name, Farm = :farm, Secret = :secret, #d = :datetime",
                 ExpressionAttributeNames = new Dictionary<string, string>
-            {
-                {"#n", "Name" },
-                {"#d", "DateTime" },
-            },
+                {
+                    { "#n", "Name" },
+                    { "#d", "DateTime" }
+                },
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-            {
-                { ":score", new AttributeValue { N = score.ToString() } },
-                { ":name", new AttributeValue { S = userName } },
-                { ":farm", new AttributeValue { S = farmName } },
-                { ":secret", new AttributeValue { S = secret } },
-                { ":datetime", new AttributeValue { S = DateTimeOffset.Now.ToUnixTimeSeconds().ToString() } },
-            },
-                ReturnValues = ReturnValue.NONE,
+                {
+                    { ":score", new AttributeValue { N = score.ToString() } },
+                    { ":name", new AttributeValue { S = userName } },
+                    { ":farm", new AttributeValue { S = farmName } },
+                    { ":secret", new AttributeValue { S = secret } },
+                    { ":datetime", new AttributeValue { S = DateTimeOffset.Now.ToUnixTimeSeconds().ToString() } }
+                },
+                ReturnValues = ReturnValue.NONE
             };
             await ModEntry.DdbClient.UpdateItemAsync(request);
         }
@@ -159,11 +158,11 @@ class LeaderboardDao
         catch (Exception e)
         {
             Log.Error($"Failed to upload score.  Please share this error message with the mod author!\n" +
-                $"Score: {score}\n" +
-                $"Stat : {stat}\n" +
-                $"Name : {userName}\n" +
-                $"Farm : {farmName}\n" +
-                $"UUID : {userUuid}\n");
+                      $"Score: {score}\n" +
+                      $"Stat : {stat}\n" +
+                      $"Name : {userName}\n" +
+                      $"Farm : {farmName}\n" +
+                      $"UUID : {userUuid}\n");
             Log.Error(e.Message);
         }
     }

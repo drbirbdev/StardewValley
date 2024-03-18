@@ -14,7 +14,7 @@ namespace BinningSkill;
 [SEvent]
 internal class Events
 {
-    private static readonly Dictionary<string, List<GarbageCanEdit>> MapGarbageCanEdits = new();
+    private static readonly Dictionary<string, List<GarbageCanEdit>> MAP_GARBAGE_CAN_EDITS = new();
 
     private class GarbageCanEdit
     {
@@ -34,7 +34,7 @@ internal class Events
     private void GameLaunched(object sender, GameLaunchedEventArgs e)
     {
         BirbSkill.Register("drbirbdev.Binning", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper,
-            new Dictionary<string, object>()
+            new Dictionary<string, object>
             {
                 { "Recycler", null },
                 { "Sneak", null },
@@ -87,7 +87,7 @@ internal class Events
     }
 
     [SEvent.AssetRequested]
-    public static void AddGarbageCans(object sender, AssetRequestedEventArgs e)
+    public static void AddGarbageCans(object _, AssetRequestedEventArgs e)
     {
         if (!e.Name.IsEquivalentTo("Data/GarbageCans"))
         {
@@ -97,10 +97,10 @@ internal class Events
         e.Edit(asset =>
         {
             GarbageCanData garbageCanData = asset.GetData<GarbageCanData>();
-            int garbageHatIndex = garbageCanData.BeforeAll.FindIndex((item) => item.Id == "Base_GarbageHat");
+            int garbageHatIndex = garbageCanData.BeforeAll.FindIndex(item => item.Id == "Base_GarbageHat");
             garbageCanData.BeforeAll.RemoveAt(garbageHatIndex);
 
-            MapGarbageCanEdits.Clear();
+            MAP_GARBAGE_CAN_EDITS.Clear();
             LoadGarbageCanEdits(garbageCanData);
 
             foreach (var can in garbageCanData.GarbageCans)
@@ -171,7 +171,7 @@ internal class Events
 
     private static GarbageCanItemData GetGarbageHatItemData(string level)
     {
-        GarbageCanItemData item = new GarbageCanItemData()
+        GarbageCanItemData item = new()
         {
             IgnoreBaseChance = true,
             IsDoubleMegaSuccess = true,
@@ -251,12 +251,12 @@ internal class Events
             return;
         }
 
-        if (MapGarbageCanEdits.Count == 0)
+        if (MAP_GARBAGE_CAN_EDITS.Count == 0)
         {
             LoadGarbageCanEdits(DataLoader.GarbageCans(Game1.content));
         }
 
-        if (!MapGarbageCanEdits.TryGetValue(e.Name.ToString() ?? string.Empty, out List<GarbageCanEdit> edits))
+        if (!MAP_GARBAGE_CAN_EDITS.TryGetValue(e.Name.ToString() ?? string.Empty, out List<GarbageCanEdit> edits))
         {
             return;
         }
@@ -265,7 +265,7 @@ internal class Events
         {
             var editor = asset.AsMap();
 
-            Size tilesheetSize = new Size(ModEntry.Assets.TrashCanTilesheet.Width / 16,
+            Size tilesheetSize = new(ModEntry.Assets.TrashCanTilesheet.Width / 16,
                 ModEntry.Assets.TrashCanTilesheet.Height / 16);
 
             editor.Data.AddTileSheet(new TileSheet("z_trashcans", editor.Data,
@@ -273,13 +273,13 @@ internal class Events
 
             foreach (GarbageCanEdit edit in edits)
             {
-                Location bottomLocation = new Location(edit.X, edit.Y);
+                Location bottomLocation = new(edit.X, edit.Y);
                 xTile.Layers.Layer buildingLayer = editor.Data.GetLayer("Buildings");
                 buildingLayer.Tiles[bottomLocation] = new StaticTile(buildingLayer,
                     editor.Data.GetTileSheet("z_trashcans"), BlendMode.Alpha, 7 + edit.SourceX);
                 buildingLayer.Tiles[bottomLocation].Properties["Action"] = $"Garbage {edit.Key}";
 
-                Location topLocation = new Location(edit.X, edit.Y - 1);
+                Location topLocation = new(edit.X, edit.Y - 1);
                 xTile.Layers.Layer frontLayer = editor.Data.GetLayer("Front");
                 frontLayer.Tiles[topLocation] = new StaticTile(frontLayer, editor.Data.GetTileSheet("z_trashcans"),
                     BlendMode.Alpha, edit.SourceX);
@@ -322,13 +322,13 @@ internal class Events
                 level = split[3];
             }
 
-            if (!MapGarbageCanEdits.TryGetValue(mapName, out List<GarbageCanEdit> edits))
+            if (!MAP_GARBAGE_CAN_EDITS.TryGetValue(mapName, out List<GarbageCanEdit> edits))
             {
                 edits = [];
-                MapGarbageCanEdits[mapName] = edits;
+                MAP_GARBAGE_CAN_EDITS[mapName] = edits;
             }
 
-            edits.Add(new GarbageCanEdit()
+            edits.Add(new GarbageCanEdit
             {
                 X = x,
                 Y = y,

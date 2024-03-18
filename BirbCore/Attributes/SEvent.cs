@@ -11,12 +11,8 @@ namespace BirbCore.Attributes;
 /// <summary>
 /// Specifies a method as a SMAPI event.
 /// </summary>
-public class SEvent : ClassHandler
+public class SEvent() : ClassHandler(9)
 {
-    public SEvent() : base(9)
-    {
-    }
-
     public override void Handle(Type type, object? instance, IMod mod, object[]? args = null)
     {
         if (this.Priority < 2)
@@ -51,7 +47,7 @@ public class SEvent : ClassHandler
             }
 
             this._mod.Helper.Events.GameLoop.UpdateTicked -= this.DoAfterTick;
-            this._method.Invoke(this._instance, new object[] { this, new GameLaunchedEventArgs() });
+            this._method.Invoke(this._instance, [this, new GameLaunchedEventArgs()]);
         }
     }
 

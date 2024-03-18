@@ -50,16 +50,16 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
             {
                 object? copyFrom = Activator.CreateInstance(type);
                 object? copyTo = getter(mod);
-                foreach (PropertyInfo property in type.GetProperties(ReflectionExtensions.AllDeclared))
+                foreach (PropertyInfo property in type.GetProperties(ReflectionExtensions.ALL_DECLARED))
                 {
                     property.SetValue(copyTo, property.GetValue(copyFrom));
                 }
-                foreach (FieldInfo field in type.GetFields(ReflectionExtensions.AllDeclared))
+                foreach (FieldInfo field in type.GetFields(ReflectionExtensions.ALL_DECLARED))
                 {
                     field.SetValue(copyTo, field.GetValue(copyFrom));
                 }
             },
-            save: () => mod.Helper.WriteConfig(getter(mod)),
+            save: () => mod.Helper.WriteConfig(getter(mod) ?? ""),
             titleScreenOnly: titleScreenOnly
         );
 

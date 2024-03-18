@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 
 namespace BirbCore.Extensions;
@@ -9,7 +10,7 @@ public static class CustomFieldsExtensions
         {
             return null;
         }
-        if (!customFields.TryGetValue(key, out string value))
+        if (!customFields.TryGetValue(key, out string? value))
         {
             return null;
         }

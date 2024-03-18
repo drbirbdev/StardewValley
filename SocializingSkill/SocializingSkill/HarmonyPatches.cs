@@ -25,9 +25,9 @@ class Dialogue_ChooseResponse
 
         try
         {
-            for (int i = 0; i < ___playerResponses.Count; i++)
+            foreach (var playerResponse in ___playerResponses)
             {
-                if (___playerResponses[i].responseKey == null || response.responseKey == null || !___playerResponses[i].responseKey.Equals(response.responseKey))
+                if (playerResponse.responseKey == null || response.responseKey == null || !playerResponse.responseKey.Equals(response.responseKey))
                 {
                     continue;
                 }
@@ -43,7 +43,7 @@ class Dialogue_ChooseResponse
                 {
                     return;
                 }
-                if (___playerResponses[i].friendshipChange <= 0)
+                if (playerResponse.friendshipChange <= 0)
                 {
                     return;
                 }
@@ -52,15 +52,15 @@ class Dialogue_ChooseResponse
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
 
 // Smooth Talker Profession
 //  - adjust friendship change during dialogue
-[HarmonyPatch(typeof(NPCDialogueResponse), MethodType.Constructor, new Type[] { typeof(string), typeof(int), typeof(string), typeof(string) })]
-class NPCDialogueResponse_Constructor
+[HarmonyPatch(typeof(NPCDialogueResponse), MethodType.Constructor, [typeof(string), typeof(int), typeof(string), typeof(string)])]
+class NpcDialogueResponse_Constructor
 {
 
     internal static void Postfix(
@@ -69,35 +69,37 @@ class NPCDialogueResponse_Constructor
     {
         try
         {
-            if (Game1.player.HasProfession("SmoothTalker"))
+            if (!Game1.player.HasProfession("SmoothTalker"))
             {
-                if (Game1.player.HasProfession("SmoothTalker", true))
+                return;
+            }
+
+            if (Game1.player.HasProfession("SmoothTalker", true))
+            {
+                if (friendshipChange < 0)
                 {
-                    if (friendshipChange < 0)
-                    {
-                        __instance.friendshipChange = 0;
-                    }
-                    else
-                    {
-                        __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPositiveMultiplier * 1.5);
-                    }
+                    __instance.friendshipChange = 0;
                 }
                 else
                 {
-                    if (friendshipChange < 0)
-                    {
-                        __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerNegativeMultiplier);
-                    }
-                    else
-                    {
-                        __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPositiveMultiplier);
-                    }
+                    __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPositiveMultiplier * 1.5);
+                }
+            }
+            else
+            {
+                if (friendshipChange < 0)
+                {
+                    __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerNegativeMultiplier);
+                }
+                else
+                {
+                    __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPositiveMultiplier);
                 }
             }
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -108,58 +110,59 @@ class NPCDialogueResponse_Constructor
 [HarmonyPatch(typeof(Event.DefaultCommands), nameof(Event.DefaultCommands.Friendship))]
 class Event_CommandFriendship
 {
-    static void Postfix(
-            string[] args)
+    static void Postfix(string[] args)
     {
         try
         {
-            if (Game1.player.HasProfession("SmoothTalker"))
+            if (!Game1.player.HasProfession("SmoothTalker"))
             {
-                NPC character = Game1.getCharacterFromName(args[1]);
-                if (character == null)
+                return;
+            }
+
+            NPC character = Game1.getCharacterFromName(args[1]);
+            if (character == null)
+            {
+                return;
+            }
+
+            int friendship = Convert.ToInt32(args[2]);
+
+            // Undo original method friendship change
+            Game1.player.changeFriendship(-friendship, character);
+
+            if (friendship > 0)
+            {
+                Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromEvents);
+            }
+
+            if (Game1.player.HasProfession("SmoothTalker", true))
+            {
+                if (friendship < 0)
                 {
-                    return;
-                }
-
-                int friendship = Convert.ToInt32(args[2]);
-
-                // Undo original method friendship change
-                Game1.player.changeFriendship(-friendship, character);
-
-                if (friendship > 0)
-                {
-                    Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromEvents);
-                }
-
-                if (Game1.player.HasProfession("SmoothTalker", true))
-                {
-                    if (friendship < 0)
-                    {
-                        friendship = 0;
-                    }
-                    else
-                    {
-                        friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier * 1.5);
-                    }
+                    friendship = 0;
                 }
                 else
                 {
-                    if (friendship < 0)
-                    {
-                        friendship = (int)(friendship * ModEntry.Config.SmoothTalkerNegativeMultiplier);
-                    }
-                    else
-                    {
-                        friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier);
-                    }
+                    friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier * 1.5);
                 }
-
-                Game1.player.changeFriendship(friendship, character);
             }
+            else
+            {
+                if (friendship < 0)
+                {
+                    friendship = (int)(friendship * ModEntry.Config.SmoothTalkerNegativeMultiplier);
+                }
+                else
+                {
+                    friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier);
+                }
+            }
+
+            Game1.player.changeFriendship(friendship, character);
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -194,7 +197,7 @@ class Quest_CheckIfComplete
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -214,21 +217,23 @@ class Quest_GetMoneyReward
     {
         try
         {
-            if (Game1.player.HasProfession("Helpful"))
+            if (!Game1.player.HasProfession("Helpful"))
             {
-                if (Game1.player.HasProfession("Helpful", true))
-                {
-                    __result = (int)(__result * ModEntry.Config.HelpfulRewardMultiplier * 2);
-                }
-                else
-                {
-                    __result = (int)(__result * ModEntry.Config.HelpfulRewardMultiplier);
-                }
+                return;
+            }
+
+            if (Game1.player.HasProfession("Helpful", true))
+            {
+                __result = (int)(__result * ModEntry.Config.HelpfulRewardMultiplier * 2);
+            }
+            else
+            {
+                __result = (int)(__result * ModEntry.Config.HelpfulRewardMultiplier);
             }
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -307,40 +312,44 @@ class Farmer_ResetFriendshipForNewDay
         {
             Random random = new();
             int level = Skills.GetSkillLevel(__instance, "drbirbdev.Socializing");
-            if (random.Next(100) < level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel)
+            if (random.Next(100) >= level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel)
             {
-                // Undo vanilla friendship decay
-                // TODO: check other mods for friendship loss prevention maybe
-                foreach (string name in __instance.friendshipData.Keys)
+                return;
+            }
+
+            // Undo vanilla friendship decay
+            // TODO: check other mods for friendship loss prevention maybe
+            foreach (string name in __instance.friendshipData.Keys)
+            {
+                bool single = false;
+                NPC i = Game1.getCharacterFromName(name);
+                i ??= Game1.getCharacterFromName<Child>(name, mustBeVillager: false);
+                if (i == null)
                 {
-                    bool single = false;
-                    NPC i = Game1.getCharacterFromName(name);
-                    i ??= Game1.getCharacterFromName<Child>(name, mustBeVillager: false);
-                    if (i != null)
-                    {
-                        if (i != null && i.datable.Value && !__instance.friendshipData[name].IsDating() && !i.isMarried())
-                        {
-                            single = true;
-                        }
-                        if (__instance.spouse != null && name.Equals(__instance.spouse) && !__instance.hasPlayerTalkedToNPC(name))
-                        {
-                            __instance.changeFriendship(20, i);
-                        }
-                        else if (i != null && __instance.friendshipData[name].IsDating() && !__instance.hasPlayerTalkedToNPC(name) && __instance.friendshipData[name].Points < 2500)
-                        {
-                            __instance.changeFriendship(10, i);
-                        }
-                        else if ((!single && __instance.friendshipData[name].Points < 2500) || (single && __instance.friendshipData[name].Points < 2000))
-                        {
-                            __instance.changeFriendship(2, i);
-                        }
-                    }
+                    continue;
+                }
+
+                if (i.datable.Value && !__instance.friendshipData[name].IsDating() && !i.isMarried())
+                {
+                    single = true;
+                }
+                if (__instance.spouse != null && name.Equals(__instance.spouse) && !__instance.hasPlayerTalkedToNPC(name))
+                {
+                    __instance.changeFriendship(20, i);
+                }
+                else if (__instance.friendshipData[name].IsDating() && !__instance.hasPlayerTalkedToNPC(name) && __instance.friendshipData[name].Points < 2500)
+                {
+                    __instance.changeFriendship(10, i);
+                }
+                else if ((!single && __instance.friendshipData[name].Points < 2500) || (single && __instance.friendshipData[name].Points < 2000))
+                {
+                    __instance.changeFriendship(2, i);
                 }
             }
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -349,7 +358,7 @@ class Farmer_ResetFriendshipForNewDay
 // Friendly
 //  - Give extra friendship
 [HarmonyPatch(typeof(NPC), nameof(NPC.grantConversationFriendship))]
-class NPC_GrantConversationFriendship
+class Npc_GrantConversationFriendship
 {
     static void Prefix(
         Farmer who,
@@ -358,29 +367,33 @@ class NPC_GrantConversationFriendship
     {
         try
         {
-            if (!__instance.Name.Contains("King")
-        && !who.hasPlayerTalkedToNPC(__instance.Name)
-        && who.friendshipData.ContainsKey(__instance.Name)
-        && !__instance.isDivorcedFrom(who)
-        && amount > 0)
+            if (__instance.Name.Contains("King")
+                || who.hasPlayerTalkedToNPC(__instance.Name)
+                || !who.friendshipData.ContainsKey(__instance.Name)
+                || __instance.isDivorcedFrom(who)
+                || amount <= 0)
             {
-                Skills.AddExperience(who, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromTalking);
-                if (who.HasProfession("Friendly"))
-                {
-                    if (who.HasProfession("Friendly", true))
-                    {
-                        who.changeFriendship((int)(ModEntry.Config.FriendlyExtraFriendship * 1.5), __instance);
-                    }
-                    else
-                    {
-                        who.changeFriendship(ModEntry.Config.FriendlyExtraFriendship, __instance);
-                    }
-                }
+                return;
+            }
+
+            Skills.AddExperience(who, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromTalking);
+            if (!who.HasProfession("Friendly"))
+            {
+                return;
+            }
+
+            if (who.HasProfession("Friendly", true))
+            {
+                who.changeFriendship((int)(ModEntry.Config.FriendlyExtraFriendship * 1.5), __instance);
+            }
+            else
+            {
+                who.changeFriendship(ModEntry.Config.FriendlyExtraFriendship, __instance);
             }
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }
@@ -388,7 +401,7 @@ class NPC_GrantConversationFriendship
 // Beloved Profession
 //  - Sometimes get random gifts
 [HarmonyPatch(typeof(NPC), nameof(NPC.checkAction))]
-class NPC_CheckAction
+class Npc_CheckAction
 {
     static void Postfix(
         Farmer who,
@@ -409,7 +422,7 @@ class NPC_CheckAction
             {
                 return;
             }
-            ModEntry.BelovedCheckedToday.Value ??= new List<string>();
+            ModEntry.BelovedCheckedToday.Value ??= [];
             if (ModEntry.BelovedCheckedToday.Value.Contains(__instance.Name))
             {
                 return;
@@ -449,7 +462,7 @@ class NPC_CheckAction
         }
         catch (Exception e)
         {
-            Log.Error($"Failed in {MethodBase.GetCurrentMethod().DeclaringType}\n{e}");
+            Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
     }
 }

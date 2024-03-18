@@ -43,11 +43,11 @@ class PanUtility
 [HarmonyPatch(typeof(Pan), nameof(Pan.DoFunction))]
 class Pan_DoFunction
 {
-    public static void Postfix(Pan __instance, GameLocation location, int x, int y, Farmer who)
+    public static void Postfix(Pan __instance, GameLocation location, Farmer who)
     {
         try
         {
-            List<Item> extraPanItems = new();
+            List<Item> extraPanItems = [];
             float dailyLuck = (float)who.DailyLuck * ModEntry.Config.DailyLuckMultiplier;
             Log.Debug($"Daily Luck {who.DailyLuck} * Multiplier {ModEntry.Config.DailyLuckMultiplier} = Weighted Daily Luck {dailyLuck}");
             float buffLuck = who.LuckLevel * ModEntry.Config.LuckLevelMultiplier;
@@ -58,14 +58,16 @@ class Pan_DoFunction
 
             for (int i = 0; i < __instance.UpgradeLevel; i++)
             {
-                if (chance > Game1.random.NextDouble())
+                if (!(chance > Game1.random.NextDouble()))
                 {
-                    // location is used to seed the random number for selecting which treasure is received in vanilla.
-                    // do something to reseed it so that we aren't just getting the same treasure up to 5 times.
-                    location.orePanPoint.X++;
-                    panCount++;
-                    extraPanItems.AddRange(__instance.getPanItems(location, who));
+                    continue;
                 }
+
+                // location is used to seed the random number for selecting which treasure is received in vanilla.
+                // do something to reseed it so that we aren't just getting the same treasure up to 5 times.
+                location.orePanPoint.X++;
+                panCount++;
+                extraPanItems.AddRange(__instance.getPanItems(location, who));
             }
             Log.Debug($"Did {panCount} draws using level {__instance.UpgradeLevel} pan.");
 
@@ -170,7 +172,7 @@ class InventoryPage_ReceiveLeftClick
     {
         try
         {
-            if (__state is not null && __state[0] is Pan pan && __state[1] != Game1.player.hat.Value)
+            if (__state?[0] is Pan pan && __state[1] != Game1.player.hat.Value)
             {
                 Game1.player.hat.Value = PanUtility.PanToHat(pan);
             }
@@ -207,8 +209,8 @@ class FarmerSprite_GetAnimationFromIndex
 
             int upgradeLevel = owner.CurrentTool.UpgradeLevel;
             int genderOffset = owner.IsMale ? -1 : 0;
-            string texture = "Mods/drbirbdev.PanningUpgrades/PanTool";
-            Rectangle sourceRect = new Rectangle(16, upgradeLevel * 16, 16, 16);
+            const string texture = "Mods/drbirbdev.PanningUpgrades/PanTool";
+            Rectangle sourceRect = new(16, upgradeLevel * 16, 16, 16);
             GameLocation location = Game1.currentLocation;
             location.temporarySprites.Add(new TemporaryAnimatedSprite(
                 textureName: texture,
@@ -373,7 +375,7 @@ class Event_SkipEvent
                 {
                     Game1.player.addItemByMenuIfNecessary(ItemRegistry.Create("(T)drbirbdev.PanningUpgrades_NormalPan"));
                 }
-                __instance.endBehaviors(new string[1] { "end" }, Game1.currentLocation);
+                __instance.endBehaviors(["end"], Game1.currentLocation);
                 return false;
             }
         }

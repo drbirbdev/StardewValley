@@ -12,7 +12,7 @@ using StardewValley.SpecialOrders.Rewards;
 
 namespace SocializingSkill;
 
-// Grant XP
+// Grant XP from event dialogue
 [HarmonyPatch(typeof(Dialogue), nameof(Dialogue.chooseResponse))]
 class Dialogue_ChooseResponse
 {
@@ -78,11 +78,11 @@ class NpcDialogueResponse_Constructor
             {
                 if (friendshipChange < 0)
                 {
-                    __instance.friendshipChange = 0;
+                    __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPrestigeNegativeMultiplier);
                 }
                 else
                 {
-                    __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPositiveMultiplier * 1.5);
+                    __instance.friendshipChange = (int)(friendshipChange * ModEntry.Config.SmoothTalkerPrestigePositiveMultiplier);
                 }
             }
             else
@@ -104,7 +104,7 @@ class NpcDialogueResponse_Constructor
     }
 }
 
-// Grant XP
+// Grant XP from event dialogue
 // Smooth Talker Profession
 //  - adjust friendship change during event
 [HarmonyPatch(typeof(Event.DefaultCommands), nameof(Event.DefaultCommands.Friendship))]
@@ -114,36 +114,37 @@ class Event_CommandFriendship
     {
         try
         {
-            if (!Game1.player.HasProfession("SmoothTalker"))
-            {
-                return;
-            }
-
             NPC character = Game1.getCharacterFromName(args[1]);
             if (character == null)
             {
                 return;
             }
 
+            // Add XP
             int friendship = Convert.ToInt32(args[2]);
-
-            // Undo original method friendship change
-            Game1.player.changeFriendship(-friendship, character);
 
             if (friendship > 0)
             {
                 Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromEvents);
             }
 
+            if (!Game1.player.HasProfession("SmoothTalker"))
+            {
+                return;
+            }
+
+            // Undo original method friendship change
+            Game1.player.changeFriendship(-friendship, character);
+
             if (Game1.player.HasProfession("SmoothTalker", true))
             {
                 if (friendship < 0)
                 {
-                    friendship = 0;
+                    friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPrestigeNegativeMultiplier);
                 }
                 else
                 {
-                    friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPositiveMultiplier * 1.5);
+                    friendship = (int)(friendship * ModEntry.Config.SmoothTalkerPrestigePositiveMultiplier);
                 }
             }
             else
@@ -168,32 +169,19 @@ class Event_CommandFriendship
 }
 
 
-// Grant XP
-[HarmonyPatch]
+[HarmonyPatch(typeof(Quest), nameof(Quest.questComplete))]
 class Quest_CheckIfComplete
 {
-    static IEnumerable<MethodBase> TargetMethods()
-    {
-        yield return AccessTools.Method(typeof(FishingQuest), nameof(FishingQuest.checkIfComplete));
-        yield return AccessTools.Method(typeof(ItemDeliveryQuest), nameof(ItemDeliveryQuest.checkIfComplete));
-        yield return AccessTools.Method(typeof(ResourceCollectionQuest), nameof(ResourceCollectionQuest.checkIfComplete));
-        yield return AccessTools.Method(typeof(SlayMonsterQuest), nameof(SlayMonsterQuest.checkIfComplete));
-    }
-
-    static void Postfix(
-        bool __result,
-        NPC n)
+    static void Prefix(Quest __instance)
     {
         try
         {
-            if (!__result)
+            if (__instance.completed.Value)
             {
                 return;
             }
-            if (n != null)
-            {
-                Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromQuests);
-            }
+
+            Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromQuests);
         }
         catch (Exception e)
         {

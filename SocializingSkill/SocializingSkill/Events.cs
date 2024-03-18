@@ -4,6 +4,7 @@ using BirbShared;
 using SpaceCore;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Constants;
 
 namespace SocializingSkill;
 
@@ -13,15 +14,16 @@ internal class Events
     [SEvent.GameLaunchedLate]
     private void GameLaunched(object sender, GameLaunchedEventArgs e)
     {
-        BirbSkill.Register("drbirbdev.Socializing", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper, new Dictionary<string, object>
-        {
-            {"Friendly", null},
-            {"Helpful", null },
-            {"SmoothTalker", null },
-            {"Gifter", null },
-            {"Haggler", null },
-            {"Beloved", null }
-        }, PerkText, HoverText);
+        BirbSkill.Register("drbirbdev.Socializing", ModEntry.Assets.SkillTexture, ModEntry.Instance.Helper,
+            new Dictionary<string, object>
+            {
+                { "Friendly", null },
+                { "Helpful", null },
+                { "SmoothTalker", null },
+                { "Gifter", null },
+                { "Haggler", null },
+                { "Beloved", null }
+            }, PerkText, HoverText);
 
         SpaceCore.Events.SpaceEvents.AfterGiftGiven += SpaceEvents_AfterGiftGiven;
     }
@@ -36,7 +38,8 @@ internal class Events
 
     private static string HoverText(int level)
     {
-        return ModEntry.Instance.I18N.Get("skill.perk", new { bonus = level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel });
+        return ModEntry.Instance.I18N.Get("skill.perk",
+            new { bonus = level * ModEntry.Config.ChanceNoFriendshipDecayPerLevel });
     }
 
     // Beloved Profession
@@ -47,7 +50,14 @@ internal class Events
         ModEntry.BelovedCheckedToday.Value = [];
     }
 
-    // Grant XP
+    // Grant XP from quest completion
+    [SEvent.StatChanged(StatKeys.QuestsCompleted)]
+    private void QuestCompleted(object sender, SEvent.StatChanged.EventArgs e)
+    {
+        Skills.AddExperience(Game1.player, "drbirbdev.Socializing", ModEntry.Config.ExperienceFromQuests * e.Delta);
+    }
+
+    // Grant XP from giving gifts
     // Gifter Profession
     //  - Give extra friendship
     private static void SpaceEvents_AfterGiftGiven(object sender, SpaceCore.Events.EventArgsGiftGiven e)
@@ -60,6 +70,7 @@ internal class Events
             {
                 extraFriendship += 20;
             }
+
             switch (taste)
             {
                 case 0:
@@ -72,6 +83,7 @@ internal class Events
                     extraFriendship += ModEntry.Config.GifterNeutralGiftExtraFriendship;
                     break;
             }
+
             Game1.player.changeFriendship(extraFriendship, e.Npc);
         }
 
@@ -85,10 +97,12 @@ internal class Events
         {
             exp *= ModEntry.Config.LovedGiftExpMultiplier;
         }
+
         if (e.Npc.isBirthday())
         {
             exp *= ModEntry.Config.BirthdayGiftExpMultiplier;
         }
+
         Skills.AddExperience(Game1.player, "drbirbdev.Socializing", (int)exp);
     }
 }

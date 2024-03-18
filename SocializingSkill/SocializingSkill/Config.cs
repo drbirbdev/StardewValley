@@ -38,11 +38,14 @@ internal class Config
 
 
     [SConfig.SectionTitle("SmoothTalkerProfessionModifiers")]
-    [SConfig.Option(-5.0f, 5.0f, 0.1f)]
+    [SConfig.Option(1.0f, 5.0f, 0.1f)]
     public float SmoothTalkerPositiveMultiplier = 2.0f;
-    [SConfig.Option(-5.0f, 5.0f, 0.1f)]
+    [SConfig.Option(0.0f, 1.0f, 0.1f)]
     public float SmoothTalkerNegativeMultiplier = 0.5f;
-
+    [SConfig.Option(1.0f, 5.0f, 0.1f)]
+    public float SmoothTalkerPrestigePositiveMultiplier = 3.0f;
+    [SConfig.Option(0.0f, 1.0f, 0.1f)]
+    public float SmoothTalkerPrestigeNegativeMultiplier = 0.0f;
 
     [SConfig.SectionTitle("GifterProfessionModifiers")]
     [SConfig.Option(0, 100)]

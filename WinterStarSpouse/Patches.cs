@@ -21,8 +21,8 @@ class Event_SetUpPlayerControlSequence
                 return;
             }
 
-            NPC signiificantOther = Utilities.GetSoleSignificantOther();
-            if (signiificantOther == null)
+            NPC significantOther = Utilities.GetSoleSignificantOther();
+            if (significantOther == null)
             {
                 // No spouse :(
                 return;
@@ -31,8 +31,8 @@ class Event_SetUpPlayerControlSequence
             Random random = new((int)(Game1.uniqueIDForThisGame / 2uL) ^ Game1.year ^ (int)Game1.player.UniqueMultiplayerID);
             if (Utilities.SpouseAsRecipient())
             {
-                __instance.secretSantaRecipient = signiificantOther;
-                Log.Trace("Overrode secret santa recipient with " + signiificantOther.Name);
+                __instance.secretSantaRecipient = significantOther;
+                Log.Trace("Overrode secret santa recipient with " + significantOther.Name);
             }
 
             if (random.Next(100) >= ModEntry.Config.SpouseIsGiverChance)
@@ -40,8 +40,8 @@ class Event_SetUpPlayerControlSequence
                 return;
             }
 
-            __instance.mySecretSanta = signiificantOther;
-            Log.Trace("Overrode secret santa giver with " + signiificantOther.Name);
+            __instance.mySecretSanta = significantOther;
+            Log.Trace("Overrode secret santa giver with " + significantOther.Name);
         }
         catch (Exception e)
         {

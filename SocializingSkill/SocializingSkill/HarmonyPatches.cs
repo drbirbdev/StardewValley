@@ -5,7 +5,6 @@ using BirbCore.Attributes;
 using BirbShared;
 using HarmonyLib;
 using SpaceCore;
-using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Characters;
 using StardewValley.Delegates;
@@ -70,7 +69,7 @@ class Dialogue_ChooseResponse
 // Smooth Talker Profession
 //  - adjust friendship change during dialogue
 [HarmonyPatch(typeof(NPCDialogueResponse), MethodType.Constructor,
-    [typeof(string), typeof(int), typeof(string), typeof(string)])]
+    [typeof(string), typeof(int), typeof(string), typeof(string), typeof(string)])]
 class NpcDialogueResponse_Constructor
 {
     internal static void Postfix(
@@ -449,7 +448,10 @@ class Npc_CheckAction
                 Item result = ItemQueryResolver.TryResolveRandomItem(entry, itemQueryContext);
 
                 GameStateQueryContext context = new(__instance.currentLocation, who, result, null, belovedRandom, null,
-                    new Dictionary<string, object> { });
+                    new Dictionary<string, object>
+                    {
+                        {"NPC", __instance}
+                    });
 
                 if (!GameStateQuery.CheckConditions(entry.Condition, context))
                 {

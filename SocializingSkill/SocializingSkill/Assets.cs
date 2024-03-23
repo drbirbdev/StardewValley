@@ -12,10 +12,6 @@ internal class Assets
     [SAsset.Asset("assets/skill_texture.png")]
     public IRawTextureData SkillTexture;
 
-
-    [SAsset.Asset("assets/belovedtable.json")]
-    public Dictionary<string, List<string>> BelovedTable;
-
     [SAsset.Asset("assets/beloved_data.json")]
     public Dictionary<string, List<BelovedEntry>> BelovedData;
 

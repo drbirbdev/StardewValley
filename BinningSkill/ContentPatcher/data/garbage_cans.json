@@ -238,7 +238,7 @@
                         }
                     ],
                     "CustomFields": {
-                        "drbirbdev.BinningSkill_AddToMap": "Maps/BusStop 3 12 Default"
+                        "drbirbdev.BinningSkill_AddToMap": "Maps/BusStop 13 12 Default"
                     }
                 },
                 "drbirbdev.BinningSkill_Backwoods_Hidden": {
@@ -342,7 +342,7 @@
                         }
                     ],
                     "CustomFields": {
-                        "drbirbdev.BinningSkill_AddToMap": "Maps/Town 102 41 Copper"
+                        "drbirbdev.BinningSkill_AddToMap": "Maps/Town 101 40 Copper"
                     }
                 },
                 "drbirbdev.BinningSkill_BugLand": {
@@ -415,7 +415,7 @@
                         }
                     ],
                     "CustomFields": {
-                        "drbirbdev.BinningSkill_AddToMap": "Maps/WitchSwamp 22 20 Iron"
+                        "drbirbdev.BinningSkill_AddToMap": "Maps/WitchSwamp 22 21 Iron"
                     }
                 },
                 "drbirbdev.BinningSkill_Woods": {

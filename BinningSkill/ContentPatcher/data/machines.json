@@ -8,15 +8,15 @@
         },
 
         // Add crafting recipes
-        {
-            "Action": "EditData",
-            "Target": "Data/CraftingRecipes",
-            "Fields": {
-                "Recycling Machine": {
-                    "4": "drbirbdev.Binning 1"
-                }
-            }
-        },
+//        {
+//            "Action": "EditData",
+//            "Target": "Data/CraftingRecipes",
+//            "Fields": {
+//                "Recycling Machine": {
+//                    "4": "drbirbdev.Binning 1"
+//                }
+//            }
+//        },
         {
             "Action": "EditData",
             "Target": "Data/CraftingRecipes",

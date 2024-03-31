@@ -68,7 +68,7 @@ jobs:
 
       - name: Download API
         run: |
-          dotnet tool install -g Digitalroot.ModUploader --version 1.0.13
+          dotnet tool install -g Digitalroot.ModUploader
           drmu nexusmods check
 
       - name: Upload File

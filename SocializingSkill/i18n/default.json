@@ -51,7 +51,7 @@
 
     "config.SmoothTalkerProfessionModifiers": "Smooth Talker Profession Modifiers",
     "config.SmoothTalkerPositiveMultiplier": "Positive Multiplier",
-    "config.SmoothTalkerPositiveMultiplier.tooltip": "Multiplies positive event responses by this amount when you have the Smooth Talker profession (keey > 1 to make responses better)",
+    "config.SmoothTalkerPositiveMultiplier.tooltip": "Multiplies positive event responses by this amount when you have the Smooth Talker profession (keep > 1 to make responses better)",
     "config.SmoothTalkerNegativeMultiplier": "Negative Multiplier",
     "config.SmoothTalkerNegativeMultiplier.tooltip": "Multiplies negative event responses by this amount when you have the Smooth Talker profession (keep > 0 and < 1 to make responses better, but not positive)",
 

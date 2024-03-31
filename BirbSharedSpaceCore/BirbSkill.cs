@@ -179,15 +179,48 @@ public class BirbSkill : Skills.Skill
         levelUpMenu.height = menuHeight + 256 + (levelUpMenu.getExtraInfoForLevel(skill, level).Count * 64 * 3 / 4);
     }
 
+    /// <summary>
+    /// Tries to recover skills from invalid states, such as not having professions or recipes.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void GameLoop_SaveLoaded(object sender, SaveLoadedEventArgs e)
     {
+        int skillLevel = Game1.player.GetCustomSkillLevel(this.Id);
+        if (skillLevel == 0)
+        {
+            return;
+        }
+
+        if (skillLevel >= 5 && !(Game1.player.HasCustomProfession(this.Professions[0]) ||
+                                 Game1.player.HasCustomProfession(this.Professions[1])))
+        {
+            Game1.endOfNightMenus.Push(new SkillLevelUpMenu(this.Id, 5));
+        }
+
+        if (skillLevel >= 10 && !(Game1.player.HasCustomProfession(this.Professions[2]) ||
+                                  Game1.player.HasCustomProfession(this.Professions[3]) ||
+                                  Game1.player.HasCustomProfession(this.Professions[4]) ||
+                                  Game1.player.HasCustomProfession(this.Professions[5])))
+        {
+            Game1.endOfNightMenus.Push(new SkillLevelUpMenu(this.Id, 10));
+        }
+
         foreach (KeyValuePair<string, string> recipePair in DataLoader.CraftingRecipes(Game1.content))
         {
             string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 4, "");
-            string skill = conditions.Split(" ")[0];
+            if (!conditions.Contains(this.Id))
+            {
+                continue;
+            }
+            if (conditions.Split(" ").Length < 2)
+            {
+                continue;
+            }
+
             int level = int.Parse(conditions.Split(" ")[1]);
 
-            if (skill != this.Id || Game1.player.GetCustomSkillLevel(this.Id) < level)
+            if (skillLevel < level)
             {
                 continue;
             }
@@ -198,10 +231,18 @@ public class BirbSkill : Skills.Skill
         foreach (KeyValuePair<string, string> recipePair in DataLoader.CookingRecipes(Game1.content))
         {
             string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 3, "");
-            string skill = conditions.Split(" ")[0];
+            if (!conditions.Contains(this.Id))
+            {
+                continue;
+            }
+            if (conditions.Split(" ").Length < 2)
+            {
+                continue;
+            }
+
             int level = int.Parse(conditions.Split(" ")[1]);
 
-            if (skill != this.Id || Game1.player.GetCustomSkillLevel(this.Id) < level)
+            if (skillLevel < level)
             {
                 continue;
             }

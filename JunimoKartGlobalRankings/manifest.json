@@ -1,11 +1,4 @@
 {
-  /*
-   | This file is automatically updated by ModManifestBuilder
-   | when the project is compiled.
-   | 
-   | Changes made to this file may be overwritten.
-   | 
-   */
   "$schema": "https://smapi.io/schemas/manifest.json",
   "UniqueID": "drbirbdev.JunimoKartGlobalRankings",
   "Name": "JunimoKartGlobalRankings",
@@ -17,7 +10,7 @@
   "Dependencies": [
     {
       "UniqueID": "drbirbdev.BirbCore",
-      "MinimumVersion": "1.0.2"
+      "MinimumVersion": "1.0.3"
     },
     {
       "UniqueID": "drbirbdev.LeaderboardLibrary"

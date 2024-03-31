@@ -10,7 +10,7 @@
   "Dependencies": [
     {
       "UniqueID": "drbirbdev.BirbCore",
-      "MinimumVersion": "1.0.2"
+      "MinimumVersion": "1.0.3"
     },
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",

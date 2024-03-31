@@ -1,6 +1,13 @@
 ﻿{
     "Changes": [
         // 1: Monster Framework
+        {
+            "Action": "Include",
+            "FromFile": "data/event/monster.json",
+            "When": {
+                "HalloweenEvent": 1
+            }
+        },
         // 2: Custom Tree Tweaks
         {
             "Action": "Include",
@@ -85,8 +92,5 @@
             "Target": "Minigames/TitleButtons",
             "FromFile": "assets/HalloweenTitle.png"
         }
-
-
-
     ]
 }

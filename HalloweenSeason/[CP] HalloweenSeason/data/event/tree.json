@@ -1,6 +1,9 @@
 ﻿{
     // Trees have candy
     "Changes": [
+
+
+
         {
             "Action": "EditImage",
             "Target": "TerrainFeatures/tree1_{{Season}}, TerrainFeatures/tree2_{{Season}}, TerrainFeatures/tree3_{{Season}}, TerrainFeatures/tree3_spring",

@@ -21,7 +21,7 @@ jobs:
         with:
           files: '_releases/Release'
           json: "true"
-        
+
       - name: Set Matrix
         id: set_matrix
         if: ${{ steps.get_new.outputs.added_files != '[]' }}
@@ -68,12 +68,12 @@ jobs:
 
       - name: Download API
         run: |
-          dotnet tool install -g Digitalroot.OdinPlusModUploader --version 1.0.13
-          opmu nexusmods check
+          dotnet tool install -g Digitalroot.ModUploader --version 1.0.13
+          drmu nexusmods check
 
       - name: Upload File
         run: |
-          opmu nexusmods upload "${{ steps.read_manifest.outputs.mod_id }}" "${{ matrix.zip }}" -f "${{ steps.read_manifest.outputs.name }}" -v ${{ steps.read_manifest.outputs.version }} -g stardewvalley -t Main -d "${{ steps.read_manifest.outputs.description }}"
+          drmu nexusmods upload "${{ steps.read_manifest.outputs.mod_id }}" "${{ matrix.zip }}" -f "${{ steps.read_manifest.outputs.name }}" -v ${{ steps.read_manifest.outputs.version }} -g stardewvalley -t Main -d "${{ steps.read_manifest.outputs.description }}"
 
   increment_version:
     name: Update Version
@@ -100,7 +100,7 @@ jobs:
       - name: Update Version
         run: |
           cd ./${{ steps.parse_folder.outputs.folder }}
-          jq '.Version = (.Version | split(".") | .[:-1] + [(.[2] | tonumber + 1 | tostring)] | join("."))' manifest.json > manifest_TEMP.json 
+          jq '.Version = (.Version | split(".") | .[:-1] + [(.[2] | tonumber + 1 | tostring)] | join("."))' manifest.json > manifest_TEMP.json
           mv manifest_TEMP.json manifest.json
 
       - name: Commit version change

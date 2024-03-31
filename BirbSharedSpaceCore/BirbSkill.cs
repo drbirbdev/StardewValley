@@ -98,6 +98,7 @@ public class BirbSkill : Skills.Skill
             this.Professions[1]));
 
         modHelper.Events.Display.MenuChanged += this.DisplayEvents_MenuChanged;
+        modHelper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded;
     }
 
     public override string GetName()
@@ -176,5 +177,40 @@ public class BirbSkill : Skills.Skill
             .SetValue(newRecipes);
 
         levelUpMenu.height = menuHeight + 256 + (levelUpMenu.getExtraInfoForLevel(skill, level).Count * 64 * 3 / 4);
+    }
+
+    private void GameLoop_SaveLoaded(object sender, SaveLoadedEventArgs e)
+    {
+        foreach (KeyValuePair<string, string> recipePair in CraftingRecipe.craftingRecipes)
+        {
+            string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 4, "");
+            string skill = conditions.Split(" ")[0];
+            int level = int.Parse(conditions.Split(" ")[1]);
+
+            if (skill != this.Id || Game1.player.GetCustomSkillLevel(this.Id) < level)
+            {
+                continue;
+            }
+
+            Game1.player.craftingRecipes.TryAdd(recipePair.Key, 0);
+        }
+
+        foreach (KeyValuePair<string, string> recipePair in CraftingRecipe.cookingRecipes)
+        {
+            string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 3, "");
+            string skill = conditions.Split(" ")[0];
+            int level = int.Parse(conditions.Split(" ")[1]);
+
+            if (skill != this.Id || Game1.player.GetCustomSkillLevel(this.Id) < level)
+            {
+                continue;
+            }
+
+            if (Game1.player.cookingRecipes.TryAdd(recipePair.Key, 0) &&
+                !Game1.player.hasOrWillReceiveMail("robinKitchenLetter"))
+            {
+                Game1.mailbox.Add("robinKitchenLetter");
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@
             "Action": "EditData",
             "Target": "Data/CraftingRecipes",
             "Entries": {
-                "drbirbdev.SocializingSkill_Bouquet": "-80 3/Field/458/false/drbirbdev.SocializingSkill 3/[LocalizedText Strings\\Objects:Bouquet_Name]",
+                "drbirbdev.SocializingSkill_Bouquet": "591 3/Field/458/false/drbirbdev.SocializingSkill 3/[LocalizedText Strings\\Objects:Bouquet_Name]",
                 "drbirbdev.SocializingSkill_PerfumeMaker": "334 3 338 2 330 1/Field/drbirbdev.SocializingSkill_PerfumeMaker/true/drbirbdev.SocializingSkill 6/{{i18n:item.PerfumeMaker.name}}",
                 "drbirbdev.SocializingSkill_WrappingStation": "335 5 428 2 787 1/Field/drbirbdev.SocializingSkill_WrappedGift/true/drbirbdev.SocializingSkill 8/{{i18n:item.WrappingStation.name}}",
                 "drbirbdev.SocializingSkill_ConfettiAmmo": "428 1 771 2/Field/drbirbdev.SocializingSkill_ConfettiAmmo/false/drbirbdev.SocializingSkill 9/{{i18n:item.ConfettiAmmo.name}}"

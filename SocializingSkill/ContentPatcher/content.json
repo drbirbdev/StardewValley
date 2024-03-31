@@ -55,7 +55,7 @@
             "Action": "EditData",
             "Target": "Data/CraftingRecipes",
             "Entries": {
-                "drbirbdev.SocializingSkill_Bouquet": "-80 3/Field/458/false/drbirbdev.SocializingSkill 3/[LocalizedText Strings\\Objects:Bouquet_Name]"
+                "drbirbdev.SocializingSkill_Bouquet": "591 3/Field/458/false/drbirbdev.SocializingSkill 3/[LocalizedText Strings\\Objects:Bouquet_Name]"
             }
         }
     ]

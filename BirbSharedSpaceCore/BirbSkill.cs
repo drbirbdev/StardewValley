@@ -181,7 +181,7 @@ public class BirbSkill : Skills.Skill
 
     private void GameLoop_SaveLoaded(object sender, SaveLoadedEventArgs e)
     {
-        foreach (KeyValuePair<string, string> recipePair in CraftingRecipe.craftingRecipes)
+        foreach (KeyValuePair<string, string> recipePair in DataLoader.CraftingRecipes(Game1.content))
         {
             string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 4, "");
             string skill = conditions.Split(" ")[0];
@@ -195,7 +195,7 @@ public class BirbSkill : Skills.Skill
             Game1.player.craftingRecipes.TryAdd(recipePair.Key, 0);
         }
 
-        foreach (KeyValuePair<string, string> recipePair in CraftingRecipe.cookingRecipes)
+        foreach (KeyValuePair<string, string> recipePair in DataLoader.CookingRecipes(Game1.content))
         {
             string conditions = ArgUtility.Get(recipePair.Value.Split('/'), 3, "");
             string skill = conditions.Split(" ")[0];

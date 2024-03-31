@@ -7,6 +7,7 @@
         <MinimumApiVersion_Behavior>Update</MinimumApiVersion_Behavior>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Description>Core Functionality for drbirbdev mods</Description>
+        <ManifestComment>false</ManifestComment>
         <Version>1.0.2</Version>
         <UpdateKeys>Nexus:19140</UpdateKeys>
         <TargetFramework>net6.0</TargetFramework>

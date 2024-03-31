@@ -4,6 +4,7 @@
         <Authors>drbirbdev</Authors>
         <UniqueId>$(Authors).$(AssemblyName)</UniqueId>
         <EntryDll>$(AssemblyName)</EntryDll>
+        <ManifestComment>false</ManifestComment>
         <MinimumApiVersion_Behavior>Update</MinimumApiVersion_Behavior>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 

@@ -1,0 +1,30 @@
+{
+  /*
+   | This file is automatically updated by ModManifestBuilder
+   | when the project is compiled.
+   | 
+   | Changes made to this file may be overwritten.
+   | 
+   */
+  "$schema": "https://smapi.io/schemas/manifest.json",
+  "UniqueID": "drbirbdev.LookToTheSky",
+  "Name": "LookToTheSky",
+  "Author": "drbirbdev",
+  "Version": "1.1.0",
+  "Description": "Adds a slingshot minigame when outdoors and things can be heard overhead.",
+  "MinimumApiVersion": "4.0",
+  "EntryDll": "LookToTheSky.dll",
+  "Dependencies": [
+    {
+      "UniqueID": "drbirbdev.BirbCore",
+      "MinimumVersion": "1.0.2"
+    },
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ],
+  "UpdateKeys": [
+    "Nexus:15262"
+  ]
+}

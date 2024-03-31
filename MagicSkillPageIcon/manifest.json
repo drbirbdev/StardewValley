@@ -1,0 +1,37 @@
+{
+  /*
+   | This file is automatically updated by ModManifestBuilder
+   | when the project is compiled.
+   | 
+   | Changes made to this file may be overwritten.
+   | 
+   */
+  "$schema": "https://smapi.io/schemas/manifest.json",
+  "UniqueID": "drbirbdev.MagicSkillPageIcon",
+  "Name": "MagicSkillPageIcon",
+  "Author": "drbirbdev",
+  "Version": "1.0.0",
+  "Description": "Just adds an icon for the Magic Skill to the Skill Page.",
+  "MinimumApiVersion": "4.0",
+  "EntryDll": "MagicSkillPageIcon.dll",
+  "Dependencies": [
+    {
+      "UniqueID": "drbirbdev.BirbCore",
+      "MinimumVersion": "1.0.2"
+    },
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    },
+    {
+      "UniqueID": "spacechase0.Magic"
+    },
+    {
+      "UniqueID": "spacechase0.SpaceCore",
+      "MinimumVersion": "1.21.0"
+    }
+  ],
+  "UpdateKeys": [
+    "Nexus:???"
+  ]
+}

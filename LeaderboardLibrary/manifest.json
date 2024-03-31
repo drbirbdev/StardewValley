@@ -1,0 +1,30 @@
+{
+  /*
+   | This file is automatically updated by ModManifestBuilder
+   | when the project is compiled.
+   | 
+   | Changes made to this file may be overwritten.
+   | 
+   */
+  "$schema": "https://smapi.io/schemas/manifest.json",
+  "UniqueID": "drbirbdev.LeaderboardLibrary",
+  "Name": "LeaderboardLibrary",
+  "Author": "drbirbdev",
+  "Version": "0.2.0",
+  "Description": "A library for creating and managing leaderboards.",
+  "MinimumApiVersion": "4.0",
+  "EntryDll": "LeaderboardLibrary.dll",
+  "Dependencies": [
+    {
+      "UniqueID": "drbirbdev.BirbCore",
+      "MinimumVersion": "1.0.2"
+    },
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ],
+  "UpdateKeys": [
+    "Nexus:15102"
+  ]
+}

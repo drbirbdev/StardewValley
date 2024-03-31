@@ -1,0 +1,34 @@
+{
+  /*
+   | This file is automatically updated by ModManifestBuilder
+   | when the project is compiled.
+   | 
+   | Changes made to this file may be overwritten.
+   | 
+   */
+  "$schema": "https://smapi.io/schemas/manifest.json",
+  "UniqueID": "drbirbdev.RealtimeFramework",
+  "Name": "RealtimeFramework",
+  "Author": "drbirbdev",
+  "Version": "1.0.0",
+  "Description": "Add Content Patcher tokens and SMAPI API for real-time events.",
+  "MinimumApiVersion": "4.0",
+  "EntryDll": "RealtimeFramework.dll",
+  "Dependencies": [
+    {
+      "UniqueID": "drbirbdev.BirbCore",
+      "MinimumVersion": "1.0.2"
+    },
+    {
+      "UniqueID": "Pathoschild.ContentPatcher",
+      "IsRequired": false
+    },
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ],
+  "UpdateKeys": [
+    "Nexus:18915"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  /*
+   | This file is automatically updated by ModManifestBuilder
+   | when the project is compiled.
+   | 
+   | Changes made to this file may be overwritten.
+   | 
+   */
+  "$schema": "https://smapi.io/schemas/manifest.json",
+  "UniqueID": "drbirbdev.GameboyArcade",
+  "Name": "GameboyArcade",
+  "Author": "drbirbdev",
+  "Version": "0.2.0",
+  "Description": "A Library for enabling Gameboy Roms to be played as in-game arcade machines.",
+  "MinimumApiVersion": "4.0",
+  "EntryDll": "GameboyArcade.dll",
+  "Dependencies": [
+    {
+      "UniqueID": "drbirbdev.BirbCore",
+      "MinimumVersion": "1.0.2"
+    },
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ],
+  "UpdateKeys": [
+    "ModDrop:1318487"
+  ]
+}

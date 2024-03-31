@@ -3,7 +3,7 @@
   "UniqueID": "drbirbdev.BinningSkill",
   "Name": "BinningSkill",
   "Author": "drbirbdev",
-  "Version": "2.0.3",
+  "Version": "2.0.4",
   "Description": "Adds a skill related to digging through trashcans.",
   "MinimumApiVersion": "4.0",
   "EntryDll": "BinningSkill.dll",

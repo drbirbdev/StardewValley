@@ -1,0 +1,28 @@
+{
+    "item.CopperGarbageHat.name": "구리 쓰레기 모자",
+    "item.CopperGarbageHat.desc": "멋진 광택의 쓰레기 '모자'.",
+    "item.IronGarbageHat.name": "철 쓰레기 모자",
+    "item.IronGarbageHat.desc": "튼튼하고, 모자로 쓸 수 있는 쓰레기통 덮개",
+    "item.GoldGarbageHat.name": "금 쓰레기 모자",
+    "item.GoldGarbageHat.desc": "왜, 누가 쓰레기통을 금으로 만들었어?",
+    "item.IridiumGarbageHat.name": "이리듐 쓰레기 모자",
+    "item.IridiumGarbageHat.desc": "쓰레기통 덮개로 만든 아름다운 보라색의 모자.",
+    "item.RadioactiveGarbageHat.name": "방사능 쓰레기 모자",
+    "item.RadioactiveGarbageHat.desc": "쓰지 않는게 좋을 거 같아요...",
+    "item.PrismaticGarbageHat.name": "무지갯빛 쓰레기 모자",
+    "item.PrismaticGarbageHat.desc": "무지갯빛 에너지로 빛나고 있습니다... 하지만 쓰레기통 뚜껑이죠...",
+
+    "item.Composter.name": "퇴비기",
+    "item.Composter.desc": "식품을 비료로 바꾸는 기계",
+    "item.TrashBin.name": "쓰레기통",
+    "item.TrashBin.desc": "쓰레기통. 마을이나 주변에 두면 주민들이 쓰레기를 버릴것 입니다.",
+    "item.RecyclingBin.name": "분리수거함",
+    "item.RecyclingBin.desc": "환경을 위한, 쓰레기통의 대안. 마을이나 주변에 두면 주민들이 좋은 걸 버릴 지도 모릅니다.",
+    "item.AdvancedRecyclingMachine.name": "고급 재활용 기계",
+    "item.AdvancedRecyclingMachine.desc": "발전된 재활용 기계. 오랜 시간과 더 많은 쓰레기를 소모해 자원으로 바꿉니다.",
+
+    "item.GrilledCheese.name": "그릴드 치즈 샌드위치",
+    "item.GrilledCheese.desc": "간단한 치즈 샌드위치.",
+    "item.FishCasserole.name": "생선 캐서롤",
+    "item.FishCasserole.desc": "냉장고에서 뒹구는 것들로 만든 무언가..."
+}

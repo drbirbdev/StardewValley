@@ -1,0 +1,28 @@
+{
+    "item.CopperGarbageHat.name": "Chapeau de déchets en cuivre",
+    "item.CopperGarbageHat.desc": "Ce \"chapeau\" de déchets a un bel éclat.",
+    "item.IronGarbageHat.name": "Chapeau de déchets en fer",
+    "item.IronGarbageHat.desc": "Un déchet très robuste, fait à partir d’un couvercle de poubelle, que vous pouvez porter en chapeau.",
+    "item.GoldGarbageHat.name": "Chapeau de déchets en or",
+    "item.GoldGarbageHat.desc": "Pourquoi quelqu’un fabriquerait une poubelle en or de toute façon ?",
+    "item.IridiumGarbageHat.name": "Chapeau de déchets en iridium",
+    "item.IridiumGarbageHat.desc": "Un magnifique chapeau violet fait à partir d’un couvercle de poubelle.",
+    "item.RadioactiveGarbageHat.name": "Chapeau de déchets radioactif",
+    "item.RadioactiveGarbageHat.desc": "Peut-être qu’il serait mieux de ne pas porter ça…",
+    "item.PrismaticGarbageHat.name": "Chapeau de déchets prismatiques",
+    "item.PrismaticGarbageHat.desc": "Ça brille d’énergie prismatique… Mais c’est toujours un couvercle de poubelle.",
+
+    "item.Composter.name": "Composteur",
+    "item.Composter.desc": "Une machine qui transforme de la matière organique en engrais.",
+    "item.TrashBin.name": "Poubelle",
+    "item.TrashBin.desc": "Une poubelle. Déplacez-la à travers la ville et les gens jetteront des choses à l’intérieur.",
+    "item.RecyclingBin.name": "Poubelle recyclable",
+    "item.RecyclingBin.desc": "Une alternative environnementale à la poubelle. Déplacez-la à travers la ville et les gens jetteront peut-être des bonnes choses à l’intérieur.",
+    "item.AdvancedRecyclingMachine.name": "Machine de recyclage avancée",
+    "item.AdvancedRecyclingMachine.desc": "Une meilleure machine de recyclage. Transforme les déchets en ressource, mais nécessite plus de déchets et plus de temps.",
+
+    "item.GrilledCheese.name": "Fromage grillé",
+    "item.GrilledCheese.desc": "Un simple sandwich au fromage",
+    "item.FishCasserole.name": "Cocotte de poisson",
+    "item.FishCasserole.desc": "Fait à partir des restes du frigo…"
+}

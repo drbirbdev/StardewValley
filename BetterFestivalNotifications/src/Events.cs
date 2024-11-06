@@ -23,39 +23,36 @@ internal class Events
     [SEvent.DayStarted]
     private void GameLoop_DayStarted(object sender, StardewModdingAPI.Events.DayStartedEventArgs e)
     {
-        if (!Utility.isFestivalDay() && !Utility.IsPassiveFestivalDay())
+        string key = Game1.currentSeason + Game1.dayOfMonth;
+
+        if (Event.tryToLoadFestivalData(key,
+                out string _,
+                out Dictionary<string, string> festivalData,
+                out string _,
+                out int startTime,
+                out int endTime))
+        {
+            this._festivalName = festivalData["name"];
+            this._startTime = startTime;
+            this._endTime = endTime;
+
+            ModEntry.Instance.Helper.Events.GameLoop.TimeChanged += this.GameLoop_TimeChanged;
+            return;
+        }
+
+        if (!Utility.TryGetPassiveFestivalDataForDay(
+                Game1.dayOfMonth,
+                Game1.season,
+                null,
+                out string _,
+                out PassiveFestivalData passiveFestivalData))
         {
             return;
         }
 
-        if (Utility.isFestivalDay())
-        {
-            Dictionary<string, string> festivalData = Game1.temporaryContent.Load<Dictionary<string, string>>(@"Data\Festivals\" + Game1.currentSeason + Game1.dayOfMonth);
-
-            this._festivalName = festivalData["name"];
-            string startAndEnd = festivalData["conditions"].Split('/')[1];
-            this._startTime = Convert.ToInt32(ArgUtility.SplitBySpaceAndGet(startAndEnd, 0, "-1"));
-            this._endTime = Convert.ToInt32(ArgUtility.SplitBySpaceAndGet(startAndEnd, 1, "-1"));
-
-            if (this._startTime < 600 || this._startTime >= 2600 || this._endTime < 600 || this._endTime > 2600)
-            {
-                Log.Warn("Festival start or end time is invalid");
-                return;
-            }
-        }
-        else
-        {
-            if (!Utility.TryGetPassiveFestivalDataForDay(Game1.dayOfMonth, Game1.season, null, out string _, out PassiveFestivalData data))
-            {
-                Log.Warn("Could not load passive festival name, start, and end time");
-                return;
-
-            }
-
-            this._festivalName = data.DisplayName;
-            this._startTime = data.StartTime;
-            this._endTime = 2600;
-        }
+        this._festivalName = passiveFestivalData.DisplayName;
+        this._startTime = passiveFestivalData.StartTime;
+        this._endTime = 2600;
 
         ModEntry.Instance.Helper.Events.GameLoop.TimeChanged += this.GameLoop_TimeChanged;
     }

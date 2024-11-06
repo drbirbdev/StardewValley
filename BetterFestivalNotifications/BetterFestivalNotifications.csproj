@@ -2,9 +2,14 @@
     <Import Project="..\common.targets" />
 
     <PropertyGroup>
+        <Name>Better Festival Notifications</Name>
         <Description>Customize notifications when a festival starts and ends.</Description>
-        <Version>1.1.1</Version>
+        <Version>1.2.0</Version>
         <UpdateKeys>Nexus:14170</UpdateKeys>
     </PropertyGroup>
+
+    <ItemGroup>
+        <SMAPIDependency Include="drbirbdev.BirbCore" Version="1.1.0" Reference="true" />
+    </ItemGroup>
 
 </Project>

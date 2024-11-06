@@ -2,24 +2,15 @@
     <Import Project="..\common.targets" />
 
     <PropertyGroup>
+        <Name>Leaderboard Library</Name>
         <Description>A library for creating and managing leaderboards.</Description>
         <Version>0.2.0</Version>
         <UpdateKeys>Nexus:15102</UpdateKeys>
+        <BundleExtraAssemblies>ThirdParty</BundleExtraAssemblies>
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="AWSSDK.Core">
-            <HintPath>.\Libraries\AWSSDK.Core.dll</HintPath>
-        </Reference>
-        <Reference Include="AWSSDK.CognitoIdentity">
-            <HintPath>.\Libraries\AWSSDK.CognitoIdentity.dll</HintPath>
-        </Reference>
-        <Reference Include="AWSSDK.SecurityToken">
-            <HintPath>.\Libraries\AWSSDK.SecurityToken.dll</HintPath>
-        </Reference>
-        <Reference Include="AWSSDK.DynamoDBv2">
-            <HintPath>.\Libraries\AWSSDK.DynamoDBv2.dll</HintPath>
-        </Reference>
+        <SMAPIDependency Include="drbirbdev.BirbCore" Version="1.1.0" Reference="true" />
     </ItemGroup>
 
 </Project>

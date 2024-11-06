@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_root", "_root", "{7BB5EFE4
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		common-contentpatcher.targets = common-contentpatcher.targets
-		common-spacecore.targets = common-spacecore.targets
 		common.targets = common.targets
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
@@ -45,10 +43,6 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HalloweenSeason", "HalloweenSeason\HalloweenSeason.shproj", "{100172ED-9F1B-4D78-8B4F-BB5C4F72537B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BirbCore", "BirbCore\BirbCore.csproj", "{8223E80F-03F0-4527-80A9-0D2E7B76A7EE}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GameboyArcadeTests", "GameboyArcadeTests\GameboyArcadeTests.shproj", "{B091A772-70C1-4AA6-B2C2-93E9E06B8C07}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GameboyArcadeTemplate", "GameboyArcadeTemplate\GameboyArcadeTemplate.shproj", "{65C1A80E-01D8-4652-A109-3FB1FCC789BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuzzleFloor", "PuzzleFloor\PuzzleFloor.csproj", "{854F3EA8-FB39-4079-A258-BA468822126E}"
 EndProject

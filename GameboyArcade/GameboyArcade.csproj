@@ -2,12 +2,25 @@
     <Import Project="..\common.targets" />
 
     <PropertyGroup>
+        <Name>Gameboy Arcade</Name>
         <Description>A Library for enabling Gameboy Roms to be played as in-game arcade machines.</Description>
         <Version>0.2.0</Version>
         <UpdateKeys>ModDrop:1318487</UpdateKeys>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <ContentPacks Include="content/[CP] GameboyArcadeTemplate" Version="$(Version)" />
+        <ContentPacks Include="content/[GBA] GameboyArcadeTemplate" Version="$(Version)" />
+        <ContentPacks Include="content/[GBA] BlarggsTests" Version="$(Version)" />
+        <ContentPacks Include="content/[GBA] 144p Test Suite" Version="$(Version)" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <SMAPIDependency Include="drbirbdev.BirbCore" Version="1.1.0" Reference="true" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
+
 </Project>

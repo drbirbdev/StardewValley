@@ -1,20 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="$(SolutionDir)\BirbSharedSpaceCore\BirbSharedSpaceCore.projitems" Label="Shared" />
     <Import Project="..\common.targets" />
-    <Import Project="..\common-contentpatcher.targets" />
-    <Import Project="..\common-spacecore.targets" />
 
     <PropertyGroup>
         <Description>Adds a skill related to befriending villagers.</Description>
         <Version>2.0.6</Version>
         <UpdateKeys>Nexus:14142</UpdateKeys>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <ContentPacks Include="content/[CP] SocializingSkill" Version="$(Version)" />
+    </ItemGroup>
 
     <ItemGroup>
+        <SMAPIDependency Include="drbirbdev.BirbCore" Version="1.1.0" Reference="true" />
+        <SMAPIDependency Include="spacechase0.SpaceCore" Version="1.26.1" Reference="true" />
+        <SMAPIDependency Include="Pathoschild.ContentPatcher" Version="2.4.2" Required="true" />
         <SMAPIDependency Include="DaLion.Overhaul" MinimumVersion="1.1.1" Required="false" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="ContentPatcher\assets\" />
-      <Folder Include="ContentPatcher\i18n\" />
-    </ItemGroup>
+    
 </Project>

@@ -1,10 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\common.targets" />
-    <Import Project="..\common-contentpatcher.targets" />
 
     <PropertyGroup>
+        <Name>Ranching Tool Upgrades</Name>
         <Description>Add Pail, Shear, and Autograbber upgrades at the blacksmith.</Description>
         <Version>1.1.1</Version>
         <UpdateKeys>Nexus:12280</UpdateKeys>
     </PropertyGroup>
+
+    <ItemGroup>
+        <ContentPacks Include="content/[CP] RanchingToolUpgrades" Version="$(Version)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <SMAPIDependency Include="drbirbdev.BirbCore" Version="1.1.0" Reference="true" />
+        <SMAPIDependency Include="Pathoschild.ContentPatcher" Version="2.4.2" Required="true" />
+    </ItemGroup>
+
 </Project>

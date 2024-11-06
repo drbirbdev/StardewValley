@@ -2,13 +2,15 @@
     <Import Project="..\common.targets" />
 
     <PropertyGroup>
+        <Name>JunimoKart Global Rankings</Name>
         <Description>Shares JunimoKart Endless Mode scores with the world.</Description>
         <Version>1.0.4</Version>
         <UpdateKeys>Nexus:14856</UpdateKeys>
     </PropertyGroup>
 
     <ItemGroup>
+        <SMAPIDependency Include="drbirbdev.BirbCore" Version="1.1.0" Reference="true" />
         <SMAPIDependency Include="drbirbdev.LeaderboardLibrary" Required="true" />
     </ItemGroup>
-
+    
 </Project>

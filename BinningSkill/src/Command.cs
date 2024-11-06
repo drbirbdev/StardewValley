@@ -102,14 +102,9 @@ internal class Command
         for (uint i = daysPlayed; i < rounds + daysPlayed; i++)
         {
             Game1.stats.DaysPlayed = i;
-            if (!canLocation.TryGetGarbageItem(key, Game1.player.DailyLuck, out Item item,
-                    out GarbageCanItemData selected, out Random _))
-            {
-                Log.Warn(
-                    "Checking garbage failed, make sure Binning level is appropriate, and no NPCs are near garbage can.");
-                Game1.stats.DaysPlayed = daysPlayed;
-                return;
-            }
+            canLocation.TryGetGarbageItem(key, Game1.player.DailyLuck, out Item item, out GarbageCanItemData selected,
+                out Random _);
+
 
             if (item == null)
             {

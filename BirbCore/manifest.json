@@ -3,13 +3,15 @@
   "UniqueID": "drbirbdev.BirbCore",
   "Name": "BirbCore",
   "Author": "drbirbdev",
-  "Version": "1.0.3",
+  "Version": "1.1.0",
   "Description": "Core Functionality for drbirbdev mods",
-  "MinimumApiVersion": "4.0",
+  "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
+  "MinimumGameVersion": "1.6.10",
   "EntryDll": "BirbCore.dll",
   "Dependencies": [
     {
       "UniqueID": "Pathoschild.ContentPatcher",
+      "MinimumVersion": "2.4.2",
       "IsRequired": false
     },
     {

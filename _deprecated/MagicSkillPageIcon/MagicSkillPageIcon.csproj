@@ -9,7 +9,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <SMAPIDependency Include="spacechase0.SpaceCore" Reference="true" />
         <SMAPIDependency Include="spacechase0.Magic" Required="true" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Pathoschild.Stardew.ModBuildConfig" Version="4.3.1" />
+      <PackageReference Update="Leclair.Stardew.ModManifestBuilder" Version="2.3.1" />
     </ItemGroup>
     
 </Project>

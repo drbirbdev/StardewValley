@@ -8,4 +8,9 @@
         <UpdateKeys>Nexus:12242</UpdateKeys>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Update="Pathoschild.Stardew.ModBuildConfig" Version="4.3.1" />
+      <PackageReference Update="Leclair.Stardew.ModManifestBuilder" Version="2.3.1" />
+    </ItemGroup>
+
 </Project>

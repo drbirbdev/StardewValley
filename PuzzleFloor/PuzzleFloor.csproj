@@ -1,11 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\common.targets" />
-    <Import Project="..\common-contentpatcher.targets" />
 
     <PropertyGroup>
+        <Name>Puzzle Floor</Name>
         <Description>Adds puzzle piece flooring</Description>
         <Version>1.0.0</Version>
         <UpdateKeys>Nexus:???</UpdateKeys>
     </PropertyGroup>
+
+    <ItemGroup>
+        <ContentPacks Include="content/[CP] PuzzleFloor" Version="$(Version)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <SMAPIDependency Include="drbirbdev.BirbCore" Version="1.1.0" Reference="true" />
+        <SMAPIDependency Include="Pathoschild.ContentPatcher" Version="2.4.2" Required="true" />
+    </ItemGroup>
 
 </Project>

@@ -1,16 +1,17 @@
 {
   "$schema": "https://smapi.io/schemas/manifest.json",
   "UniqueID": "drbirbdev.BetterFestivalNotifications",
-  "Name": "BetterFestivalNotifications",
+  "Name": "Better Festival Notifications",
   "Author": "drbirbdev",
-  "Version": "1.1.1",
+  "Version": "1.2.0-Debug",
   "Description": "Customize notifications when a festival starts and ends.",
-  "MinimumApiVersion": "4.0",
+  "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
+  "MinimumGameVersion": "1.6.10",
   "EntryDll": "BetterFestivalNotifications.dll",
   "Dependencies": [
     {
       "UniqueID": "drbirbdev.BirbCore",
-      "MinimumVersion": "1.0.3"
+      "MinimumVersion": "1.1.0"
     },
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",

@@ -197,9 +197,9 @@
                         {
                             "Sounds": [
                                 {
-                                    "Id": "trashcan",
+                                    "Id": "trashcan"
                                 }
-                            ],
+                            ]
                         }
                     ],
                     "StatsToIncrementWhenLoaded": [
@@ -454,7 +454,7 @@
                                 {
                                     "Id": "trashcan"
                                 }
-                            ],
+                            ]
                         }
                     ],
                     "StatsToIncrementWhenLoaded": [
@@ -488,12 +488,14 @@
                     "SpriteIndex": 4,
                     "Edibility": 50,
                     "IsDrink": false,
-                    "Buff": {
-                        "Duration": 500,
-                        "CustomFields": {
-                            "spacechase.SpaceCore.SkillBuff.drbirbdev.Binning": "1"
+                    "Buffs": [
+                        {
+                            "Duration": 500,
+                            "CustomFields": {
+                                "spacechase.SpaceCore.SkillBuff.drbirbdev.Binning": "1"
+                            }
                         }
-                    }
+                    ]
                 },
                 "drbirbdev.BinningSkill_FishCasserole": {
                     "Name": "Fish Casserole",
@@ -506,13 +508,15 @@
                     "SpriteIndex": 9,
                     "Edibility": 50,
                     "IsDrink": false,
-                    "Buff": {
-                        "Duration": 500,
-                        "CustomFields": {
-                            "spacechase.SpaceCore.SkillBuff.drbirbdev.Binning": "3",
-                            "spacechase.SpaceCore.SkillBuff.drbirbdev.Socializing": "2"
+                    "Buffs": [
+                        {
+                            "Duration": 500,
+                            "CustomFields": {
+                                "spacechase.SpaceCore.SkillBuff.drbirbdev.Binning": "3",
+                                "spacechase.SpaceCore.SkillBuff.drbirbdev.Socializing": "2"
+                            }
                         }
-                    }
+                    ]
                 }
             }
         }

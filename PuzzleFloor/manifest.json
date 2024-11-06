@@ -1,18 +1,21 @@
 {
   "$schema": "https://smapi.io/schemas/manifest.json",
   "UniqueID": "drbirbdev.PuzzleFloor",
-  "Name": "PuzzleFloor",
+  "Name": "Puzzle Floor",
   "Author": "drbirbdev",
-  "Version": "1.0.0",
+  "Version": "1.0.0-Debug",
   "Description": "Adds puzzle piece flooring",
-  "MinimumApiVersion": "4.0",
+  "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
+  "MinimumGameVersion": "1.6.10",
   "EntryDll": "PuzzleFloor.dll",
   "Dependencies": [
     {
-      "UniqueID": "drbirbdev.BirbCore"
+      "UniqueID": "drbirbdev.BirbCore",
+      "MinimumVersion": "1.1.0"
     },
     {
-      "UniqueID": "Pathoschild.ContentPatcher"
+      "UniqueID": "Pathoschild.ContentPatcher",
+      "MinimumVersion": "2.4.2"
     },
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",

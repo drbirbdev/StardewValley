@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Amazon;
 using Amazon.CognitoIdentity;
@@ -31,17 +32,20 @@ public class ModEntry : Mod
         if (GLOBAL_MOD_DATA.Value is null)
         {
             Log.Debug("Creating new global leaderboard data...");
-            GLOBAL_MOD_DATA.SetValueForScreen(0, new GlobalModData());
+            GLOBAL_MOD_DATA.SetValueForScreen(0, new GlobalModData()
+            {
+                UserUuid = Guid.NewGuid().ToString(),
+                Secret = Guid.NewGuid().ToString()
+            });
             this.Helper.Data.WriteGlobalData(GLOBAL_DATA_KEY, GLOBAL_MOD_DATA.Value);
         }
         Log.Debug($"Using leaderboard identity {GLOBAL_MOD_DATA?.Value?.UserUuid ?? ""} and secret staring with {GLOBAL_MOD_DATA?.Value?.Secret?[..3]}");
-
 
         LocalModData = this.Helper.Data.ReadJsonFile<LocalModData>("data/cached_leaderboards.json");
         if (LocalModData is null)
         {
             Log.Debug("Creating new local leaderboard cache...");
-            if (GLOBAL_MOD_DATA is { Value: not null })
+            if (GLOBAL_MOD_DATA is { Value: not null, Value.UserUuid: not null })
             {
                 LocalModData = new LocalModData(GLOBAL_MOD_DATA.Value.UserUuid);
             }

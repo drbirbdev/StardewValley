@@ -22,6 +22,11 @@ class LeaderboardDao
             List<Dictionary<string, AttributeValue>> keys = [];
             foreach (string playerUuid in ModEntry.LocalModData.MultiplayerUuiDs)
             {
+                if (playerUuid is null)
+                {
+                    continue;
+                }
+
                 keys.Add(new Dictionary<string, AttributeValue>
                 {
                     { "Stat", new AttributeValue { S = stat } },

@@ -224,7 +224,7 @@ class Quest_GetMoneyReward
     typeof(ShopData),
     typeof(ShopOwnerData),
     typeof(NPC),
-    typeof(Func<ISalable, Farmer, int, bool>),
+    typeof(ShopMenu.OnPurchaseDelegate),
     typeof(Func<ISalable, bool>),
     typeof(bool)
 ])]

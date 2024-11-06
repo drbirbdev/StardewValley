@@ -1,11 +1,12 @@
 {
   "$schema": "https://smapi.io/schemas/manifest.json",
   "UniqueID": "drbirbdev.SlimingSkill",
-  "Name": "SlimingSkill",
+  "Name": "Sliming Skill",
   "Author": "drbirbdev",
-  "Version": "0.0.1",
+  "Version": "0.0.1-Debug",
   "Description": "Adds a skill related to raising and fighting slimes.",
-  "MinimumApiVersion": "4.0",
+  "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
+  "MinimumGameVersion": "1.6.10",
   "EntryDll": "SlimingSkill.dll",
   "Dependencies": [
     {
@@ -13,10 +14,12 @@
       "IsRequired": false
     },
     {
-      "UniqueID": "drbirbdev.BirbCore"
+      "UniqueID": "drbirbdev.BirbCore",
+      "MinimumVersion": "1.1.0"
     },
     {
-      "UniqueID": "Pathoschild.ContentPatcher"
+      "UniqueID": "Pathoschild.ContentPatcher",
+      "MinimumVersion": "2.4.2"
     },
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",
@@ -24,7 +27,7 @@
     },
     {
       "UniqueID": "spacechase0.SpaceCore",
-      "MinimumVersion": "1.21.0"
+      "MinimumVersion": "1.26.1"
     }
   ],
   "UpdateKeys": [

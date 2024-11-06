@@ -4,7 +4,7 @@
     <PropertyGroup>
         <Name>Gameboy Arcade</Name>
         <Description>A Library for enabling Gameboy Roms to be played as in-game arcade machines.</Description>
-        <Version>0.2.0</Version>
+        <Version>1.0.0</Version>
         <UpdateKeys>ModDrop:1318487</UpdateKeys>
     </PropertyGroup>
     

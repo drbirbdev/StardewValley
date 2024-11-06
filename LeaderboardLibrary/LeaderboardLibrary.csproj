@@ -4,10 +4,25 @@
     <PropertyGroup>
         <Name>Leaderboard Library</Name>
         <Description>A library for creating and managing leaderboards.</Description>
-        <Version>0.2.0</Version>
+        <Version>0.3.0</Version>
         <UpdateKeys>Nexus:15102</UpdateKeys>
         <BundleExtraAssemblies>ThirdParty</BundleExtraAssemblies>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <Reference Include="AWSSDK.Core">
+            <HintPath>.\libraries\AWSSDK.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="AWSSDK.CognitoIdentity">
+            <HintPath>.\libraries\AWSSDK.CognitoIdentity.dll</HintPath>
+        </Reference>
+        <Reference Include="AWSSDK.SecurityToken">
+            <HintPath>.\libraries\AWSSDK.SecurityToken.dll</HintPath>
+        </Reference>
+        <Reference Include="AWSSDK.DynamoDBv2">
+            <HintPath>.\libraries\AWSSDK.DynamoDBv2.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 
     <ItemGroup>
         <SMAPIDependency Include="drbirbdev.BirbCore" Version="1.1.0" Reference="true" />

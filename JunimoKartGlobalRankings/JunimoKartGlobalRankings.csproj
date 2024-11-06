@@ -4,7 +4,7 @@
     <PropertyGroup>
         <Name>JunimoKart Global Rankings</Name>
         <Description>Shares JunimoKart Endless Mode scores with the world.</Description>
-        <Version>1.0.4</Version>
+        <Version>1.1.0</Version>
         <UpdateKeys>Nexus:14856</UpdateKeys>
     </PropertyGroup>
 

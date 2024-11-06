@@ -5,7 +5,7 @@
     <PropertyGroup>
         <Name>Binning Skill</Name>
         <Description>Adds a skill related to digging through trashcans.</Description>
-        <Version>2.0.5</Version>
+        <Version>2.1.0</Version>
         <UpdateKeys>Nexus:14073</UpdateKeys>
     </PropertyGroup>
 

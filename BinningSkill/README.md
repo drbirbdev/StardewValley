@@ -72,5 +72,6 @@ Translation is automated by DeepL.  Feel free to PR suggested changes in your la
 
 # Roadmap
 
-* Add trashcans to popular mod locations (SVE, Ridgeside Village, East Scarpe, Downtown Zuzu, etc).
+* Add/customize trashcans in popular mod locations (SVE, Ridgeside Village, East Scarpe, Downtown Zuzu, etc).
 * Gauge interest in turning off certain trashcans in config. (For easier compatibility, aesthetic).
+* Add food buffs to vanilla items and other modded items.

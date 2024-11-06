@@ -1,16 +1,17 @@
 {
   "$schema": "https://smapi.io/schemas/manifest.json",
   "UniqueID": "drbirbdev.JunimoKartGlobalRankings",
-  "Name": "JunimoKartGlobalRankings",
+  "Name": "JunimoKart Global Rankings",
   "Author": "drbirbdev",
-  "Version": "1.0.4",
+  "Version": "1.0.4-Debug",
   "Description": "Shares JunimoKart Endless Mode scores with the world.",
-  "MinimumApiVersion": "4.0",
+  "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
+  "MinimumGameVersion": "1.6.10",
   "EntryDll": "JunimoKartGlobalRankings.dll",
   "Dependencies": [
     {
       "UniqueID": "drbirbdev.BirbCore",
-      "MinimumVersion": "1.0.3"
+      "MinimumVersion": "1.1.0"
     },
     {
       "UniqueID": "drbirbdev.LeaderboardLibrary"

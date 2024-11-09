@@ -1,6 +1,9 @@
 {
     "festivalWarn": "The {{festival}} is ending soon!",
     "festivalOver": "The {{festival}} has ended.",
+    "visitorWarn": "The {{visitor}} is leaving soon!",
+    "visitorOver": "The {{visitor}} has left.",
+    "defaultFestivalName": "event",
 
     "config.PlayStartSound": "Play Start Sound",
     "config.PlayStartSound.tooltip": "Should a sound be played when a festival begins?",

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using BirbCore.Attributes;
 using StardewValley;
 using StardewValley.GameData;
+using StardewValley.TokenizableStrings;
 
 namespace BetterFestivalNotifications;
 
 [SEvent]
 internal class Events
 {
-
-    private string _festivalName;
+    private string _warnMessage;
+    private string _endMessage;
     private int _startTime;
     private int _endTime;
 
@@ -32,29 +33,61 @@ internal class Events
                 out int startTime,
                 out int endTime))
         {
-            this._festivalName = festivalData["name"];
+            string festivalName = festivalData["name"];
+            if (festivalName == "")
+            {
+                festivalName = ModEntry.Instance.I18N.Get("defaultFestivalName").ToString();
+            }
+
+            this._warnMessage = ModEntry.Instance.I18N.Get("festivalWarn", new { festival = festivalName }).ToString();
+            this._endMessage = ModEntry.Instance.I18N.Get("festivalOver", new { festival = festivalName }).ToString();
             this._startTime = startTime;
             this._endTime = endTime;
 
             ModEntry.Instance.Helper.Events.GameLoop.TimeChanged += this.GameLoop_TimeChanged;
-            return;
         }
-
-        if (!Utility.TryGetPassiveFestivalDataForDay(
-                Game1.dayOfMonth,
-                Game1.season,
-                null,
-                out string _,
-                out PassiveFestivalData passiveFestivalData))
+        else if (Utility.TryGetPassiveFestivalDataForDay(
+                     Game1.dayOfMonth,
+                     Game1.season,
+                     null,
+                     out string _,
+                     out PassiveFestivalData passiveFestivalData))
         {
-            return;
+            string festivalName = TokenParser.ParseText(passiveFestivalData.DisplayName);
+            if (festivalName == "")
+            {
+                if (Game1.IsSummer && (Game1.dayOfMonth == 20 || Game1.dayOfMonth == 21))
+                {
+                    festivalName = Game1.content.LoadString("Strings\\1_6_Strings:TroutDerby");
+                }
+                else if (Game1.IsWinter && (Game1.dayOfMonth == 12 || Game1.dayOfMonth == 21))
+                {
+                    festivalName = Game1.content.LoadString("Strings\\1_6_Strings:SquidFest");
+                }
+                else
+                {
+                    festivalName = ModEntry.Instance.I18N.Get("defaultFestivalName").ToString();
+                }
+            }
+
+            this._warnMessage = ModEntry.Instance.I18N.Get("festivalWarn", new { festival = festivalName }).ToString();
+            this._endMessage = ModEntry.Instance.I18N.Get("festivalOver", new { festival = festivalName }).ToString();
+            this._startTime = passiveFestivalData.StartTime;
+            this._endTime = 2600;
+
+            ModEntry.Instance.Helper.Events.GameLoop.TimeChanged += this.GameLoop_TimeChanged;
         }
+        else if (Utility.getDaysOfBooksellerThisSeason().Contains(Game1.dayOfMonth))
+        {
+            string festivalName = Game1.content.LoadString("Strings\\1_6_Strings:Bookseller");
 
-        this._festivalName = passiveFestivalData.DisplayName;
-        this._startTime = passiveFestivalData.StartTime;
-        this._endTime = 2600;
+            this._warnMessage = ModEntry.Instance.I18N.Get("visitorWarn", new { visitor = festivalName }).ToString();
+            this._endMessage = ModEntry.Instance.I18N.Get("visitorOver", new { visitor = festivalName }).ToString();
+            this._startTime = 600;
+            this._endTime = 2600;
 
-        ModEntry.Instance.Helper.Events.GameLoop.TimeChanged += this.GameLoop_TimeChanged;
+            ModEntry.Instance.Helper.Events.GameLoop.TimeChanged += this.GameLoop_TimeChanged;
+        }
     }
 
     private void GameLoop_TimeChanged(object sender, StardewModdingAPI.Events.TimeChangedEventArgs e)
@@ -72,9 +105,10 @@ internal class Events
             {
                 Game1.playSound(ModEntry.Config.WarnSound);
             }
+
             if (ModEntry.Config.ShowWarnNotification)
             {
-                Game1.showGlobalMessage(ModEntry.Instance.I18N.Get("festivalWarn", new { festival = this._festivalName }));
+                Game1.showGlobalMessage(this._warnMessage);
             }
         }
         else if (e.NewTime == this._endTime)
@@ -83,9 +117,10 @@ internal class Events
             {
                 Game1.playSound(ModEntry.Config.OverSound);
             }
+
             if (ModEntry.Config.ShowOverNotification)
             {
-                Game1.showGlobalMessage(ModEntry.Instance.I18N.Get("festivalOver", new { festival = this._festivalName }));
+                Game1.showGlobalMessage(this._endMessage);
             }
         }
     }

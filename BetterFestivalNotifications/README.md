@@ -25,3 +25,6 @@ Over notifications don't work for passive festivals, as they are hard-coded to e
 ## Translation
 
 Translation is automated by DeepL.  Feel free to PR suggested changes in your language.
+
+### Manual Translation Credits
+- None yet

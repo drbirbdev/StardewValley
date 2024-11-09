@@ -137,7 +137,7 @@ public class SkyObjectData
         }
         else if (long.TryParse(str, out long id))
         {
-            return Game1.getFarmer(id);
+            return Game1.GetPlayer(id);
         }
         else
         {

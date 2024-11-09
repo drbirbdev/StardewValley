@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\common.targets" />
+
+    <PropertyGroup>
+        <Name>Halloween Season</Name>
+        <Description>Add halloween seasonal event changes.</Description>
+        <Version>1.1.0</Version>
+        <UpdateKeys>Nexus:18916</UpdateKeys>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ContentPacks Include="content/[CP] HalloweenSeason" Version="$(Version)" />
+        <ContentPacks Include="content/[FTM] HalloweenSeason" Version="$(Version)" />
+    </ItemGroup>
+
+</Project>

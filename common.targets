@@ -28,7 +28,7 @@
 
     <!--GMCM optional requirement-->
     <ItemGroup>
-        <SMAPIDependency Include="spacechase0.GenericModConfigMenu" Required="false" />
+        <SMAPIDependency Include="spacechase0.GenericModConfigMenu" Version="1.14.0" Required="false" />
     </ItemGroup>
 
     <!--common mod build package options-->

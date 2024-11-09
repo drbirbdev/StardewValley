@@ -3,10 +3,10 @@
   "UniqueID": "drbirbdev.BetterFestivalNotifications",
   "Name": "Better Festival Notifications",
   "Author": "drbirbdev",
-  "Version": "1.2.0-Debug",
+  "Version": "1.2.0",
   "Description": "Customize notifications when a festival starts and ends.",
   "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
-  "MinimumGameVersion": "1.6.10",
+  "MinimumGameVersion": "1.6.13",
   "EntryDll": "BetterFestivalNotifications.dll",
   "Dependencies": [
     {

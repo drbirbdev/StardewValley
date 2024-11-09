@@ -1,25 +1,20 @@
 {
   "$schema": "https://smapi.io/schemas/manifest.json",
-  "UniqueID": "drbirbdev.BirbCore",
-  "Name": "BirbCore",
+  "UniqueID": "drbirbdev.HalloweenSeason",
+  "Name": "Halloween Season",
   "Author": "drbirbdev",
   "Version": "1.1.0",
-  "Description": "Core Functionality for drbirbdev mods",
+  "Description": "Add halloween seasonal event changes.",
   "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
   "MinimumGameVersion": "1.6.13",
-  "EntryDll": "BirbCore.dll",
+  "EntryDll": "HalloweenSeason.dll",
   "Dependencies": [
-    {
-      "UniqueID": "Pathoschild.ContentPatcher",
-      "MinimumVersion": "2.4.2",
-      "IsRequired": false
-    },
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",
       "IsRequired": false
     }
   ],
   "UpdateKeys": [
-    "Nexus:19140"
+    "Nexus:18916"
   ]
 }

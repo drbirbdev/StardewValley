@@ -3,10 +3,10 @@
   "UniqueID": "drbirbdev.GameboyArcade",
   "Name": "Gameboy Arcade",
   "Author": "drbirbdev",
-  "Version": "1.0.0-Debug",
+  "Version": "1.0.0",
   "Description": "A Library for enabling Gameboy Roms to be played as in-game arcade machines.",
   "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
-  "MinimumGameVersion": "1.6.10",
+  "MinimumGameVersion": "1.6.13",
   "EntryDll": "GameboyArcade.dll",
   "Dependencies": [
     {

@@ -219,7 +219,7 @@ public class SCommand(string name, string help = "") : ClassHandler(2)
             {
                 if (long.TryParse(arg, out long playerId))
                 {
-                    return Game1.getFarmerMaybeOffline(playerId);
+                    return Game1.GetPlayer(playerId);
                 }
 
                 return arg.Equals("host", StringComparison.InvariantCultureIgnoreCase)

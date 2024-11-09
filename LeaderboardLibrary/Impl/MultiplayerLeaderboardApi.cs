@@ -22,7 +22,7 @@ class MultiplayerLeaderboardApi : ChainableLeaderboardApi
             return;
         }
 
-        string name = Game1.getFarmer(e.FromPlayerID)?.Name;
+        string name = Game1.GetPlayer(e.FromPlayerID)?.Name;
         UploadScoreMessage message = e.ReadAs<UploadScoreMessage>();
         ((CachedLeaderboardApi)this.Delegate).UpdateCache(message.Stat, message.Score, message.UserUuid, name);
     }

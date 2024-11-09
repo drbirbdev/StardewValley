@@ -45,7 +45,7 @@ public class SConfig(bool titleScreenOnly = false) : ClassHandler(1)
         _api = mod.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
         if (_api is null)
         {
-            Log.Error("Generic Mod Config Menu is not enabled, so will skip parsing");
+            Log.Info("Generic Mod Config Menu is not enabled, so will skip parsing");
             return;
         }
 

@@ -301,6 +301,12 @@ class GameLocation_TryGetGarbageIItem
                 return;
             }
 
+            if (item == null)
+            {
+                selected = null;
+                return;
+            }
+
             // Remove Mega, DoubleMega results if not meeting level requirements
             if ((!selected.IsMegaSuccess ||
                  Game1.player.GetCustomSkillLevel("drbirbdev.Binning") >= ModEntry.Config.MegaMinLevel) &&

@@ -4,6 +4,7 @@ using System.Reflection;
 using BirbCore.Extensions;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewModdingAPI.Utilities;
 using StardewValley;
 
 namespace BirbCore.Attributes;
@@ -55,7 +56,7 @@ public class SEvent() : ClassHandler(9)
     {
         private MethodInfo? _method;
         private object? _instance;
-        private uint _currentStat;
+        private readonly PerScreen<uint> _currentStat = new();
 
         public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
@@ -63,25 +64,25 @@ public class SEvent() : ClassHandler(9)
             this._instance = instance;
 
             mod.Helper.Events.GameLoop.SaveLoaded += this.DoOnLoad;
-            mod.Helper.Events.GameLoop.TimeChanged += this.DoOnTimeChange;
+            mod.Helper.Events.GameLoop.OneSecondUpdateTicked += this.DoOnOneSecondUpdateTicked;
         }
 
         private void DoOnLoad(object? sender, SaveLoadedEventArgs e)
         {
-            this._currentStat = Game1.player.stats.Get(stat);
+            this._currentStat.Value = Game1.player.stats.Get(stat);
         }
 
-        private void DoOnTimeChange(object? sender, TimeChangedEventArgs e)
+        private void DoOnOneSecondUpdateTicked(object? sender, OneSecondUpdateTickedEventArgs e)
         {
             uint newStat = Game1.player.stats.Get(stat);
-            if (this._currentStat == newStat)
+            if (this._currentStat.Value == newStat)
             {
                 return;
             }
 
             this._method?.Invoke(this._instance,
-                [this, new EventArgs(this._currentStat, newStat, (int)(newStat - this._currentStat))]);
-            this._currentStat = newStat;
+                [this, new EventArgs(this._currentStat.Value, newStat, (int)(newStat - this._currentStat.Value))]);
+            this._currentStat.Value = newStat;
         }
 
         public class EventArgs(uint oldStat, uint newStat, int delta) : System.EventArgs

@@ -105,8 +105,7 @@ internal class Command
             canLocation.TryGetGarbageItem(key, Game1.player.DailyLuck, out Item item, out GarbageCanItemData selected,
                 out Random _);
 
-
-            if (item == null)
+            if (selected == null)
             {
                 noItem++;
                 continue;
@@ -115,8 +114,8 @@ internal class Command
             itemDataCounts.TryAdd(selected.Id, 0);
             itemDataCounts[selected.Id]++;
 
-            itemCounts.TryAdd(item.Name, 0);
-            itemCounts[item.Name]++;
+            itemCounts.TryAdd(item?.Name ?? "null", 0);
+            itemCounts[item?.Name ?? "null"]++;
         }
 
         Game1.stats.DaysPlayed = daysPlayed;

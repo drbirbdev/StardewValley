@@ -14,14 +14,14 @@ class MilkPail_DoFunction
     {
         try
         {
-            FarmAnimal animal = ModEntry.Instance.Helper.Reflection.GetField<FarmAnimal>(__instance, "animal").GetValue();
+            FarmAnimal animal = ModEntry.Instance.Helper.Reflection.GetField<FarmAnimal>(__instance, "animal")
+                .GetValue();
             RanchToolUtility.GetExtraEffects(animal, __instance, who);
         }
         catch (Exception e)
         {
             Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
-
     }
 }
 
@@ -32,14 +32,14 @@ class Shears_DoFunction
     {
         try
         {
-            FarmAnimal animal = ModEntry.Instance.Helper.Reflection.GetField<FarmAnimal>(__instance, "animal").GetValue();
+            FarmAnimal animal = ModEntry.Instance.Helper.Reflection.GetField<FarmAnimal>(__instance, "animal")
+                .GetValue();
             RanchToolUtility.GetExtraEffects(animal, __instance, who);
         }
         catch (Exception e)
         {
             Log.Error($"Failed in {MethodBase.GetCurrentMethod()?.DeclaringType}\n{e}");
         }
-
     }
 }
 
@@ -55,7 +55,8 @@ class RanchToolUtility
         // do extra friendship effect
         int extraFriendship = ModEntry.Config.ExtraFriendshipBase * tool.UpgradeLevel;
         animal.friendshipTowardFarmer.Value = Math.Min(1000, animal.friendshipTowardFarmer.Value + extraFriendship);
-        Log.Debug($"Applied extra friendship {extraFriendship}.  Total friendship: {animal.friendshipTowardFarmer.Value}");
+        Log.Debug(
+            $"Applied extra friendship {extraFriendship}.  Total friendship: {animal.friendshipTowardFarmer.Value}");
 
         // do quality bump effect
         float higherQualityChance = ModEntry.Config.QualityBumpChanceBase * tool.UpgradeLevel;
@@ -73,7 +74,9 @@ class RanchToolUtility
                     animal.produceQuality.Set(4);
                     break;
             }
-            Log.Debug($"Quality Bump Chance {higherQualityChance}, succeeded.  New quality {animal.produceQuality.Value}");
+
+            Log.Debug(
+                $"Quality Bump Chance {higherQualityChance}, succeeded.  New quality {animal.produceQuality.Value}");
         }
         else
         {
@@ -89,13 +92,21 @@ class RanchToolUtility
                 extraProduce++;
             }
         }
-        Log.Debug($"Extra Produce Chance {ModEntry.Config.ExtraProduceChance} generated {extraProduce} additional produce from {tool.UpgradeLevel} draws.");
+
+        if (animal.hasEatenAnimalCracker.Value)
+        {
+            extraProduce *= 2;
+        }
+
+        Log.Debug(
+            $"Extra Produce Chance {ModEntry.Config.ExtraProduceChance} generated {extraProduce} additional produce from {tool.UpgradeLevel} draws.");
         if (extraProduce <= 0)
         {
             return;
         }
 
-        SObject produce = ItemRegistry.Create<SObject>("(O)" + animal.currentProduce.Value, extraProduce, animal.produceQuality.Value);
+        SObject produce = ItemRegistry.Create<SObject>("(O)" + animal.currentProduce.Value, extraProduce,
+            animal.produceQuality.Value);
         produce.CanBeSetDown = false;
         farmer.addItemToInventory(produce);
     }

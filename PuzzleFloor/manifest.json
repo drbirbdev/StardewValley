@@ -5,7 +5,7 @@
   "Author": "drbirbdev",
   "Version": "1.0.0",
   "Description": "Adds puzzle piece flooring",
-  "MinimumApiVersion": "4.1.4+4daed27628b4c1810433acdfdf158d87e6f3bef7",
+  "MinimumApiVersion": "4.1.6+09dd92a74f13a3edeccb72242015876d7b5f6463",
   "MinimumGameVersion": "1.6.13",
   "EntryDll": "PuzzleFloor.dll",
   "Dependencies": [
@@ -19,6 +19,7 @@
     },
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",
+      "MinimumVersion": "1.14.0",
       "IsRequired": false
     }
   ],

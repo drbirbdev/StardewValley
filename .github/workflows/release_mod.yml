@@ -41,8 +41,7 @@ jobs:
       matrix: ${{ fromJson(needs.releases_json.outputs.matrix) }}
     env:
       NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
-      NEXUSMOD_COOKIE_NEXUSID: ${{ secrets.NEXUSMOD_COOKIE_NEXUSID }}
-      NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
+      NEXUSMOD_SESSION_COOKIE: ${{ secrets.NEXUSMOD_SESSION_COOKIE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

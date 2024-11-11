@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <SMAPIDependency Include="Pathoschild.ContentPatcher" Version="2.4.2" Required="false" />
+        <SMAPIDependency Include="Pathoschild.ContentPatcher" Version="2.4.4" Required="false" />
     </ItemGroup>
 
 </Project>

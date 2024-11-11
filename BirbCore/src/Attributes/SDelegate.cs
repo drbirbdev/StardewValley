@@ -8,6 +8,7 @@ using StardewValley;
 using StardewValley.Delegates;
 using StardewValley.Internal;
 using StardewValley.TokenizableStrings;
+using StardewValley.Triggers;
 
 namespace BirbCore.Attributes;
 
@@ -71,6 +72,14 @@ public class SDelegate() : ClassHandler(2)
         public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
         {
             GameLocation.RegisterTileAction($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<Func<GameLocation, string[], Farmer, Point, bool>>(instance));
+        }
+    }
+
+    public class TriggerAction : MethodHandler
+    {
+        public override void Handle(MethodInfo method, object? instance, IMod mod, object[]? args = null)
+        {
+            TriggerActionManager.RegisterAction($"{mod.ModManifest.UniqueID}_{method.Name}", method.InitDelegate<TriggerActionDelegate>(instance));
         }
     }
 

@@ -8,6 +8,7 @@
         <EntryDll>$(AssemblyName)</EntryDll>
         <BaseManifest>new</BaseManifest>
         <Dependencies_AlwaysIncludeRequire>true</Dependencies_AlwaysIncludeRequire>
+        <Dependencies_VersionBehavior>Error</Dependencies_VersionBehavior>
         <ManifestComment>false</ManifestComment>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 

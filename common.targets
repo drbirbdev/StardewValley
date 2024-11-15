@@ -7,6 +7,7 @@
         <MinimumGameVersion_Behavior>UpdateFull</MinimumGameVersion_Behavior>
         <EntryDll>$(AssemblyName)</EntryDll>
         <BaseManifest>new</BaseManifest>
+        <Version_AppendConfiguration>false</Version_AppendConfiguration>
         <Dependencies_AlwaysIncludeRequire>true</Dependencies_AlwaysIncludeRequire>
         <Dependencies_VersionBehavior>Error</Dependencies_VersionBehavior>
         <ManifestComment>false</ManifestComment>

@@ -3,10 +3,10 @@
   "UniqueID": "drbirbdev.SocializingSkill",
   "Name": "SocializingSkill",
   "Author": "drbirbdev",
-  "Version": "2.1.0",
+  "Version": "2.1.1",
   "Description": "Adds a skill related to befriending villagers.",
-  "MinimumApiVersion": "4.1.6+09dd92a74f13a3edeccb72242015876d7b5f6463",
-  "MinimumGameVersion": "1.6.13",
+  "MinimumApiVersion": "4.1.7+ae4c42648356b6ee5c769397e3a2048b22bfd80b",
+  "MinimumGameVersion": "1.6.14",
   "EntryDll": "SocializingSkill.dll",
   "Dependencies": [
     {

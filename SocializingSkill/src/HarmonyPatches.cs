@@ -442,8 +442,7 @@ class Npc_CheckAction
                     continue;
                 }
 
-                ItemQueryContext itemQueryContext =
-                    new ItemQueryContext(__instance.currentLocation, who, belovedRandom);
+                ItemQueryContext itemQueryContext = new(__instance.currentLocation, who, belovedRandom, "SocializingSkill Beloved ItemQueryContext triggered error.");
 
                 Item result = ItemQueryResolver.TryResolveRandomItem(entry, itemQueryContext);
 
